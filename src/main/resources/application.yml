@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: snappin
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
