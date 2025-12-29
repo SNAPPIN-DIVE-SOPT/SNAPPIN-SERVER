@@ -8,3 +8,6 @@ springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+
+cors:
+  allowed-origins: "http://localhost:3000,http://localhost:8080"
