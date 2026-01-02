@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,12 +40,14 @@ public class Photo extends BaseEntity {
     @Builder(access = AccessLevel.PRIVATE)
     private Photo(String imageUrl, List<Float> embedding) {
         this.imageUrl = imageUrl;
+        this.embedding = embedding;
     }
 
     public static Photo create(String imageUrl, List<Float> embedding) {
         validatePhoto(imageUrl);
         return Photo.builder()
             .imageUrl(imageUrl)
+            .embedding(embedding)
             .build();
     }
 
