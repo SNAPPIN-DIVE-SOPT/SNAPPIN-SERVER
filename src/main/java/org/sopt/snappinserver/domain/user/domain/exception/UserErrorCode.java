@@ -10,7 +10,8 @@ public enum UserErrorCode implements ErrorCode {
 
     // 400 BAD REQUEST
     USER_ROLE_REQUIRED(400, "USER_400_001", "유저 역할은 필수입니다."),
-    GENDER_REQUIRED(400, "USER_400_002", "성별은 필수입니다."),
+    NAME_REQUIRED(400, "USER_400_002", "이름은 필수입니다."),
+    NAME_LENGTH_TOO_LONG(400, "USER_400_003", "이름 길이는 50자 이하입니다."),
 
     // 401 UNAUTHORIZED
 

@@ -22,6 +22,8 @@ import org.sopt.snappinserver.global.entity.BaseEntity;
 @Table(name = "users")
 public class User extends BaseEntity {
 
+    private static final int MAX_NAME_LENGTH = 50;
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
@@ -30,29 +32,44 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserRole role;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Gender gender;
+    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    private String name;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private User(UserRole role, Gender gender) {
+    private User(UserRole role, String name) {
         this.role = role;
-        this.gender = gender;
+        this.name = name;
     }
 
-    public static User create(UserRole role, Gender gender) {
+    public static User create(UserRole role, String name) {
+        validateUser(role, name);
         return User.builder()
             .role(role)
-            .gender(gender)
+            .name(name)
             .build();
     }
 
-    public void validateUser(UserRole role, Gender gender) {
+    private static void validateUser(UserRole role, String name) {
+        validateUserRoleExists(role);
+        validateNameExists(name);
+        validateNameLength(name);
+    }
+
+    private static void validateUserRoleExists(UserRole role) {
         if (role == null) {
             throw new UserException(UserErrorCode.USER_ROLE_REQUIRED);
         }
-        if (gender == null) {
-            throw new UserException(UserErrorCode.GENDER_REQUIRED);
+    }
+
+    private static void validateNameExists(String name) {
+        if (name == null || name.isBlank()) {
+            throw new UserException(UserErrorCode.NAME_REQUIRED);
+        }
+    }
+
+    private static void validateNameLength(String name) {
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new UserException(UserErrorCode.NAME_LENGTH_TOO_LONG);
         }
     }
 }
