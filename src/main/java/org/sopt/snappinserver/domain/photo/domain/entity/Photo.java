@@ -31,25 +31,23 @@ public class Photo extends BaseEntity {
     @Column(nullable = false, length = MAX_IMAGE_URL_LENGTH)
     private String imageUrl;
 
-    @Column(columnDefinition = "vector(512)")
+    @Column(columnDefinition = "vector(" + EMBEDDING_DIMENSION + ")")
     @JdbcTypeCode(SqlTypes.VECTOR)
     private List<Float> embedding;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Photo(String imageUrl, List<Float> embedding) {
         this.imageUrl = imageUrl;
-        this.embedding = embedding;
     }
 
     public static Photo create(String imageUrl, List<Float> embedding) {
-        validatePhoto(imageUrl, embedding);
+        validatePhoto(imageUrl);
         return Photo.builder()
             .imageUrl(imageUrl)
-            .embedding(embedding)
             .build();
     }
 
-    private static void validatePhoto(String imageUrl, List<Float> embedding) {
+    private static void validatePhoto(String imageUrl) {
         validateImageUrlExists(imageUrl);
         validateImageUrlLength(imageUrl);
     }
