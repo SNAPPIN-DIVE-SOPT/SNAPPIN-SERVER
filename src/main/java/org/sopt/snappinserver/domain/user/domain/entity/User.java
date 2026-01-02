@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.user.domain;
+package org.sopt.snappinserver.domain.user.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.sopt.snappinserver.domain.user.domain.enums.UserRole;
 import org.sopt.snappinserver.domain.user.domain.exception.UserErrorCode;
 import org.sopt.snappinserver.domain.user.domain.exception.UserException;
 import org.sopt.snappinserver.global.entity.BaseEntity;

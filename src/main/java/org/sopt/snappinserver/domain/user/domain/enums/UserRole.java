@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.user.domain;
+package org.sopt.snappinserver.domain.user.domain.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

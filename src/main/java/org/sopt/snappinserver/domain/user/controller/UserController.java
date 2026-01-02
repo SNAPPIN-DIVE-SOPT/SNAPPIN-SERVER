@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @RestController
-public class UserController {
+public class UserController implements UserApi {
 
 }
