@@ -43,16 +43,18 @@ public class Mood extends BaseEntity {
     private List<Float> embedding;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Mood(MoodCategory category, String name) {
+    private Mood(MoodCategory category, String name, List<Float> embedding) {
         this.category = category;
         this.name = name;
+        this.embedding = embedding;
     }
 
-    public static Mood create(MoodCategory category, String name) {
+    public static Mood create(MoodCategory category, String name, List<Float> embedding) {
         validateMood(category, name);
         return Mood.builder()
             .category(category)
             .name(name)
+            .embedding(embedding)
             .build();
     }
 
