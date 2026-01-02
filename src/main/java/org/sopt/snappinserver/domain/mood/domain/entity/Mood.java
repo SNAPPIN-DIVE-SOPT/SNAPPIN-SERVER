@@ -1,0 +1,87 @@
+package org.sopt.snappinserver.domain.mood.domain.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import java.util.List;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
+import org.sopt.snappinserver.domain.mood.domain.exception.MoodErrorCode;
+import org.sopt.snappinserver.domain.mood.domain.exception.MoodException;
+import org.sopt.snappinserver.global.entity.BaseEntity;
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Mood extends BaseEntity {
+
+    private static final int MAX_NAME_LENGTH = 10;
+    private static final int EMBEDDING_DIMENSION = 512;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private MoodCategory category;
+
+    @Column(nullable = false, length = MAX_NAME_LENGTH)
+    private String name;
+
+    @Column(columnDefinition = "vector(" + EMBEDDING_DIMENSION + ")")
+    @JdbcTypeCode(SqlTypes.VECTOR)
+    private List<Float> embedding;
+
+    @Builder(access = AccessLevel.PRIVATE)
+    private Mood(MoodCategory category, String name) {
+        this.category = category;
+        this.name = name;
+    }
+
+    public static Mood create(MoodCategory category, String name) {
+        validateMood(category, name);
+        return Mood.builder()
+            .category(category)
+            .name(name)
+            .build();
+    }
+
+    private static void validateMood(MoodCategory category, String name) {
+        validateCategoryExists(category);
+        validateName(name);
+    }
+
+    private static void validateCategoryExists(MoodCategory category) {
+        if (category == null) {
+            throw new MoodException(MoodErrorCode.CATEGORY_REQUIRED);
+        }
+    }
+
+    private static void validateName(String name) {
+        validateNameExists(name);
+        validateNameLength(name);
+    }
+
+    private static void validateNameExists(String name) {
+        if (name == null || name.isBlank()) {
+            throw new MoodException(MoodErrorCode.NAME_REQUIRED);
+        }
+    }
+
+    private static void validateNameLength(String name) {
+        if (name.length() > MAX_NAME_LENGTH) {
+            throw new MoodException(MoodErrorCode.NAME_TOO_LONG);
+        }
+    }
+
+}
