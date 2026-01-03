@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.mood.controller;
+package org.sopt.snappinserver.api.mood.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
