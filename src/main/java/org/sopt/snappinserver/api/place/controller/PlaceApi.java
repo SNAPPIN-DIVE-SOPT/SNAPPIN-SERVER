@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.place.controller;
+package org.sopt.snappinserver.api.place.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
