@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.photographer.controller;
+package org.sopt.snappinserver.api.photographer.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;

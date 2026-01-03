@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.photographer.controller;
+package org.sopt.snappinserver.api.photographer.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 
