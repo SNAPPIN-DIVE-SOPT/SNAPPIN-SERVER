@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.auth.controller;
+package org.sopt.snappinserver.api.auth.controller;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 

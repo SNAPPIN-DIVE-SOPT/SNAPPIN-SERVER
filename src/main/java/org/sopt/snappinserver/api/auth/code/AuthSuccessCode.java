@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.auth.controller.code;
+package org.sopt.snappinserver.api.auth.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
