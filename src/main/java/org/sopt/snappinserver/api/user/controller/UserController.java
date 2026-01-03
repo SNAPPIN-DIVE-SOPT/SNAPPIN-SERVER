@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.user.controller;
+package org.sopt.snappinserver.api.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
