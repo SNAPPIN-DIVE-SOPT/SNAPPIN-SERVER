@@ -1,12 +1,12 @@
-package org.sopt.snappinserver.domain.mood.controller.code;
+package org.sopt.snappinserver.global.response.code.product;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.global.response.code.SuccessCode;
+import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum MoodSuccessCode implements SuccessCode {
+public enum ProductSuccessCode implements SuccessCode {
 
     // 200 OK
 
@@ -17,4 +17,5 @@ public enum MoodSuccessCode implements SuccessCode {
     private final int status;
     private final String code;
     private final String message;
+
 }

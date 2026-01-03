@@ -1,12 +1,12 @@
-package org.sopt.snappinserver.domain.user.controller.code;
+package org.sopt.snappinserver.global.response.code.auth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.global.response.code.SuccessCode;
+import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum UserSuccessCode implements SuccessCode {
+public enum AuthSuccessCode implements SuccessCode {
 
     // 200 OK
 

@@ -1,12 +1,12 @@
-package org.sopt.snappinserver.domain.photographer.controller.code;
+package org.sopt.snappinserver.global.response.code.mood;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.global.response.code.SuccessCode;
+import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum PhotographerSuccessCode implements SuccessCode {
+public enum MoodSuccessCode implements SuccessCode {
 
     // 200 OK
 

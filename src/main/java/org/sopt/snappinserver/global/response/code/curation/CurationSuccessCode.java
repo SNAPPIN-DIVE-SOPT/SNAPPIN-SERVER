@@ -1,12 +1,12 @@
-package org.sopt.snappinserver.domain.product.controller.code;
+package org.sopt.snappinserver.global.response.code.curation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.global.response.code.SuccessCode;
+import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum ProductSuccessCode implements SuccessCode {
+public enum CurationSuccessCode implements SuccessCode {
 
     // 200 OK
 
@@ -17,5 +17,4 @@ public enum ProductSuccessCode implements SuccessCode {
     private final int status;
     private final String code;
     private final String message;
-
 }

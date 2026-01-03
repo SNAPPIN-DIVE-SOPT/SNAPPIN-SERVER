@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.global.exception;
 
 import lombok.Getter;
-import org.sopt.snappinserver.global.response.code.ErrorCode;
+import org.sopt.snappinserver.global.response.code.common.ErrorCode;
 
 @Getter
 public class BusinessException extends RuntimeException {

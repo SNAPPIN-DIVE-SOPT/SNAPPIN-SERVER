@@ -3,8 +3,8 @@ package org.sopt.snappinserver.global.response.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.sopt.snappinserver.global.response.code.ErrorCode;
-import org.sopt.snappinserver.global.response.code.SuccessCode;
+import org.sopt.snappinserver.global.response.code.common.ErrorCode;
+import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "공통 응답 DTO")

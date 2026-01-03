@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.global.response.code;
+package org.sopt.snappinserver.global.response.code.common;
 
 public interface ResponseCode {
     int getStatus();

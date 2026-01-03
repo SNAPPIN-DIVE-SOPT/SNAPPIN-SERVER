@@ -2,7 +2,7 @@ package org.sopt.snappinserver.domain.photo.domain.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.global.response.code.ErrorCode;
+import org.sopt.snappinserver.global.response.code.common.ErrorCode;
 
 @Getter
 @RequiredArgsConstructor
