@@ -1,0 +1,31 @@
+upstream backend {
+  server __UPSTREAM__;
+}
+
+server {
+  listen 80;
+  server_name snapping.co.kr;
+
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  location / {
+    return 301 https://$host$request_uri;
+  }
+}
+
+server {
+  listen 443 ssl;
+  server_name snapping.co.kr;
+
+  ssl_certificate /etc/letsencrypt/live/snapping.co.kr/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/snapping.co.kr/privkey.pem;
+
+  location / {
+    proxy_pass http://backend;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto https;
+  }
+}
