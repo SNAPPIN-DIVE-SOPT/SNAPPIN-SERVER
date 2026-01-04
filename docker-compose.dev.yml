@@ -1,0 +1,62 @@
+version: "3.8"
+
+services:
+  app_blue:
+    image: "${DOCKER_HUB_USERNAME}/snapping-be-app:${IMAGE_TAG}"
+    container_name: snapping-be-app-blue
+    restart: always
+    env_file:
+      - /home/ubuntu/snapping-be-app/.env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      TZ: Asia/Seoul
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 120s
+    networks:
+      - backend
+
+  app_green:
+    image: "${DOCKER_HUB_USERNAME}/snapping-be-app:${IMAGE_TAG}"
+    container_name: snapping-be-app-green
+    restart: always
+    env_file:
+      - /home/ubuntu/snapping-be-app/.env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      TZ: Asia/Seoul
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 120s
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: snapping-be-app-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    networks:
+      - backend
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
+networks:
+  backend:
