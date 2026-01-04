@@ -1,0 +1,12 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/snapping-be-app
+
+hooks:
+  AfterInstall:
+    - location: deploy.dev.sh
+      timeout: 300
+      runas: root
