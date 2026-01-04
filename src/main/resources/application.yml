@@ -1,8 +1,10 @@
 spring:
-  profiles:
-    active: local
   application:
     name: snappin
+
+  batch:
+    jdbc:
+      initialize-schema: never
 
 springdoc:
   swagger-ui:
@@ -10,4 +12,4 @@ springdoc:
     operations-sorter: alpha
 
 cors:
-  allowed-origins: "http://localhost:3000,http://localhost:8080"
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}

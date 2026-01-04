@@ -1,0 +1,58 @@
+name: Deploy - Dev
+
+on:
+  push:
+    branches: [ "develop" ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Build & Push Image
+        run: |
+          IMAGE_TAG=${GITHUB_SHA::7}
+          echo "IMAGE_TAG=$IMAGE_TAG" > image-tag
+
+          ./gradlew build -x test
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/snapping-be-app:$IMAGE_TAG .
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/snapping-be-app:$IMAGE_TAG
+      
+      
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::252807701206:role/GithubActions-CodeDeploy-Dev
+          aws-region: ap-northeast-2
+
+      - name: Prepare deploy files
+        run: |
+          cp appspec.dev.yml appspec.yml
+
+          zip -r deploy.zip \
+            image-tag \
+            docker-compose.dev.yml \
+            deploy.dev.sh \
+            appspec.yml \
+            nginx/app.conf.template
+
+      - name: Upload to S3 & Deploy
+        run: |
+          aws s3 cp deploy.zip s3://${{ secrets.AWS_S3_BUCKET }}/deploy.zip
+          aws deploy create-deployment \
+            --application-name ${{ secrets.CODEDEPLOY_APP_NAME }} \
+            --deployment-group-name ${{ secrets.CODEDEPLOY_DG_NAME }} \
+            --s3-location bucket=${{ secrets.AWS_S3_BUCKET }},bundleType=zip,key=deploy.zip
