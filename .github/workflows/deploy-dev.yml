@@ -29,8 +29,6 @@ jobs:
           ./gradlew build -x test
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/snapping-be-app:$IMAGE_TAG .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/snapping-be-app:$IMAGE_TAG
-      
-      
 
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
@@ -47,7 +45,9 @@ jobs:
             docker-compose.dev.yml \
             deploy.dev.sh \
             appspec.yml \
-            nginx/app.conf.template
+            nginx/app.conf.template \
+            nginx/conf.d/devlog.conf \
+            nginx/conf.d/swagger.conf
 
       - name: Upload to S3 & Deploy
         run: |
