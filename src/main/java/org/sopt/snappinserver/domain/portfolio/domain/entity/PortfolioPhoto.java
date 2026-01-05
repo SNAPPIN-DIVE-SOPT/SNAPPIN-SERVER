@@ -1,6 +1,5 @@
-package org.sopt.snappinserver.domain.product.domain.entity;
+package org.sopt.snappinserver.domain.portfolio.domain.entity;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,33 +17,32 @@ import org.sopt.snappinserver.global.entity.BaseEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ProductPhoto extends BaseEntity {
+public class PortfolioPhoto extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    @JoinColumn(name = "portfolio_id")
+    private Portfolio portfolio;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "photo_id", nullable = false)
+    @JoinColumn(name = "photo_id")
     private Photo photo;
 
-    @Column(nullable = false)
     private int displayOrder;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private ProductPhoto(Product product, Photo photo, int displayOrder) {
-        this.product = product;
+    private PortfolioPhoto(Portfolio portfolio, Photo photo, int displayOrder) {
+        this.portfolio = portfolio;
         this.photo = photo;
         this.displayOrder = displayOrder;
     }
 
-    public ProductPhoto create(Product product, Photo photo, int displayOrder) {
-        return ProductPhoto.builder()
-            .product(product)
+    public static PortfolioPhoto create(Portfolio portfolio, Photo photo, int displayOrder) {
+        return PortfolioPhoto.builder()
+            .portfolio(portfolio)
             .photo(photo)
             .displayOrder(displayOrder)
             .build();
