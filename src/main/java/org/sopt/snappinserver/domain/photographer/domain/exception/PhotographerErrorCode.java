@@ -21,10 +21,11 @@ public enum PhotographerErrorCode implements ErrorCode {
     START_TIME_REQUIRED(400, "PHOTOGRAPHER_400_010", "시작 시각은 필수입니다."),
     END_TIME_REQUIRED(400, "PHOTOGRAPHER_400_011", "종료 시각은 필수입니다."),
     START_TIME_AFTER_THAN_END_TIME(400, "PHOTOGRAPHER_400_012", "스케쥴 시작 시간이 종료 시간보다 앞서야 합니다."),
+    BIO_TOO_LONG(400, "PHOTOGRAPHER_400_013", "한 줄 소개 길이는 200자 이하입니다."),
 
     // 401 UNAUTHORIZED
 
-    // 403 FORBIDDEN
+    // 403 FORBIDDENa
 
     // 404 NOT FOUND
 

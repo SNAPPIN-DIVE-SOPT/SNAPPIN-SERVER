@@ -28,6 +28,7 @@ public class Photographer extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MAX_NICKNAME_LENGTH = 20;
+    private static final int MAX_BIO_LENGTH = 200;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -51,19 +52,24 @@ public class Photographer extends BaseEntity {
     @Column(nullable = false)
     private SnapCategory specialty;
 
+    @Column(length = MAX_BIO_LENGTH)
+    private String bio;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Photographer(
         User user,
         String name,
         String nickname,
         Gender gender,
-        SnapCategory specialty
+        SnapCategory specialty,
+        String bio
     ) {
         this.user = user;
         this.name = name;
         this.nickname = nickname;
         this.gender = gender;
         this.specialty = specialty;
+        this.bio = bio;
     }
 
     public static Photographer create(
@@ -71,15 +77,17 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        SnapCategory specialty
+        SnapCategory specialty,
+        String bio
     ) {
-        validatePhotographer(user, name, nickname, gender, specialty);
+        validatePhotographer(user, name, nickname, gender, specialty, bio);
         return Photographer.builder()
             .user(user)
             .name(name)
             .nickname(nickname)
             .gender(gender)
             .specialty(specialty)
+            .bio(bio)
             .build();
     }
 
@@ -88,17 +96,19 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        SnapCategory specialty
+        SnapCategory specialty,
+        String bio
     ) {
         validateUserExists(user);
         validateName(name);
         validateNickname(nickname);
         validateGenderExists(gender);
         validateSpecialtyExists(specialty);
+        validateBioLength(bio);
     }
 
     private static void validateUserExists(User user) {
-        if(user == null) {
+        if (user == null) {
             throw new PhotographerException(PhotographerErrorCode.USER_REQUIRED);
         }
     }
@@ -109,13 +119,13 @@ public class Photographer extends BaseEntity {
     }
 
     private static void validateNameExists(String name) {
-        if(name == null || name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new PhotographerException(PhotographerErrorCode.NAME_REQUIRED);
         }
     }
 
     private static void validateNameLength(String name) {
-        if(name.length() > MAX_NAME_LENGTH) {
+        if (name.length() > MAX_NAME_LENGTH) {
             throw new PhotographerException(PhotographerErrorCode.NAME_LENGTH_TOO_LONG);
         }
     }
@@ -126,26 +136,32 @@ public class Photographer extends BaseEntity {
     }
 
     private static void validateNicknameExists(String nickname) {
-        if(nickname == null || nickname.isBlank()) {
+        if (nickname == null || nickname.isBlank()) {
             throw new PhotographerException(PhotographerErrorCode.NICKNAME_REQUIRED);
         }
     }
 
     private static void validateNicknameLength(String nickname) {
-        if(nickname.length() > MAX_NICKNAME_LENGTH) {
+        if (nickname.length() > MAX_NICKNAME_LENGTH) {
             throw new PhotographerException(PhotographerErrorCode.NICKNAME_LENGTH_TOO_LONG);
         }
     }
 
     private static void validateGenderExists(Gender gender) {
-        if(gender == null) {
+        if (gender == null) {
             throw new PhotographerException(PhotographerErrorCode.GENDER_REQUIRED);
         }
     }
 
     private static void validateSpecialtyExists(SnapCategory specialty) {
-        if(specialty == null) {
+        if (specialty == null) {
             throw new PhotographerException(PhotographerErrorCode.SPECIALTY_REQUIRED);
+        }
+    }
+
+    private static void validateBioLength(String bio) {
+        if (bio != null && bio.length() > MAX_BIO_LENGTH) {
+            throw new PhotographerException(PhotographerErrorCode.BIO_TOO_LONG);
         }
     }
 }
