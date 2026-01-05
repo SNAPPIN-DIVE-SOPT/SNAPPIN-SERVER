@@ -48,6 +48,7 @@ public class Review extends BaseEntity {
     }
 
     public static Review create(Reservation reservation, Integer rating, String content) {
+        validateReview(reservation, rating, content);
         return Review.builder()
             .reservation(reservation)
             .rating(rating)
