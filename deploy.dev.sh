@@ -64,12 +64,12 @@ done
 sed "s|__UPSTREAM__|${NEW_CONTAINER}:8080|" nginx/app.conf.template \
   > nginx/conf.d/app.conf
 
-docker-compose exec -T nginx nginx -t
-docker-compose exec -T nginx nginx -s reload
+docker-compose -f $COMPOSE_FILE exec -T nginx nginx -t
+docker-compose -f $COMPOSE_FILE exec -T nginx nginx -s reload
 
 echo "$NEW_COLOR" > "$ACTIVE_COLOR_FILE"
 
-docker-compose stop $OLD_SERVICE || true
-docker-compose rm -f $OLD_SERVICE || true
+docker-compose -f $COMPOSE_FILE stop $OLD_SERVICE || true
+docker-compose -f $COMPOSE_FILE rm -f $OLD_SERVICE || true
 
 docker image prune -f
