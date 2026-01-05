@@ -24,6 +24,7 @@ import org.sopt.snappinserver.global.entity.BaseEntity;
 public class User extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 50;
+    private static final int MAX_PROFILE_IMAGE_URL_LENGTH = 1024;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -36,21 +37,26 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     private String name;
 
+    @Column(nullable = false, length = MAX_PROFILE_IMAGE_URL_LENGTH)
+    private String profileImageUrl;
+
     @Builder(access = AccessLevel.PRIVATE)
-    private User(UserRole role, String name) {
+    private User(UserRole role, String name, String profileImageUrl) {
         this.role = role;
         this.name = name;
+        this.profileImageUrl = profileImageUrl;
     }
 
-    public static User create(UserRole role, String name) {
-        validateUser(role, name);
+    public static User create(UserRole role, String name, String profileImageUrl) {
+        validateUser(role, name, profileImageUrl);
         return User.builder()
             .role(role)
             .name(name)
+            .profileImageUrl(profileImageUrl)
             .build();
     }
 
-    private static void validateUser(UserRole role, String name) {
+    private static void validateUser(UserRole role, String name, String profileImageUrl) {
         validateUserRoleExists(role);
         validateNameExists(name);
         validateNameLength(name);
@@ -71,6 +77,15 @@ public class User extends BaseEntity {
     private static void validateNameLength(String name) {
         if (name.length() > MAX_NAME_LENGTH) {
             throw new UserException(UserErrorCode.NAME_LENGTH_TOO_LONG);
+        }
+    }
+
+    private static void validateProfileImageUrl(String profileImageUrl) {
+        if(profileImageUrl == null || profileImageUrl.isBlank()) {
+
+        }
+        if(profileImageUrl.length() > MAX_PROFILE_IMAGE_URL_LENGTH) {
+
         }
     }
 }
