@@ -12,12 +12,7 @@ services:
       TZ: Asia/Seoul
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-      start_period: 120s
-    networks:
-      - backend
+    networks: [backend]
 
   app_green:
     image: "${DOCKER_HUB_USERNAME}/snapping-be-app:${IMAGE_TAG}"
@@ -30,33 +25,27 @@ services:
       TZ: Asia/Seoul
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-      start_period: 120s
-    networks:
-      - backend
+    networks: [backend]
+
+  dozzle:
+    image: amir20/dozzle
+    container_name: dozzle
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks: [backend]
 
   nginx:
     image: nginx:1.27-alpine
     container_name: snapping-be-app-nginx
-    restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/.htpasswd:/etc/nginx/.htpasswd
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    networks:
-      - backend
-
-  certbot:
-    image: certbot/certbot
-    container_name: certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
+    networks: [backend]
 
 networks:
   backend:
