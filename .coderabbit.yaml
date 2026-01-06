@@ -1,0 +1,136 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+# 기본 설정
+language: 'ko-KR'          # CodeRabbit 리뷰 결과를 한국어로 출력
+early_access: true         # CodeRabbit의 얼리 액세스 기능 사용
+
+tone_instructions: |
+  한국어(ko-KR)로 정중하고 협업적인 톤의 코드 리뷰를 제공합니다.
+  비판보다는 개선 방향을 제시하고, 이유가 명확한 피드백을 우선합니다.
+
+# 리뷰 동작 방식 설정
+reviews:
+  profile: 'assertive'        # 리뷰 성향
+  high_level_summary: true    # PR 전체 변경 사항 요약 생성
+  review_status: true         # PR에 리뷰 상태 표시
+  changed_files_summary: true # 변경된 파일 목록 및 요약 제공
+  collapse_walkthrough: true  # 상세 워크스루는 기본적으로 접어서 표시(노이즈 감소)
+  abort_on_close: true        # PR이 닫히면 리뷰 작업 즉시 중단
+
+  path_filters:
+    # 포함할 경로 (allow-list)
+    - 'src/**'                # 서버 소스 코드
+    - '.github/**'            # GitHub Actions 및 레포 설정
+    - '.coderabbit.yaml'      # CodeRabbit 설정 파일 자체
+
+    # 루트 레벨 배포 / 빌드 / 운영 관련 파일
+    - 'Dockerfile'
+    - 'docker-compose*.yml'
+    - 'appspec*.yml'
+    - 'deploy*.sh'
+    - 'nginx/**'
+    - 'build.gradle'
+    - 'settings.gradle'
+
+    # 제외할 경로 (deny-list)
+    - '!build/**'             # 빌드 산출물(자동 생성)
+    - '!out/**'               # IDE/컴파일 결과물
+    - '!coverage/**'          # 테스트 커버리지 리포트
+    - '!gradle/wrapper/**'    # Gradle Wrapper 자동 생성 파일
+    - '!gradlew'
+    - '!gradlew.bat'
+    - '!**/*.png'             # 이미지 파일
+    - '!**/*.jpg'
+    - '!**/*.jpeg'
+    - '!**/*.svg'
+    - '!**/*.lock'            # 의존성 잠금 파일
+
+  path_instructions:
+    # src 하위 전체에 적용되는 서버 코드 컨벤션
+    - path: 'src/**'
+      instructions: |
+        [네이밍 규칙]
+        - 변수명은 camelCase인지 확인
+        - 클래스명은 PascalCase인지 확인
+        - 패키지명은 모두 소문자인지 확인
+
+        [계층별 클래스 네이밍]
+        - Controller: 도메인명 + Controller
+        - Swagger API 인터페이스: 도메인명 + Api
+        - Service 인터페이스: 도메인명 + Usecase
+        - Service 구현체: 도메인명 + Service
+        - Repository: 도메인명 + Repository
+        - DTO: CreateXXRequest / CreateXXResponse 형식 사용
+        - 도메인별 성공 코드: 도메인명 + SuccessCode
+        - 도메인별 에러 코드(Enum): 도메인명 + ErrorCode
+        - 도메인별 예외 클래스: 도메인명 + Exception
+
+        [메서드 네이밍 규칙]
+        - Controller 메서드는 create/update/get/delete 접두사 사용
+        - Service 메서드는 실제 비즈니스 행위를 드러내는 동사 사용 (예: writeArticle)
+
+        [조회 메서드]
+        - get: 단순 조회
+        - find: 조건에 따른 조회
+        - fetch: 외부 시스템 호출
+        - load: 내부 로딩/상태 반영
+
+        [상태/판단 메서드]
+        - is / has / can 접두사 사용
+
+        [데이터 변경 메서드]
+        - create, save, update, delete/remove, register, replace
+          → 목적에 맞게 의미를 구분하여 사용
+
+        [클래스 내부 구성 순서]
+        1. static final 상수
+        2. static 변수
+        3. 인스턴스 변수
+        4. 생성자
+        5. public 메서드
+        6. protected 메서드
+        7. package-private 메서드
+        8. private 메서드
+        9. nested 클래스/인터페이스
+
+        [API URL 설계 규칙]
+        - 리소스는 복수형 사용
+        - URL은 kebab-case 사용
+        - path variable은 camelCase 사용
+        - 리소스 식별은 path variable
+        - 필터링/검색은 query string 사용
+
+  # 자동 리뷰 트리거 설정
+  auto_review:
+    enabled: true              # PR 생성 시 자동 리뷰 활성화
+    drafts: false              # Draft PR은 리뷰하지 않음
+    base_branches:
+      - 'develop'              # develop 브랜치 기준 PR
+      - 'main'                 # main 브랜치 기준 PR
+    labels:
+      - '!wip'                 # wip 라벨이 있으면 리뷰 제외
+      - '!draft'
+      - '!skip-review'
+
+  # 보조 도구 설정
+  tools:
+    gitleaks:
+      enabled: true            # 시크릿/토큰/민감 정보 유출 검사
+    yamllint:
+      enabled: true            # YAML 문법 오류 검사
+    actionlint:
+      enabled: true            # GitHub Actions 워크플로우 검증
+
+# CodeRabbit 채팅/응답 설정
+chat:
+  art: false                   # 아스키/이모지 아트 비활성화
+  auto_reply: true             # CodeRabbit 자동 응답 활성화
+
+# CodeRabbit이 리뷰 시 참고할 지식 베이스 정의
+knowledge_base:
+  web_search:
+    enabled: true              # 외부 웹 검색을 통해 참고 가능
+
+  code_guidelines:
+    enabled: true              # 레포 내 규칙 문서를 참고 대상으로 활성화
+    filePatterns: []           # 특정 문서를 기준(source of truth)으로 고정하지 않음
