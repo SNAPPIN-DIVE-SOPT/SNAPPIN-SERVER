@@ -23,6 +23,15 @@ reviews:
     - '.github/**'            # GitHub Actions 및 레포 설정
     - '.coderabbit.yaml'      # CodeRabbit 설정 파일 자체
 
+    # 루트 레벨 배포 / 빌드 / 운영 관련 파일
+    - 'Dockerfile'
+    - 'docker-compose*.yml'
+    - 'appspec*.yml'
+    - 'deploy*.sh'
+    - 'nginx/**'
+    - 'build.gradle'
+    - 'settings.gradle'
+
     # 제외할 경로 (deny-list)
     - '!build/**'             # 빌드 산출물(자동 생성)
     - '!out/**'               # IDE/컴파일 결과물
