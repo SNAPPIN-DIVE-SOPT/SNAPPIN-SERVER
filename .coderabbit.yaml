@@ -56,9 +56,14 @@ reviews:
 
         [계층별 클래스 네이밍]
         - Controller: 도메인명 + Controller
-        - Service: 도메인명 + Service
+        - Swagger API 인터페이스: 도메인명 + Api
+        - Service 인터페이스: 도메인명 + Usecase
+        - Service 구현체: 도메인명 + Service
         - Repository: 도메인명 + Repository
         - DTO: CreateXXRequest / CreateXXResponse 형식 사용
+        - 도메인별 성공 코드: 도메인명 + SuccessCode
+        - 도메인별 에러 코드(Enum): 도메인명 + ErrorCode
+        - 도메인별 예외 클래스: 도메인명 + Exception
 
         [메서드 네이밍 규칙]
         - Controller 메서드는 create/update/get/delete 접두사 사용
@@ -95,7 +100,6 @@ reviews:
         - 리소스 식별은 path variable
         - 필터링/검색은 query string 사용
 
-
   # 자동 리뷰 트리거 설정
   auto_review:
     enabled: true              # PR 생성 시 자동 리뷰 활성화
@@ -117,12 +121,10 @@ reviews:
     actionlint:
       enabled: true            # GitHub Actions 워크플로우 검증
 
-
 # CodeRabbit 채팅/응답 설정
 chat:
   art: false                   # 아스키/이모지 아트 비활성화
   auto_reply: true             # CodeRabbit 자동 응답 활성화
-
 
 # CodeRabbit이 리뷰 시 참고할 지식 베이스 정의
 knowledge_base:
