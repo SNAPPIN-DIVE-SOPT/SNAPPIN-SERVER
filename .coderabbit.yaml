@@ -36,6 +36,9 @@ reviews:
     - '!build/**'             # 빌드 산출물(자동 생성)
     - '!out/**'               # IDE/컴파일 결과물
     - '!coverage/**'          # 테스트 커버리지 리포트
+    - '!gradle/wrapper/**'    # Gradle Wrapper 자동 생성 파일
+    - '!gradlew'
+    - '!gradlew.bat'
     - '!**/*.png'             # 이미지 파일
     - '!**/*.jpg'
     - '!**/*.jpeg'
