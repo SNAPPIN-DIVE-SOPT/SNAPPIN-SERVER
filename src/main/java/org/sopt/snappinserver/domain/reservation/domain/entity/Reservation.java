@@ -63,7 +63,7 @@ public class Reservation extends BaseEntity {
     private ReservationStatus reservationStatus;
 
     @Enumerated(EnumType.STRING)
-    private ReservationStatus canceledAt;
+    private ReservationStatus previousCancelStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Reservation(
@@ -75,7 +75,7 @@ public class Reservation extends BaseEntity {
         Integer peopleCount,
         String requestNote,
         ReservationStatus reservationStatus,
-        ReservationStatus canceledAt
+        ReservationStatus previousCancelStatus
     ) {
         this.product = product;
         this.user = user;
@@ -85,7 +85,7 @@ public class Reservation extends BaseEntity {
         this.peopleCount = peopleCount;
         this.requestNote = requestNote;
         this.reservationStatus = reservationStatus;
-        this.canceledAt = canceledAt;
+        this.previousCancelStatus = previousCancelStatus;
     }
 
     public static Reservation create(
@@ -97,7 +97,7 @@ public class Reservation extends BaseEntity {
         Integer peopleCount,
         String requestNote,
         ReservationStatus reservationStatus,
-        ReservationStatus canceledAt
+        ReservationStatus previousCancelStatus
     ) {
         validateReservation(
             product, user, place, reservedAt, durationTime, peopleCount, requestNote,
@@ -112,7 +112,7 @@ public class Reservation extends BaseEntity {
             .peopleCount(peopleCount)
             .requestNote(requestNote)
             .reservationStatus(reservationStatus)
-            .reservationStatus(canceledAt)
+            .previousCancelStatus(previousCancelStatus)
             .build();
     }
 
