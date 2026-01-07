@@ -11,7 +11,7 @@ tone_instructions: |
 # 리뷰 동작 방식 설정
 reviews:
   profile: 'assertive'        # 리뷰 성향
-  high_level_summary: true    # PR 전체 변경 사항 요약 생성
+  high_level_summary: false   # PR 전체 변경 사항 요약 생성
   review_status: true         # PR에 리뷰 상태 표시
   changed_files_summary: true # 변경된 파일 목록 및 요약 제공
   collapse_walkthrough: true  # 상세 워크스루는 기본적으로 접어서 표시(노이즈 감소)
