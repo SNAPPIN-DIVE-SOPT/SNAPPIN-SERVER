@@ -3,6 +3,7 @@ package org.sopt.snappinserver.api.product.controller;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.product.code.ProductSuccessCode;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsCursorResponse;
+import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.review.service.dto.response.ReviewPageResult;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -17,16 +18,25 @@ public class ProductController implements ProductApi {
     private final GetProductReviewsUseCase getProductReviewsUseCase;
 
     @Override
-    public ApiResponseBody<ProductReviewsCursorResponse, Void> getProductReviews(
-        Long productId,
-        Long cursor
-    ) {
+    public ApiResponseBody<ProductReviewsCursorResponse, ProductReviewsMetaResponse>
+    getProductReviews(Long productId, Long cursor) {
+
         ReviewPageResult result =
             getProductReviewsUseCase.getProductReviews(productId, cursor);
 
+        ProductReviewsCursorResponse data =
+            ProductReviewsCursorResponse.from(result);
+
+        ProductReviewsMetaResponse meta =
+            new ProductReviewsMetaResponse(
+                result.getNextCursor(),
+                result.isHasNext()
+            );
+
         return ApiResponseBody.ok(
             ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
-            ProductReviewsCursorResponse.from(result)
+            data,
+            meta
         );
     }
 }
