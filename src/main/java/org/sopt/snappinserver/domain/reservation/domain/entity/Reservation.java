@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -22,6 +24,7 @@ import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationErr
 import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationException;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.global.entity.BaseEntity;
+import org.springframework.cglib.core.Local;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -47,7 +50,7 @@ public class Reservation extends BaseEntity {
     private Place place;
 
     @Column(nullable = false)
-    private OffsetDateTime reservedAt;
+    private LocalDateTime reservedAt;
 
     @Column(nullable = false)
     private Integer durationTime;
@@ -58,23 +61,24 @@ public class Reservation extends BaseEntity {
     @Column(length = MAX_REQUEST_NOTE_LENGTH)
     private String requestNote;
 
-    private Integer extraPrice;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus reservationStatus;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus canceledAt;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Reservation(
         Product product,
         User user,
         Place place,
-        OffsetDateTime reservedAt,
+        LocalDateTime reservedAt,
         Integer durationTime,
         Integer peopleCount,
         String requestNote,
-        Integer extraPrice,
-        ReservationStatus reservationStatus
+        ReservationStatus reservationStatus,
+        ReservationStatus canceledAt
     ) {
         this.product = product;
         this.user = user;
@@ -83,20 +87,20 @@ public class Reservation extends BaseEntity {
         this.durationTime = durationTime;
         this.peopleCount = peopleCount;
         this.requestNote = requestNote;
-        this.extraPrice = extraPrice;
         this.reservationStatus = reservationStatus;
+        this.canceledAt = canceledAt;
     }
 
     public static Reservation create(
         Product product,
         User user,
         Place place,
-        OffsetDateTime reservedAt,
+        LocalDateTime reservedAt,
         Integer durationTime,
         Integer peopleCount,
         String requestNote,
-        Integer extraPrice,
-        ReservationStatus reservationStatus
+        ReservationStatus reservationStatus,
+        ReservationStatus canceledAt
     ) {
         validateReservation(
             product, user, place, reservedAt, durationTime, peopleCount, requestNote,
@@ -110,8 +114,8 @@ public class Reservation extends BaseEntity {
             .durationTime(durationTime)
             .peopleCount(peopleCount)
             .requestNote(requestNote)
-            .extraPrice(extraPrice)
             .reservationStatus(reservationStatus)
+            .reservationStatus(canceledAt)
             .build();
     }
 
@@ -119,7 +123,7 @@ public class Reservation extends BaseEntity {
         Product product,
         User user,
         Place place,
-        OffsetDateTime reservedAt,
+        LocalDateTime reservedAt,
         Integer durationTime,
         Integer peopleCount,
         String requestNote,
@@ -153,7 +157,7 @@ public class Reservation extends BaseEntity {
         }
     }
 
-    private static void validateReservedAtExists(OffsetDateTime reservedAt) {
+    private static void validateReservedAtExists(LocalDateTime reservedAt) {
         if (reservedAt == null) {
             throw new ReservationException(ReservationErrorCode.RESERVED_AT_REQUIRED);
         }
