@@ -19,6 +19,9 @@ public enum AuthErrorCode implements ErrorCode {
     USER_AGENT_LENGTH_TOO_LONG(400, "AUTH_400_008", "로그인 기기 정보(UserAgent) 길이는 512자 이하입니다."),
 
     // 401 UNAUTHORIZED
+    EXPIRED_JWT_TOKEN(401, "AUTH_401_001", "토큰이 만료되었습니다."),
+    INVALID_JWT_TOKEN(401, "AUTH_401_002", "잘못된 토큰입니다."),
+    INVALID_OAUTH_TOKEN(401, "AUTH_401_003", "카카오 로그인 접근 실패"),
 
     // 403 FORBIDDEN
 
