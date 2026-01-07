@@ -21,6 +21,7 @@ public enum ReservationErrorCode implements ErrorCode {
     ADDITIONAL_PAYMENT_NAME_REQUIRED(400, "RESERVATION_400_010", "추가 요청 금액명은 필수입니다."),
     ADDITIONAL_PAYMENT_NAME_TOO_LONG(400, "RESERVATION_400_011", "추가 요청 금액명 길이는 100자 이하입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_REQUIRED(400, "RESERVATION_400_012", "추가 요청 금액은 필수입니다."),
+    ADDITIONAL_PAYMENT_AMOUNT_TOO_SMALL(400, "RESERVATION_400_013", "추가 요청 금액은 10원 이상이어야 합니다."),
 
     // 401 UNAUTHORIZED
 

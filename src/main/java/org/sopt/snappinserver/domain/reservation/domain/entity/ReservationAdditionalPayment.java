@@ -21,6 +21,7 @@ import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationExc
 public class ReservationAdditionalPayment {
 
     private static final int MAX_NAME_LENGTH = 100;
+    private static final int MIN_AMOUNT_VALUE = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -63,7 +64,7 @@ public class ReservationAdditionalPayment {
     ) {
         validateReservationExists(reservation);
         validateName(name);
-        validateAmountExists(amount);
+        validateAmount(amount);
     }
 
     private static void validateReservationExists(Reservation reservation) {
@@ -89,9 +90,22 @@ public class ReservationAdditionalPayment {
         }
     }
 
+    private static void validateAmount(Integer amount) {
+        validateAmountExists(amount);
+        validateMinAmount(amount);
+    }
+
     private static void validateAmountExists(Integer amount) {
         if (amount == null) {
             throw new ReservationException(ReservationErrorCode.ADDITIONAL_PAYMENT_AMOUNT_REQUIRED);
+        }
+    }
+
+    private static void validateMinAmount(Integer amount) {
+        if (amount < MIN_AMOUNT_VALUE) {
+            throw new ReservationException(
+                ReservationErrorCode.ADDITIONAL_PAYMENT_AMOUNT_TOO_SMALL
+            );
         }
     }
 
