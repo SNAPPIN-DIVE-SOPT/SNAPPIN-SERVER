@@ -18,8 +18,8 @@ public class ProductReviewsMetaResponse {
 
     public static ProductReviewsMetaResponse from(ProductReviewPageResult result) {
         return new ProductReviewsMetaResponse(
-            result.getNextCursor(),
-            result.isHasNext()
+            result.nextCursor(),
+            result.hasNext()
         );
     }
 }

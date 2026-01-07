@@ -17,7 +17,7 @@ public class ProductReviewsResponse {
 
     public static ProductReviewsResponse from(ProductReviewPageResult result) {
         return new ProductReviewsResponse(
-            result.getReviews().stream()
+            result.reviews().stream()
                 .map(ProductReviewResponse::from)
                 .toList()
         );
