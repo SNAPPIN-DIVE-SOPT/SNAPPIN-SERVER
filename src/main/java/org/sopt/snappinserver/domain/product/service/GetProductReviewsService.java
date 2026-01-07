@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetProductReviewsService implements GetProductReviewsUseCase {
 
+    // 페이지 크기 설정
     private static final int PAGE_SIZE = 5;
 
     private final ProductRepository productRepository;
@@ -27,6 +28,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
     @Override
     public ReviewPageResult getProductReviews(Long productId, Long cursor) {
 
+        // 상품 및 커서 유효성 검증
         if (!productRepository.existsById(productId)) {
             throw new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND);
         }
@@ -35,23 +37,27 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
             throw new ProductException(ProductErrorCode.INVALID_CURSOR);
         }
 
+        // 커서 기준으로 리뷰 조회 (limit + 1)
         List<Review> reviews =
                 (cursor == null)
                         ? reviewRepository.findTop6ByReservationProductIdOrderByIdDesc(productId)
                         : reviewRepository
                         .findTop6ByReservationProductIdAndIdLessThanOrderByIdDesc(productId, cursor);
 
+        // 다음 페이지 존재 여부 판단
         boolean hasNext = reviews.size() > PAGE_SIZE;
 
         if (hasNext) {
             reviews = reviews.subList(0, PAGE_SIZE);
         }
 
+        // 엔티티를 도메인 결과 DTO로 변환
         List<ReviewResult> results =
                 reviews.stream()
                         .map(this::toResult)
                         .toList();
 
+        // 다음 커서 계산
         Long nextCursor = hasNext
                 ? reviews.get(reviews.size() - 1).getId()
                 : null;
