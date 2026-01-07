@@ -29,13 +29,9 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
     public ReviewPageResult getProductReviews(Long productId, Long cursor) {
 
         // 상품 및 커서 유효성 검증
-        if (!productRepository.existsById(productId)) {
-            throw new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND);
-        }
+        validateProductExist(productId);
 
-        if (cursor != null && cursor < MIN_CURSOR_VALUE) {
-            throw new ProductException(ProductErrorCode.INVALID_CURSOR);
-        }
+        validateCursorSize(cursor);
 
         // 커서 기준으로 리뷰 조회 (limit + 1)
         List<Review> reviews =
@@ -63,6 +59,18 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
             : null;
 
         return new ReviewPageResult(results, nextCursor, hasNext);
+    }
+
+    private void validateProductExist(Long productId) {
+        if (!productRepository.existsById(productId)) {
+            throw new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND);
+        }
+    }
+
+    private static void validateCursorSize(Long cursor) {
+        if (cursor != null && cursor < MIN_CURSOR_VALUE) {
+            throw new ProductException(ProductErrorCode.INVALID_CURSOR);
+        }
     }
 
     private ReviewResult toResult(Review review) {
