@@ -1,9 +1,9 @@
 package org.sopt.snappinserver.domain.product.service;
 
-import org.sopt.snappinserver.api.product.dto.response.ProductReviewsCursorResponse;
+import org.sopt.snappinserver.domain.review.service.dto.response.ReviewPageResult;
 
 public interface GetProductReviewsUseCase {
-    ProductReviewsCursorResponse getProductReviews(
+    ReviewPageResult getProductReviews(
             Long productId,
             Long cursor
     );
