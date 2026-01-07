@@ -1,10 +1,9 @@
 package org.sopt.snappinserver.api.product.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.category.code.CategorySuccessCode;
 import org.sopt.snappinserver.api.product.code.ProductSuccessCode;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsCursorResponse;
-import org.sopt.snappinserver.domain.product.service.GetProductReviewsUseCase;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.review.service.dto.response.ReviewPageResult;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.RequestMapping;

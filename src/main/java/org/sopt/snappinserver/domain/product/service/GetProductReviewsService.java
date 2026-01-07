@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.product.domain.exception.ProductErrorCode;
 import org.sopt.snappinserver.domain.product.domain.exception.ProductException;
 import org.sopt.snappinserver.domain.product.repository.ProductRepository;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
