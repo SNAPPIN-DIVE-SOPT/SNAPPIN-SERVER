@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.review.service.dto.response;
+package org.sopt.snappinserver.domain.product.service.dto.response;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -11,7 +11,7 @@ import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 
 @Getter
 @AllArgsConstructor
-public class ReviewResult {
+public class ProductReviewResult {
 
     private Long id;
     private String reviewer;
@@ -20,8 +20,8 @@ public class ReviewResult {
     private List<String> images;
     private String content;
 
-    public static ReviewResult from(Review review) {
-        return new ReviewResult(
+    public static ProductReviewResult from(Review review) {
+        return new ProductReviewResult(
             review.getId(),
             extractReviewer(review),
             review.getRating(),
@@ -31,9 +31,9 @@ public class ReviewResult {
         );
     }
 
-    public static List<ReviewResult> of(List<Review> reviews) {
+    public static List<ProductReviewResult> of(List<Review> reviews) {
         return reviews.stream()
-            .map(ReviewResult::from)
+            .map(ProductReviewResult::from)
             .toList();
     }
     private static String extractReviewer(Review review) {

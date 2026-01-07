@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.sopt.snappinserver.domain.review.service.dto.response.ReviewResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewResult;
 
 @Getter
 @AllArgsConstructor
@@ -30,7 +30,7 @@ public class ProductReviewResponse {
     @Schema(description = "리뷰 내용", example = "리뷰 내용")
     private String content;
 
-    public static ProductReviewResponse from(ReviewResult result) {
+    public static ProductReviewResponse from(ProductReviewResult result) {
         return new ProductReviewResponse(
             result.getId(),
             result.getReviewer(),

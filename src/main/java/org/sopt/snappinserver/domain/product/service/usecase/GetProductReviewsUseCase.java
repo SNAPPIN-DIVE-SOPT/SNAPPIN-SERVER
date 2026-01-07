@@ -1,10 +1,10 @@
 package org.sopt.snappinserver.domain.product.service.usecase;
 
-import org.sopt.snappinserver.domain.review.service.dto.response.ReviewPageResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 
 public interface GetProductReviewsUseCase {
 
-    ReviewPageResult getProductReviews(
+    ProductReviewPageResult getProductReviews(
         Long productId,
         Long cursor
     );

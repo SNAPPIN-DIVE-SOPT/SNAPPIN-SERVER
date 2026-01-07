@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.review.service.dto.response;
+package org.sopt.snappinserver.domain.product.service.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,9 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class ReviewPageResult {
+public class ProductReviewPageResult {
 
-    private List<ReviewResult> reviews;
+    private List<ProductReviewResult> reviews;
     private Long nextCursor;
     private boolean hasNext;
 }

@@ -1,7 +1,5 @@
 package org.sopt.snappinserver.domain.product.service;
 
-import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.product.domain.exception.ProductErrorCode;
@@ -9,10 +7,9 @@ import org.sopt.snappinserver.domain.product.domain.exception.ProductException;
 import org.sopt.snappinserver.domain.product.repository.ProductRepository;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.review.domain.entity.Review;
-import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
-import org.sopt.snappinserver.domain.review.service.dto.response.ReviewPageResult;
-import org.sopt.snappinserver.domain.review.service.dto.response.ReviewResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewResult;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +23,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
     private final ReviewRepository reviewRepository;
 
     @Override
-    public ReviewPageResult getProductReviews(Long productId, Long cursor) {
+    public ProductReviewPageResult getProductReviews(Long productId, Long cursor) {
 
         validateProductExist(productId);
         validateCursorSize(cursor);
@@ -43,13 +40,13 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
             reviews = reviews.subList(0, PAGE_SIZE);
         }
 
-        List<ReviewResult> results = ReviewResult.of(reviews);
+        List<ProductReviewResult> results = ProductReviewResult.of(reviews);
 
         Long nextCursor = hasNext
             ? reviews.get(reviews.size() - 1).getId()
             : null;
 
-        return new ReviewPageResult(results, nextCursor, hasNext);
+        return new ProductReviewPageResult(results, nextCursor, hasNext);
     }
 
     private void validateProductExist(Long productId) {

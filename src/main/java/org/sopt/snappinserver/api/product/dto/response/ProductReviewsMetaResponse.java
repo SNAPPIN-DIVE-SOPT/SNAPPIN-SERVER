@@ -3,7 +3,7 @@ package org.sopt.snappinserver.api.product.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.sopt.snappinserver.domain.review.service.dto.response.ReviewPageResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 
 @Schema(description = "상품 리뷰 커서 기반 조회 메타 정보")
 @Getter
@@ -16,7 +16,7 @@ public class ProductReviewsMetaResponse {
     @Schema(description = "다음 페이지 존재 여부", example = "true")
     private boolean hasNext;
 
-    public static ProductReviewsMetaResponse from(ReviewPageResult result) {
+    public static ProductReviewsMetaResponse from(ProductReviewPageResult result) {
         return new ProductReviewsMetaResponse(
             result.getNextCursor(),
             result.isHasNext()
