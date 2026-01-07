@@ -234,26 +234,26 @@ public class Product extends BaseEntity {
         }
     }
 
-    private static void validateTime(LocalDateTime starts_at, LocalDateTime ends_at) {
-        validateStartsAtExists(starts_at);
-        validateEndsAtExists(ends_at);
-        validateTimeOrder(starts_at, ends_at);
+    private static void validateTime(LocalDateTime startsAt, LocalDateTime endsAt) {
+        validateStartsAtExists(startsAt);
+        validateEndsAtExists(endsAt);
+        validateTimeOrder(startsAt, endsAt);
     }
 
-    private static void validateStartsAtExists(LocalDateTime starts_at) {
-        if (starts_at == null) {
+    private static void validateStartsAtExists(LocalDateTime startsAt) {
+        if (startsAt == null) {
             throw new ProductException(ProductErrorCode.STARTS_AT_REQUIRED);
         }
     }
 
-    private static void validateEndsAtExists(LocalDateTime ends_at) {
-        if (ends_at == null) {
+    private static void validateEndsAtExists(LocalDateTime endsAt) {
+        if (endsAt == null) {
             throw new ProductException(ProductErrorCode.ENDS_AT_REQUIRED);
         }
     }
 
-    private static void validateTimeOrder(LocalDateTime starts_at, LocalDateTime ends_at) {
-        if (starts_at.isAfter(ends_at) || starts_at.isEqual(ends_at)) {
+    private static void validateTimeOrder(LocalDateTime startsAt, LocalDateTime endsAt) {
+        if (startsAt.isAfter(endsAt) || startsAt.isEqual(endsAt)) {
             throw new ProductException(ProductErrorCode.STARTS_AT_AFTER_ENDS_AT);
         }
     }
