@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class GetProductReviewsService implements GetProductReviewsUseCase {
 
-    // 페이지 크기 설정
     private static final int PAGE_SIZE = 5;
+    private static final long MIN_CURSOR_VALUE = 1L;
 
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
@@ -33,7 +33,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
             throw new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND);
         }
 
-        if (cursor != null && cursor < 0) {
+        if (cursor != null && cursor < MIN_CURSOR_VALUE) {
             throw new ProductException(ProductErrorCode.INVALID_CURSOR);
         }
 
