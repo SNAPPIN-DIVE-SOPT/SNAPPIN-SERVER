@@ -2,13 +2,9 @@ package org.sopt.snappinserver.api.product.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.sopt.snappinserver.domain.review.domain.entity.Review;
-import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.service.dto.response.ReviewResult;
 
 @Getter
