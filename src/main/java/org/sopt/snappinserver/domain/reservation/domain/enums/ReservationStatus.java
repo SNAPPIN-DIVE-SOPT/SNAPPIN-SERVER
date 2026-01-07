@@ -13,6 +13,7 @@ public enum ReservationStatus {
     PAYMENT_COMPLETED("결제 완료"),
     RESERVATION_CONFIRMED("예약 확정"),
     RESERVATION_CANCELED("예약 취소"),
+    RESERVATION_REFUSED("예약 거절"),
     SHOOT_COMPLETED("촬영 완료");
 
     private final String status;

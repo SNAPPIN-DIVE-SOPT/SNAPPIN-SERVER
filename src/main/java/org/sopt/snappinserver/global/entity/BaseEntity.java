@@ -15,10 +15,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public abstract class BaseEntity {
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false, nullable = false)
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "created_at", updatable = false, nullable = false)
     protected Instant createdAt;
 
     @LastModifiedDate
-    @Column(name = "updated_at", nullable = false)
+    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", name = "updated_at", nullable = false)
     protected Instant updatedAt;
 }

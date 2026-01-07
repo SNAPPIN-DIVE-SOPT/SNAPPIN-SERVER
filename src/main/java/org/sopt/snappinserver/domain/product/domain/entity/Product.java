@@ -10,7 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,11 +64,11 @@ public class Product extends BaseEntity {
     @Column(length = MAX_CAUTION_LENGTH)
     private String caution;
 
-    @Column(nullable = false)
-    private OffsetDateTime startsAt;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
+    private LocalDateTime startsAt;
 
-    @Column(nullable = false)
-    private OffsetDateTime endsAt;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
+    private LocalDateTime endsAt;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Product(
@@ -80,8 +80,8 @@ public class Product extends BaseEntity {
         String equipment,
         String processDescription,
         String caution,
-        OffsetDateTime startsAt,
-        OffsetDateTime endsAt
+        LocalDateTime startsAt,
+        LocalDateTime endsAt
     ) {
         this.photographer = photographer;
         this.title = title;
@@ -104,8 +104,8 @@ public class Product extends BaseEntity {
         String equipment,
         String processDescription,
         String caution,
-        OffsetDateTime startsAt,
-        OffsetDateTime endsAt
+        LocalDateTime startsAt,
+        LocalDateTime endsAt
     ) {
         validateProduct(
             photographer,
@@ -142,8 +142,8 @@ public class Product extends BaseEntity {
         String equipment,
         String processDescription,
         String caution,
-        OffsetDateTime startsAt,
-        OffsetDateTime endsAt
+        LocalDateTime startsAt,
+        LocalDateTime endsAt
     ) {
         validatePhotographerExists(photographer);
         validateTitle(title);
@@ -234,26 +234,26 @@ public class Product extends BaseEntity {
         }
     }
 
-    private static void validateTime(OffsetDateTime starts_at, OffsetDateTime ends_at) {
-        validateStartsAtExists(starts_at);
-        validateEndsAtExists(ends_at);
-        validateTimeOrder(starts_at, ends_at);
+    private static void validateTime(LocalDateTime startsAt, LocalDateTime endsAt) {
+        validateStartsAtExists(startsAt);
+        validateEndsAtExists(endsAt);
+        validateTimeOrder(startsAt, endsAt);
     }
 
-    private static void validateStartsAtExists(OffsetDateTime starts_at) {
-        if (starts_at == null) {
+    private static void validateStartsAtExists(LocalDateTime startsAt) {
+        if (startsAt == null) {
             throw new ProductException(ProductErrorCode.STARTS_AT_REQUIRED);
         }
     }
 
-    private static void validateEndsAtExists(OffsetDateTime ends_at) {
-        if (ends_at == null) {
+    private static void validateEndsAtExists(LocalDateTime endsAt) {
+        if (endsAt == null) {
             throw new ProductException(ProductErrorCode.ENDS_AT_REQUIRED);
         }
     }
 
-    private static void validateTimeOrder(OffsetDateTime starts_at, OffsetDateTime ends_at) {
-        if (starts_at.isAfter(ends_at) || starts_at.isEqual(ends_at)) {
+    private static void validateTimeOrder(LocalDateTime startsAt, LocalDateTime endsAt) {
+        if (startsAt.isAfter(endsAt) || startsAt.isEqual(endsAt)) {
             throw new ProductException(ProductErrorCode.STARTS_AT_AFTER_ENDS_AT);
         }
     }

@@ -10,7 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -46,8 +46,8 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    @Column(nullable = false)
-    private OffsetDateTime reservedAt;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
+    private LocalDateTime reservedAt;
 
     @Column(nullable = false)
     private Integer durationTime;
@@ -58,23 +58,24 @@ public class Reservation extends BaseEntity {
     @Column(length = MAX_REQUEST_NOTE_LENGTH)
     private String requestNote;
 
-    private Integer extraPrice;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ReservationStatus reservationStatus;
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus previousCancelStatus;
 
     @Builder(access = AccessLevel.PRIVATE)
     private Reservation(
         Product product,
         User user,
         Place place,
-        OffsetDateTime reservedAt,
+        LocalDateTime reservedAt,
         Integer durationTime,
         Integer peopleCount,
         String requestNote,
-        Integer extraPrice,
-        ReservationStatus reservationStatus
+        ReservationStatus reservationStatus,
+        ReservationStatus previousCancelStatus
     ) {
         this.product = product;
         this.user = user;
@@ -83,20 +84,20 @@ public class Reservation extends BaseEntity {
         this.durationTime = durationTime;
         this.peopleCount = peopleCount;
         this.requestNote = requestNote;
-        this.extraPrice = extraPrice;
         this.reservationStatus = reservationStatus;
+        this.previousCancelStatus = previousCancelStatus;
     }
 
     public static Reservation create(
         Product product,
         User user,
         Place place,
-        OffsetDateTime reservedAt,
+        LocalDateTime reservedAt,
         Integer durationTime,
         Integer peopleCount,
         String requestNote,
-        Integer extraPrice,
-        ReservationStatus reservationStatus
+        ReservationStatus reservationStatus,
+        ReservationStatus previousCancelStatus
     ) {
         validateReservation(
             product, user, place, reservedAt, durationTime, peopleCount, requestNote,
@@ -110,8 +111,8 @@ public class Reservation extends BaseEntity {
             .durationTime(durationTime)
             .peopleCount(peopleCount)
             .requestNote(requestNote)
-            .extraPrice(extraPrice)
             .reservationStatus(reservationStatus)
+            .previousCancelStatus(previousCancelStatus)
             .build();
     }
 
@@ -119,7 +120,7 @@ public class Reservation extends BaseEntity {
         Product product,
         User user,
         Place place,
-        OffsetDateTime reservedAt,
+        LocalDateTime reservedAt,
         Integer durationTime,
         Integer peopleCount,
         String requestNote,
@@ -153,7 +154,7 @@ public class Reservation extends BaseEntity {
         }
     }
 
-    private static void validateReservedAtExists(OffsetDateTime reservedAt) {
+    private static void validateReservedAtExists(LocalDateTime reservedAt) {
         if (reservedAt == null) {
             throw new ReservationException(ReservationErrorCode.RESERVED_AT_REQUIRED);
         }
