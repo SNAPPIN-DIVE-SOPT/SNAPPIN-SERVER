@@ -2,14 +2,12 @@ package org.sopt.snappinserver.api.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.sopt.snappinserver.api.auth.dto.request.LoginRequest;
 import org.sopt.snappinserver.api.auth.dto.response.LoginResponse;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "01 - Auth", description = "인증/인가 관련 API")
 public interface AuthApi {
