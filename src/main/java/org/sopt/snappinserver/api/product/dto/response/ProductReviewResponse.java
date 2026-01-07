@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
+import org.sopt.snappinserver.domain.review.service.dto.response.ReviewResult;
 
 @Getter
 @AllArgsConstructor
@@ -33,33 +34,14 @@ public class ProductReviewResponse {
     @Schema(description = "리뷰 내용", example = "리뷰 내용")
     private String content;
 
-    public static ProductReviewResponse from(Review review) {
+    public static ProductReviewResponse from(ReviewResult result) {
         return new ProductReviewResponse(
-                review.getId(),
-                getReviewerFrom(review),
-                review.getRating(),
-                getCreatedDateFrom(review),
-                getImagesFrom(review),
-                review.getContent()
+                result.getId(),
+                result.getReviewer(),
+                result.getRating(),
+                result.getCreatedAt(),
+                result.getImages(),
+                result.getContent()
         );
-    }
-
-    private static String getReviewerFrom(Review review) {
-        return review.getReservation()
-                .getUser()
-                .getName();
-    }
-
-    private static LocalDate getCreatedDateFrom(Review review) {
-        return review.getCreatedAt()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-    }
-
-    private static List<String> getImagesFrom(Review review) {
-        return review.getReviewPhotos().stream()
-                .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
-                .map(rp -> rp.getPhoto().getImageUrl())
-                .toList();
     }
 }
