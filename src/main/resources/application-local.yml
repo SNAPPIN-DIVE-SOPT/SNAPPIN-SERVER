@@ -1,4 +1,8 @@
 spring:
+  jackson:
+    time-zone: Asia/Seoul
+    property-naming-strategy: SNAKE_CASE
+
   datasource:
     url: ${DB_URL}
     driver-class-name: org.postgresql.Driver
@@ -19,3 +23,12 @@ spring:
         order_updates: true
 
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+kakao:
+  auth:
+    client: ${KAKAO_CLIENT_ID}
+    redirect: ${KAKAO_REDIRECT_URI}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration_time: ${JWT_EXPIRATION_TIME}

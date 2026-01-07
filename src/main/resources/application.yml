@@ -4,6 +4,7 @@ spring:
 
   jackson:
     time-zone: Asia/Seoul
+    property-naming-strategy: SNAKE_CASE
 
   batch:
     jdbc:
@@ -16,3 +17,12 @@ springdoc:
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
+
+kakao:
+  auth:
+    client: ${KAKAO_CLIENT_ID}
+    redirect: ${KAKAO_REDIRECT_URI}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration_time: ${JWT_EXPIRATION_TIME}
