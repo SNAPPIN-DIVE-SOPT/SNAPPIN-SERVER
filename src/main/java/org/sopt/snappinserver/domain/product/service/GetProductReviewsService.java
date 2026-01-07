@@ -28,9 +28,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
     @Override
     public ReviewPageResult getProductReviews(Long productId, Long cursor) {
 
-        // 상품 및 커서 유효성 검증
         validateProductExist(productId);
-
         validateCursorSize(cursor);
 
         // 커서 기준으로 리뷰 조회 (limit + 1)
@@ -40,20 +38,13 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
                 : reviewRepository
                     .findTop6ByReservationProductIdAndIdLessThanOrderByIdDesc(productId, cursor);
 
-        // 다음 페이지 존재 여부 판단
         boolean hasNext = reviews.size() > PAGE_SIZE;
-
         if (hasNext) {
             reviews = reviews.subList(0, PAGE_SIZE);
         }
 
-        // 엔티티를 도메인 결과 DTO로 변환
-        List<ReviewResult> results =
-            reviews.stream()
-                .map(this::toResult)
-                .toList();
+        List<ReviewResult> results = ReviewResult.of(reviews);
 
-        // 다음 커서 계산
         Long nextCursor = hasNext
             ? reviews.get(reviews.size() - 1).getId()
             : null;
@@ -71,21 +62,5 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         if (cursor != null && cursor < MIN_CURSOR_VALUE) {
             throw new ProductException(ProductErrorCode.INVALID_CURSOR);
         }
-    }
-
-    private ReviewResult toResult(Review review) {
-        return new ReviewResult(
-            review.getId(),
-            review.getReservation().getUser().getName(),
-            review.getRating(),
-            review.getCreatedAt()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate(),
-            review.getReviewPhotos().stream()
-                .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
-                .map(rp -> rp.getPhoto().getImageUrl())
-                .toList(),
-            review.getContent()
-        );
     }
 }
