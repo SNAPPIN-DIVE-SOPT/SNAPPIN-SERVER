@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ReviewResult {
+
     private Long id;
     private String reviewer;
     private int rating;

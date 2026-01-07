@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ProductApi {
 
     @Operation(
-            summary = "상품 리뷰 목록 조회",
-            description = "커서 기반 페이지네이션 방식으로 상품 리뷰 목록을 조회합니다."
+        summary = "상품 리뷰 목록 조회",
+        description = "커서 기반 페이지네이션 방식으로 상품 리뷰 목록을 조회합니다."
     )
     @GetMapping("/{productId}/reviews")
     ApiResponseBody<ProductReviewsCursorResponse, Void> getProductReviews(
-            @PathVariable Long productId,
-            @RequestParam(required = false) Long cursor
+        @PathVariable Long productId,
+        @RequestParam(required = false) Long cursor
     );
 }

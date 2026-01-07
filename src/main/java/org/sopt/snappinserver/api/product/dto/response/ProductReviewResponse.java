@@ -32,12 +32,12 @@ public class ProductReviewResponse {
 
     public static ProductReviewResponse from(ReviewResult result) {
         return new ProductReviewResponse(
-                result.getId(),
-                result.getReviewer(),
-                result.getRating(),
-                result.getCreatedAt(),
-                result.getImages(),
-                result.getContent()
+            result.getId(),
+            result.getReviewer(),
+            result.getRating(),
+            result.getCreatedAt(),
+            result.getImages(),
+            result.getContent()
         );
     }
 }

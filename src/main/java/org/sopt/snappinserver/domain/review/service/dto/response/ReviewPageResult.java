@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class ReviewPageResult {
+
     private List<ReviewResult> reviews;
     private Long nextCursor;
     private boolean hasNext;

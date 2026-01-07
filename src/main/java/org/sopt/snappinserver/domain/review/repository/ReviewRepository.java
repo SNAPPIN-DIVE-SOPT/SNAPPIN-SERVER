@@ -8,14 +8,15 @@ import java.util.List;
 
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
+
     // 첫 페이지
     List<Review> findTop6ByReservationProductIdOrderByIdDesc(
-            Long productId
+        Long productId
     );
 
     // 커서 이후 페이지
     List<Review> findTop6ByReservationProductIdAndIdLessThanOrderByIdDesc(
-            Long productId,
-            Long cursor
+        Long productId,
+        Long cursor
     );
 }

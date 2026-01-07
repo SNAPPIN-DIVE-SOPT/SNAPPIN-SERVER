@@ -39,10 +39,10 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
 
         // 커서 기준으로 리뷰 조회 (limit + 1)
         List<Review> reviews =
-                (cursor == null)
-                        ? reviewRepository.findTop6ByReservationProductIdOrderByIdDesc(productId)
-                        : reviewRepository
-                        .findTop6ByReservationProductIdAndIdLessThanOrderByIdDesc(productId, cursor);
+            (cursor == null)
+                ? reviewRepository.findTop6ByReservationProductIdOrderByIdDesc(productId)
+                : reviewRepository
+                    .findTop6ByReservationProductIdAndIdLessThanOrderByIdDesc(productId, cursor);
 
         // 다음 페이지 존재 여부 판단
         boolean hasNext = reviews.size() > PAGE_SIZE;
@@ -53,31 +53,31 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
 
         // 엔티티를 도메인 결과 DTO로 변환
         List<ReviewResult> results =
-                reviews.stream()
-                        .map(this::toResult)
-                        .toList();
+            reviews.stream()
+                .map(this::toResult)
+                .toList();
 
         // 다음 커서 계산
         Long nextCursor = hasNext
-                ? reviews.get(reviews.size() - 1).getId()
-                : null;
+            ? reviews.get(reviews.size() - 1).getId()
+            : null;
 
         return new ReviewPageResult(results, nextCursor, hasNext);
     }
 
     private ReviewResult toResult(Review review) {
         return new ReviewResult(
-                review.getId(),
-                review.getReservation().getUser().getName(),
-                review.getRating(),
-                review.getCreatedAt()
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate(),
-                review.getReviewPhotos().stream()
-                        .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
-                        .map(rp -> rp.getPhoto().getImageUrl())
-                        .toList(),
-                review.getContent()
+            review.getId(),
+            review.getReservation().getUser().getName(),
+            review.getRating(),
+            review.getCreatedAt()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate(),
+            review.getReviewPhotos().stream()
+                .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
+                .map(rp -> rp.getPhoto().getImageUrl())
+                .toList(),
+            review.getContent()
         );
     }
 }

@@ -18,15 +18,15 @@ public class ProductController implements ProductApi {
 
     @Override
     public ApiResponseBody<ProductReviewsCursorResponse, Void> getProductReviews(
-            Long productId,
-            Long cursor
+        Long productId,
+        Long cursor
     ) {
         ReviewPageResult result =
-                getProductReviewsUseCase.getProductReviews(productId, cursor);
+            getProductReviewsUseCase.getProductReviews(productId, cursor);
 
         return ApiResponseBody.ok(
-                ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
-                ProductReviewsCursorResponse.from(result)
+            ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
+            ProductReviewsCursorResponse.from(result)
         );
     }
 }

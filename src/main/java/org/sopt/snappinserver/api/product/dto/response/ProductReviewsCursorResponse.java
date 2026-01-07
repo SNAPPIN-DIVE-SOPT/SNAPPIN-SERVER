@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Schema(description = "상품 리뷰 커서 기반 목록 응답 DTO")
 public class ProductReviewsCursorResponse {
+
     @Schema(description = "상품 리뷰 목록")
     private List<ProductReviewResponse> reviews;
 
@@ -22,11 +23,11 @@ public class ProductReviewsCursorResponse {
 
     public static ProductReviewsCursorResponse from(ReviewPageResult result) {
         return new ProductReviewsCursorResponse(
-                result.getReviews().stream()
-                        .map(ProductReviewResponse::from)
-                        .toList(),
-                result.getNextCursor(),
-                result.isHasNext()
+            result.getReviews().stream()
+                .map(ProductReviewResponse::from)
+                .toList(),
+            result.getNextCursor(),
+            result.isHasNext()
         );
     }
 }
