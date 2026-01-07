@@ -27,12 +27,13 @@ public enum ProductErrorCode implements ErrorCode {
     PRODUCT_OPTION_CATEGORY_REQUIRED(400, "PRODUCT_400_016", ""),
     ANSWER_REQUIRED(400, "PRODUCT_400_017", ""),
     ANSWER_TOO_LONG(400, "PRODUCT_400_018", ""),
-
+    INVALID_CURSOR(400, "PRODUCT_400_019", "유효하지 않은 커서 값입니다."),
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
 
-    ;
+    // 404 NOT FOUND
+    PRODUCT_NOT_FOUND(404, "PRODUCT_404_001", "존재하지 않는 상품입니다.");
 
     private final int status;
     private final String code;
