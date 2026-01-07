@@ -11,8 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +22,6 @@ import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationErr
 import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationException;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.global.entity.BaseEntity;
-import org.springframework.cglib.core.Local;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,7 +46,7 @@ public class Reservation extends BaseEntity {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
     private LocalDateTime reservedAt;
 
     @Column(nullable = false)

@@ -64,10 +64,10 @@ public class Product extends BaseEntity {
     @Column(length = MAX_CAUTION_LENGTH)
     private String caution;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
     private LocalDateTime startsAt;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
     private LocalDateTime endsAt;
 
     @Builder(access = AccessLevel.PRIVATE)

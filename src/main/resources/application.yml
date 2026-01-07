@@ -2,6 +2,9 @@ spring:
   application:
     name: snappin
 
+  jackson:
+    time-zone: Asia/Seoul
+
   batch:
     jdbc:
       initialize-schema: never
