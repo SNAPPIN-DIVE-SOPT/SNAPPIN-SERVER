@@ -15,12 +15,14 @@ import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
     servers = {
-        @Server(url="http://localhost:8080", description = "로컬 서버 주소")
+        @Server(url = "https://dev-api.snapping.co.kr", description = "dev 서버 주소"),
+        @Server(url = "http://localhost:8080", description = "로컬 서버 주소")
     }
 )
 @Configuration
 public class SwaggerConfig {
 
+    private static final String DEV_ORIGIN = "https://dev-api.snapping.co.kr";
     private static final String LOCAL_ORIGIN = "http://localhost:8080";
 
     @Bean
@@ -80,6 +82,11 @@ public class SwaggerConfig {
 
             List<io.swagger.v3.oas.models.servers.Server> servers = new ArrayList<>();
 
+            servers.add(
+                new io.swagger.v3.oas.models.servers.Server()
+                    .url(DEV_ORIGIN + fullPrefix)
+                    .description("dev")
+            );
             servers.add(
                 new io.swagger.v3.oas.models.servers.Server()
                     .url(LOCAL_ORIGIN + fullPrefix)
