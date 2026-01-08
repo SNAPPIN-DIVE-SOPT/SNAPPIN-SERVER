@@ -24,10 +24,12 @@ public enum AuthErrorCode implements ErrorCode {
     EXPIRED_JWT_TOKEN(401, "AUTH_401_001", "토큰이 만료되었습니다."),
     INVALID_JWT_TOKEN(401, "AUTH_401_002", "잘못된 토큰입니다."),
     INVALID_OAUTH_TOKEN(401, "AUTH_401_003", "카카오 로그인 접근 실패"),
+    INVALID_REFRESH_TOKEN(401, "AUTH_401_004", "잘못된 리프레시 토큰입니다."),
 
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
+    USER_NOT_FOUND(404, "AUTH_404_001", "해당 유저를 찾을 수 없습니다."),
 
     ;
 
