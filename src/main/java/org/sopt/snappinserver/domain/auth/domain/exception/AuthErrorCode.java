@@ -18,7 +18,7 @@ public enum AuthErrorCode implements ErrorCode {
     EXPIRES_AT_REQUIRED(400, "AUTH_400_007", "토큰 만료일은 필수입니다."),
     USER_AGENT_LENGTH_TOO_LONG(400, "AUTH_400_008", "로그인 기기 정보(UserAgent) 길이는 512자 이하입니다."),
     SHA_256_UNSUPPORTED(400, "AUTH_400_009", "SHA256 해싱은 지원되지 않습니다."),
-    KAKAO_PROFILE_NOT_PROVIDED(400, "AUT_400_010", "카카오 프로필이 정상적으로 제공되지 않았습니다."),
+    KAKAO_PROFILE_NOT_PROVIDED(400, "AUTH_400_010", "카카오 프로필이 정상적으로 제공되지 않았습니다."),
 
     // 401 UNAUTHORIZED
     EXPIRED_JWT_TOKEN(401, "AUTH_401_001", "토큰이 만료되었습니다."),
