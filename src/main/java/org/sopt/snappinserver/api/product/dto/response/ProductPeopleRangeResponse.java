@@ -9,6 +9,7 @@ import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleR
 @AllArgsConstructor
 @Schema(description = "촬영 가능 인원 수 조회 응답 DTO")
 public class ProductPeopleRangeResponse {
+
     @Schema(description = "최소 인원", example = "1")
     private int minPeople;
 
