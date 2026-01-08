@@ -31,7 +31,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         select review
         from Review review
         join fetch review.reservation reservation
-        join fetch reservation.user u
+        join fetch reservation.user user
         where reservation.product.id = :productId
           and review.id < :cursor
         order by review.id desc
