@@ -28,6 +28,7 @@ public class ReissueTokenService implements ReissueTokenUseCase {
         RefreshTokenValue refreshTokenValue = refreshTokenStore.find(refreshToken);
         validateRefreshTokenValueExists(refreshTokenValue);
 
+        authTokenManager.validateUserAgent(userAgent, refreshTokenValue.userAgentHash());
         User user = userRepository.findById(refreshTokenValue.userId())
             .orElseThrow(() -> new AuthException(AuthErrorCode.USER_NOT_FOUND));
         refreshTokenStore.delete(refreshToken);

@@ -50,6 +50,25 @@ public class AuthTokenManager {
         );
     }
 
+    public void validateUserAgent(String requestUserAgent, String userAgentHash) {
+        if (userAgentHash == null) {
+            return;
+        }
+
+        validateUserAgentExists(requestUserAgent);
+        String currentHash = hashUserAgent(requestUserAgent);
+
+        if (!userAgentHash.equals(currentHash)) {
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+        }
+    }
+
+    private void validateUserAgentExists(String requestUserAgent) {
+        if (requestUserAgent == null) {
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+        }
+    }
+
     private String hashUserAgent(String userAgent) {
         try {
             MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
