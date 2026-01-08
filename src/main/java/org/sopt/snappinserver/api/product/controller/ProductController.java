@@ -28,10 +28,7 @@ public class ProductController implements ProductApi {
             ProductReviewsResponse.from(result);
 
         ProductReviewsMetaResponse meta =
-            new ProductReviewsMetaResponse(
-                result.nextCursor(),
-                result.hasNext()
-            );
+            ProductReviewsMetaResponse.from(result);
 
         return ApiResponseBody.ok(
             ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
