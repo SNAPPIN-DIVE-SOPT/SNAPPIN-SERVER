@@ -5,6 +5,7 @@ import static org.sopt.snappinserver.domain.auth.domain.enums.SocialProvider.KAK
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.infra.oauth.KakaoClient;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserInfo;
+import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserProfile;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.OAuthToken;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
@@ -21,21 +22,21 @@ public class LoginService implements LoginUseCase {
 
     @Override
     public LoginResult kakaoLogin(String accessCode, String userAgent) {
-        KakaoUserInfo kakaoUserInfo = fetchKakaoUserInfo(accessCode);
+        KakaoUserProfile kakaoUserInfo = fetchKakaoUserInfo(accessCode);
 
         User user = userProcessor.registerOrGetUser(
             KAKAO,
-            kakaoUserInfo.id().toString(),
-            kakaoUserInfo.kakaoAccount().profile().nickname(),
-            kakaoUserInfo.kakaoAccount().profile().profileImageUrl()
+            kakaoUserInfo.socialId(),
+            kakaoUserInfo.nickname(),
+            kakaoUserInfo.profileImage()
         );
 
         return authTokenManager.issueTokens(user, userAgent);
     }
 
-    private KakaoUserInfo fetchKakaoUserInfo(String accessCode) {
+    private KakaoUserProfile fetchKakaoUserInfo(String accessCode) {
         OAuthToken oAuthToken = kakaoClient.fetchOAuthToken(accessCode);
 
-        return kakaoClient.fetchUserInfo(oAuthToken.accessToken());
+        return KakaoUserProfile.from(kakaoClient.fetchUserInfo(oAuthToken.accessToken()));
     }
 }
