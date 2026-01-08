@@ -6,13 +6,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.snappinserver.api.auth.code.AuthSuccessCode;
 import org.sopt.snappinserver.api.auth.dto.request.CreateKakaoLoginRequest;
+import org.sopt.snappinserver.api.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
+import org.sopt.snappinserver.domain.auth.service.dto.response.ReissueTokenResult;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
+import org.sopt.snappinserver.domain.auth.service.usecase.ReissueTokenUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -27,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController implements AuthApi {
 
     private final LoginUseCase loginUseCase;
+    private final ReissueTokenUseCase reissueTokenUseCase;
 
     @Value("${auth.cookie.secure}")
     private boolean isSecure;
@@ -52,7 +57,7 @@ public class AuthController implements AuthApi {
             createKakaoLoginRequest.code(),
             userAgent
         );
-        ResponseCookie refreshCookie = getResponseCookie(loginResult);
+        ResponseCookie refreshCookie = getResponseCookie(loginResult.refreshToken());
         httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
         return ApiResponseBody.ok(
@@ -61,8 +66,31 @@ public class AuthController implements AuthApi {
         );
     }
 
-    private ResponseCookie getResponseCookie(LoginResult loginResult) {
-        return ResponseCookie.from("refreshToken", loginResult.refreshToken())
+    @Override
+    @PostMapping("/reissue")
+    public ApiResponseBody<CreateAccessTokenResponse, Void> createRefreshedAccessToken(
+        @CookieValue(name = "refreshToken") String refreshToken,
+        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+        HttpServletResponse httpServletResponse
+    ) {
+        ReissueTokenResult reissueTokenResult = reissueTokenUseCase.reissueToken(
+            refreshToken,
+            userAgent
+        );
+        CreateAccessTokenResponse createAccessTokenResponse = CreateAccessTokenResponse.from(
+            reissueTokenResult
+        );
+        ResponseCookie refreshCookie = getResponseCookie(reissueTokenResult.refreshToken());
+        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
+
+        return ApiResponseBody.ok(
+            AuthSuccessCode.REISSUE_TOKENS_SUCCESS,
+            createAccessTokenResponse
+        );
+    }
+
+    private ResponseCookie getResponseCookie(String refreshTokenValue) {
+        return ResponseCookie.from("refreshToken", refreshTokenValue)
             .httpOnly(true)
             .secure(isSecure)
             .sameSite(isSecure ? "None" : "Lax")

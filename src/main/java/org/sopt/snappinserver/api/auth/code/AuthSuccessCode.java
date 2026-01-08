@@ -10,6 +10,7 @@ public enum AuthSuccessCode implements SuccessCode {
 
     // 200 OK
     LOGIN_SUCCESS(200, "AUTH_200_001", "성공적으로 카카오 로그인을 완료했습니다."),
+    REISSUE_TOKENS_SUCCESS(200, "AUTH_200_002", "성공적으로 토큰 재발급을 완료했습니다."),
 
     // 201 CREATED
 

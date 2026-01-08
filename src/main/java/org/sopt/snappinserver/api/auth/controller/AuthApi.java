@@ -6,8 +6,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.sopt.snappinserver.api.auth.dto.request.CreateKakaoLoginRequest;
+import org.sopt.snappinserver.api.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,10 +23,24 @@ public interface AuthApi {
     )
     ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
 
-        @Schema(description = "카카오에 등록할 redirect_uri 주소입니다.", example= "", nullable = true)
-        @RequestParam String clientRedirectUri,
+        @Schema(description = "카카오에 등록할 redirect_uri 주소입니다.", example = "http://localhost:8080/api/v1/auth/login/kakao", nullable = true)
+        @RequestParam(name = "redirect_uri", required = false) String clientRedirectUri,
 
         @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
+
+        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+
+        HttpServletResponse httpServletResponse
+    );
+
+    @Operation(
+        summary = "토큰 재발급",
+        description = "accessToken 만료 시, 기존 Refresh Token 으로 새로운 accessToken 을 반환하고, 새로운 refreshToken 으로 쿠키를 교체합니다."
+    )
+    ApiResponseBody<CreateAccessTokenResponse, Void> createRefreshedAccessToken(
+
+        @Schema(description = "재발급 때 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
+        @CookieValue(name = "refreshToken") String refreshToken,
 
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
 
