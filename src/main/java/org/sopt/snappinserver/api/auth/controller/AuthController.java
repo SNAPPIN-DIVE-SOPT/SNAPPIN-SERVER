@@ -2,12 +2,15 @@ package org.sopt.snappinserver.api.auth.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.snappinserver.api.auth.code.AuthSuccessCode;
 import org.sopt.snappinserver.api.auth.dto.request.CreateKakaoLoginRequest;
 import org.sopt.snappinserver.api.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
+import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
+import org.sopt.snappinserver.domain.auth.domain.exception.AuthException;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 import org.sopt.snappinserver.domain.auth.service.dto.response.ReissueTokenResult;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
@@ -69,10 +72,11 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping("/reissue")
     public ApiResponseBody<CreateAccessTokenResponse, Void> createRefreshedAccessToken(
-        @CookieValue(name = "refreshToken") String refreshToken,
+        @CookieValue(name = "refreshToken", required = false) String refreshToken,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
     ) {
+        validateCookieExists(refreshToken);
         ReissueTokenResult reissueTokenResult = reissueTokenUseCase.reissueToken(
             refreshToken,
             userAgent
@@ -99,4 +103,9 @@ public class AuthController implements AuthApi {
             .build();
     }
 
+    private void validateCookieExists(String refreshToken) {
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new AuthException(AuthErrorCode.REFRESH_TOKEN_COOKIE_REQUIRED);
+        }
+    }
 }

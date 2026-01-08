@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(AUTHENTICATED_URLS).authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login/kakao").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/reissue").permitAll()
                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_URLS).permitAll()
                 .anyRequest().authenticated()
             );
