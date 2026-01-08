@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.auth.code.AuthSuccessCode;
-import org.sopt.snappinserver.api.auth.dto.request.LoginRequest;
-import org.sopt.snappinserver.api.auth.dto.response.LoginResponse;
+import org.sopt.snappinserver.api.auth.dto.request.CreateKakaoLoginRequest;
+import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -35,18 +35,21 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/login/kakao")
-    public ApiResponseBody<LoginResponse, Void> createKakaoLogin(
-        @Valid @RequestBody LoginRequest loginRequest,
+    public ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
+        @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
     ) {
-        LoginResult loginResult = loginUseCase.kakaoLogin(loginRequest.code(), userAgent);
+        LoginResult loginResult = loginUseCase.kakaoLogin(
+            createKakaoLoginRequest.code(),
+            userAgent
+        );
         ResponseCookie refreshCookie = getResponseCookie(loginResult);
         httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString());
 
         return ApiResponseBody.ok(
             AuthSuccessCode.LOGIN_SUCCESS,
-            new LoginResponse(loginResult.accessToken())
+            new CreateKakaoLoginResponse(loginResult.accessToken())
         );
     }
 
