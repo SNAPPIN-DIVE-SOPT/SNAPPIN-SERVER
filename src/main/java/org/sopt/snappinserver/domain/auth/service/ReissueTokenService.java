@@ -3,6 +3,7 @@ package org.sopt.snappinserver.domain.auth.service;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthException;
+import org.sopt.snappinserver.domain.auth.domain.value.TokenPair;
 import org.sopt.snappinserver.domain.auth.infra.redis.RefreshTokenStore;
 import org.sopt.snappinserver.domain.auth.infra.redis.RefreshTokenValue;
 import org.sopt.snappinserver.domain.auth.service.dto.response.ReissueTokenResult;
