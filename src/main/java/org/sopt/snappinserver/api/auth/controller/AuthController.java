@@ -2,7 +2,6 @@ package org.sopt.snappinserver.api.auth.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.snappinserver.api.auth.code.AuthSuccessCode;
@@ -11,14 +10,17 @@ import org.sopt.snappinserver.api.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthException;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 import org.sopt.snappinserver.domain.auth.service.dto.response.ReissueTokenResult;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
+import org.sopt.snappinserver.domain.auth.service.usecase.LogoutUseCase;
 import org.sopt.snappinserver.domain.auth.service.usecase.ReissueTokenUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,7 @@ public class AuthController implements AuthApi {
 
     private final LoginUseCase loginUseCase;
     private final ReissueTokenUseCase reissueTokenUseCase;
+    private final LogoutUseCase logoutUseCase;
 
     @Value("${auth.cookie.secure}")
     private boolean isSecure;
@@ -107,5 +110,27 @@ public class AuthController implements AuthApi {
         if (refreshToken == null || refreshToken.isBlank()) {
             throw new AuthException(AuthErrorCode.REFRESH_TOKEN_COOKIE_REQUIRED);
         }
+    }
+
+    @Override
+    @PostMapping("/logout")
+    public ApiResponseBody<Void, Void> logout(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        @CookieValue(name = "refreshToken", required = false) String refreshToken,
+        HttpServletResponse httpServletResponse
+    ) {
+        logoutUseCase.logout(principal.userId(), refreshToken);
+        ResponseCookie deletedCookie = getDeletedCookie();
+        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, deletedCookie.toString());
+
+        return ApiResponseBody.ok(AuthSuccessCode.LOGOUT_SUCCESS);
+    }
+
+    private ResponseCookie getDeletedCookie() {
+        return ResponseCookie.from("refreshToken", "")
+            .path("/")
+            .maxAge(0)
+            .httpOnly(true)
+            .build();
     }
 }

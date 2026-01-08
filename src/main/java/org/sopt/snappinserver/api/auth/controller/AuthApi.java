@@ -8,7 +8,9 @@ import jakarta.validation.Valid;
 import org.sopt.snappinserver.api.auth.dto.request.CreateKakaoLoginRequest;
 import org.sopt.snappinserver.api.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -45,6 +47,16 @@ public interface AuthApi {
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
 
         HttpServletResponse httpServletResponse
+    );
+
+    @Operation(
+        summary = "로그아웃",
+        description = "accessToken, refreshToken 을 받아 사용자를 로그아웃 처리합니다."
+    )
+    ApiResponseBody<Void, Void> logout(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        @CookieValue(name = "refreshToken", required = false) String refreshToken,
+        HttpServletResponse response
     );
 
 }
