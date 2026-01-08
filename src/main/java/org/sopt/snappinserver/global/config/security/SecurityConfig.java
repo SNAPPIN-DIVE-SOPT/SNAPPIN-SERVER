@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.global.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.global.security.JwtAccessDeniedHandler;
 import org.sopt.snappinserver.global.security.TokenAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +42,7 @@ public class SecurityConfig {
     };
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -52,7 +54,10 @@ public class SecurityConfig {
             )
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-
+            .anonymous(AbstractHttpConfigurer::disable)
+            .exceptionHandling(e -> e
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
