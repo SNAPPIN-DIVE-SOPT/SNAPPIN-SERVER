@@ -31,8 +31,8 @@ public class LoginService implements LoginUseCase {
     }
 
     private KakaoUserInfo fetchKakaoUserInfo(String accessCode) {
-        OAuthToken oAuthToken = kakaoClient.requestToken(accessCode);
+        OAuthToken oAuthToken = kakaoClient.fetchOAuthToken(accessCode);
 
-        return kakaoClient.getUserInfo(oAuthToken.access_token());
+        return kakaoClient.fetchUserInfo(oAuthToken.access_token());
     }
 }

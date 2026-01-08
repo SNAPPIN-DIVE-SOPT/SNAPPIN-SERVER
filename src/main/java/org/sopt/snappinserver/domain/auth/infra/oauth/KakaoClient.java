@@ -24,7 +24,7 @@ public class KakaoClient {
     @Value("${kakao.auth.redirect}")
     private String redirect;
 
-    public OAuthToken requestToken(String accessCode) {
+    public OAuthToken fetchOAuthToken(String accessCode) {
         return webClient.post()
             .uri("https://kauth.kakao.com/oauth/token")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -37,7 +37,7 @@ public class KakaoClient {
             .block();
     }
 
-    public KakaoUserInfo getUserInfo(String accessToken) {
+    public KakaoUserInfo fetchUserInfo(String accessToken) {
         return webClient.get()
             .uri("https://kapi.kakao.com/v2/user/me")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
