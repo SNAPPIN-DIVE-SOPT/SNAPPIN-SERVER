@@ -30,9 +30,20 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    // 외부 api 호출
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // Jwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // Database
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
