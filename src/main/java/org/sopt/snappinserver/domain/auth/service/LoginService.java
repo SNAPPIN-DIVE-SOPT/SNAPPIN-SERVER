@@ -23,8 +23,8 @@ public class LoginService implements LoginUseCase {
 
         User user = userProcessor.registerOrGetUser(
             kakaoUserInfo.id().toString(),
-            kakaoUserInfo.kakao_account().profile().nickname(),
-            kakaoUserInfo.kakao_account().profile().profile_image_url()
+            kakaoUserInfo.kakaoAccount().profile().nickname(),
+            kakaoUserInfo.kakaoAccount().profile().profileImageUrl()
         );
 
         return authTokenManager.issueTokens(user, userAgent);
@@ -33,6 +33,6 @@ public class LoginService implements LoginUseCase {
     private KakaoUserInfo fetchKakaoUserInfo(String accessCode) {
         OAuthToken oAuthToken = kakaoClient.fetchOAuthToken(accessCode);
 
-        return kakaoClient.fetchUserInfo(oAuthToken.access_token());
+        return kakaoClient.fetchUserInfo(oAuthToken.accessToken());
     }
 }

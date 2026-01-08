@@ -1,10 +1,20 @@
 package org.sopt.snappinserver.domain.auth.infra.oauth.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record KakaoUserInfo(
+
+    @JsonProperty("id")
     Long id,
-    String connected_at,
+
+    @JsonProperty("connected_at")
+    String connectedAt,
+
+    @JsonProperty("properties")
     Properties properties,
-    KakaoAccount kakao_account
+
+    @JsonProperty("kakao_account")
+    KakaoAccount kakaoAccount
 ) {
 
 }
