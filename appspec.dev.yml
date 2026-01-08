@@ -10,12 +10,3 @@ hooks:
     - location: deploy.dev.sh
       timeout: 300
       runas: root
-
-kakao:
-  auth:
-    client: ${KAKAO_CLIENT_ID}
-    redirect: ${KAKAO_REDIRECT_URI}
-
-jwt:
-  secret: ${JWT_SECRET}
-  expiration_time: ${JWT_EXPIRATION_TIME}
