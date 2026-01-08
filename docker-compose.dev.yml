@@ -51,7 +51,7 @@ services:
     image: redis:7
     container_name: redis
     restart: always
-    networks: [ backend ]
+    networks: [backend]
 
 networks:
   backend:
