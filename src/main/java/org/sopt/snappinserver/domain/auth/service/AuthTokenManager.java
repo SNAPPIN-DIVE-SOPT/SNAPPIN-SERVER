@@ -36,7 +36,7 @@ public class AuthTokenManager {
 
         saveRefreshToken(user.getId(), refreshToken, userAgent);
 
-        return LoginResult.create(accessToken, refreshToken);
+        return new LoginResult(accessToken, refreshToken);
     }
 
     private void saveRefreshToken(Long userId, String refreshToken, String userAgent) {
