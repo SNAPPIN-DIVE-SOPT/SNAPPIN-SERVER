@@ -1,8 +1,4 @@
 spring:
-  jackson:
-    time-zone: Asia/Seoul
-    property-naming-strategy: SNAKE_CASE
-
   datasource:
     url: ${DB_URL}
     driver-class-name: org.postgresql.Driver
@@ -31,7 +27,7 @@ kakao:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration_time: ${JWT_EXPIRATION_TIME}
+  expiration-time: ${JWT_EXPIRATION_TIME}
   refresh-token-ttl-seconds: 1209600
 
 auth:

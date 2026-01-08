@@ -4,7 +4,6 @@ spring:
 
   jackson:
     time-zone: Asia/Seoul
-    property-naming-strategy: SNAKE_CASE
 
   batch:
     jdbc:

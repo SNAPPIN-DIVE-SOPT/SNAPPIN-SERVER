@@ -21,7 +21,7 @@ kakao:
 
 jwt:
   secret: ${JWT_SECRET}
-  expiration_time: ${JWT_EXPIRATION_TIME}
+  expiration-time: ${JWT_EXPIRATION_TIME}
   refresh-token-ttl-seconds: 1209600
 
 auth:
