@@ -11,18 +11,14 @@ public class RefreshTokenStore {
 
     private static final String KEY_PREFIX = "refresh:";
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisTemplate<String, RefreshTokenValue> redisTemplate;
 
     public void save(String refreshToken, RefreshTokenValue value, Duration ttl) {
-        redisTemplate.opsForValue().set(KEY_PREFIX + refreshToken, value, ttl);
+        redisTemplate.opsForValue()
+            .set(key(refreshToken), value, ttl);
     }
 
-    public RefreshTokenValue get(String refreshToken) {
-        Object value = redisTemplate.opsForValue().get(KEY_PREFIX + refreshToken);
-        return (RefreshTokenValue) value;
-    }
-
-    public void delete(String refreshToken) {
-        redisTemplate.delete(KEY_PREFIX + refreshToken);
+    private String key(String refreshToken) {
+        return KEY_PREFIX + refreshToken;
     }
 }
