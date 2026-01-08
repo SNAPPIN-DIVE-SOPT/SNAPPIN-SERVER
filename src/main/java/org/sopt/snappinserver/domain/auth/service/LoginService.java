@@ -22,15 +22,15 @@ public class LoginService implements LoginUseCase {
     @Override
     public LoginResult kakaoLogin(String redirectUri, String accessCode, String userAgent) {
         KakaoUserProfile kakaoUserInfo = fetchKakaoUserInfo(redirectUri, accessCode);
-
         User user = userProcessor.registerOrGetUser(
             KAKAO,
             kakaoUserInfo.socialId(),
             kakaoUserInfo.nickname(),
             kakaoUserInfo.profileImage()
         );
+        TokenPair tokenPair = authTokenManager.issueTokenPair(user, userAgent);
 
-        return authTokenManager.issueTokens(user, userAgent);
+        return LoginResult.from(tokenPair);
     }
 
     private KakaoUserProfile fetchKakaoUserInfo(String redirectUri, String accessCode) {
