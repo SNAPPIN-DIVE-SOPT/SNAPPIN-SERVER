@@ -22,6 +22,14 @@ server {
   ssl_certificate /etc/letsencrypt/live/dev-api.snapping.co.kr/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/dev-api.snapping.co.kr/privkey.pem;
 
+  location ~* ^/(swagger-ui|v3/api-docs|swagger-resources) {
+    return 404;
+  }
+
+  location ~ /\. {
+    return 404;
+  }
+
   location / {
     proxy_pass http://backend;
     proxy_set_header Host $host;
