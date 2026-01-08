@@ -4,7 +4,6 @@ import static org.sopt.snappinserver.domain.auth.domain.enums.SocialProvider.KAK
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.infra.oauth.KakaoClient;
-import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserInfo;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserProfile;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.OAuthToken;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
