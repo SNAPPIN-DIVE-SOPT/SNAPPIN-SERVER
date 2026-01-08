@@ -128,9 +128,11 @@ public class AuthController implements AuthApi {
 
     private ResponseCookie getDeletedCookie() {
         return ResponseCookie.from("refreshToken", "")
+            .httpOnly(true)
+            .secure(isSecure)
+            .sameSite(isSecure ? "None" : "Lax")
             .path("/")
             .maxAge(0)
-            .httpOnly(true)
             .build();
     }
 }
