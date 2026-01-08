@@ -10,9 +10,6 @@ import org.sopt.snappinserver.domain.review.domain.exception.ReviewErrorCode;
 import org.sopt.snappinserver.domain.review.domain.exception.ReviewException;
 import org.sopt.snappinserver.global.entity.BaseEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -35,9 +32,6 @@ public class Review extends BaseEntity {
 
     @Column(nullable = false, length = MAX_CONTENT_LENGTH)
     private String content;
-
-    @OneToMany(mappedBy = "review", fetch = FetchType.LAZY)
-    private List<ReviewPhoto> reviewPhotos = new ArrayList<>();
 
     @Builder(access = AccessLevel.PRIVATE)
     private Review(Reservation reservation, Integer rating, String content) {
