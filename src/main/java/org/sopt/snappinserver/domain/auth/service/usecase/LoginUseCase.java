@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 
 public interface LoginUseCase {
 
-    LoginResult kakaoLogin(String accessCode, String userAgent);
+    LoginResult kakaoLogin(String redirectUri, String accessCode, String userAgent);
 }

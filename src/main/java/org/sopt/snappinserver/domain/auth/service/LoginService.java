@@ -20,8 +20,8 @@ public class LoginService implements LoginUseCase {
     private final AuthTokenManager authTokenManager;
 
     @Override
-    public LoginResult kakaoLogin(String accessCode, String userAgent) {
-        KakaoUserProfile kakaoUserInfo = fetchKakaoUserInfo(accessCode);
+    public LoginResult kakaoLogin(String redirectUri, String accessCode, String userAgent) {
+        KakaoUserProfile kakaoUserInfo = fetchKakaoUserInfo(redirectUri, accessCode);
 
         User user = userProcessor.registerOrGetUser(
             KAKAO,
@@ -33,8 +33,8 @@ public class LoginService implements LoginUseCase {
         return authTokenManager.issueTokens(user, userAgent);
     }
 
-    private KakaoUserProfile fetchKakaoUserInfo(String accessCode) {
-        OAuthToken oAuthToken = kakaoClient.fetchOAuthToken(accessCode);
+    private KakaoUserProfile fetchKakaoUserInfo(String redirectUri, String accessCode) {
+        OAuthToken oAuthToken = kakaoClient.fetchOAuthToken(redirectUri, accessCode);
 
         return KakaoUserProfile.from(kakaoClient.fetchUserInfo(oAuthToken.accessToken()));
     }

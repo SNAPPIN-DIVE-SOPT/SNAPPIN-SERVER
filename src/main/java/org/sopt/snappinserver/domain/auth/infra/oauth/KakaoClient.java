@@ -24,16 +24,13 @@ public class KakaoClient {
     @Value("${kakao.auth.client}")
     private String client;
 
-    @Value("${kakao.auth.redirect}")
-    private String redirect;
-
-    public OAuthToken fetchOAuthToken(String accessCode) {
+    public OAuthToken fetchOAuthToken(String redirectUri, String accessCode) {
         return webClient.post()
             .uri("https://kauth.kakao.com/oauth/token")
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(BodyInserters.fromFormData("grant_type", "authorization_code")
                 .with("client_id", client)
-                .with("redirect_uri", redirect)
+                .with("redirect_uri", redirectUri)
                 .with("code", accessCode))
             .retrieve()
             .onStatus(

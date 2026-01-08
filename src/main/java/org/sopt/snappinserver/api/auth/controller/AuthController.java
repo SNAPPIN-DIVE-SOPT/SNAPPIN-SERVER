@@ -3,6 +3,7 @@ package org.sopt.snappinserver.api.auth.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.sopt.snappinserver.api.auth.code.AuthSuccessCode;
 import org.sopt.snappinserver.api.auth.dto.request.CreateKakaoLoginRequest;
 import org.sopt.snappinserver.api.auth.dto.response.CreateKakaoLoginResponse;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class AuthController implements AuthApi {
 
     private final LoginUseCase loginUseCase;
@@ -34,11 +37,18 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping("/login/kakao")
     public ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
+        @RequestParam(name = "redirect_uri", required = false) String clientRedirectUri,
         @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
     ) {
+        String redirectUri =
+            (clientRedirectUri == null)
+                ? ("http://localhost:8080/api/v1/auth/login/kakao")
+                : clientRedirectUri;
+        log.info("redirectUri: {}", redirectUri);
         LoginResult loginResult = loginUseCase.kakaoLogin(
+            redirectUri,
             createKakaoLoginRequest.code(),
             userAgent
         );
