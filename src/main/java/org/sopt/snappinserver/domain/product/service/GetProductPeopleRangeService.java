@@ -21,7 +21,6 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
 
     @Override
     public ProductPeopleRangeResult getProductPeopleRange(Long productId) {
-
         List<ProductOption> options = getPeopleRangeOptions(productId);
 
         int minPeople = getMinPeople(options);
@@ -40,12 +39,22 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
         );
     }
 
+    private int parsePeopleCount(ProductOption option) {
+        try {
+            return Integer.parseInt(option.getAnswer());
+        } catch (NumberFormatException e) {
+            throw new ProductException(
+                ProductErrorCode.INVALID_PRODUCT_OPTION_FORMAT
+            );
+        }
+    }
+
     private int getMinPeople(List<ProductOption> options) {
         return options.stream()
             .filter(option ->
                 option.getProductOptionCategory() == ProductOptionCategory.MIN_PEOPLE
             )
-            .mapToInt(option -> Integer.parseInt(option.getAnswer()))
+            .mapToInt(this::parsePeopleCount)
             .findFirst()
             .orElse(1);
     }
@@ -55,7 +64,7 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
             .filter(option ->
                 option.getProductOptionCategory() == ProductOptionCategory.MAX_PEOPLE
             )
-            .mapToInt(option -> Integer.parseInt(option.getAnswer()))
+            .mapToInt(this::parsePeopleCount)
             .findFirst()
             .orElseThrow(() ->
                 new ProductException(ProductErrorCode.PRODUCT_PEOPLE_RANGE_NOT_FOUND)
