@@ -17,7 +17,7 @@ public interface AuthApi {
         summary = "카카오 로그인",
         description = "인가 코드를 받아 카카오로 소셜 로그인을 진행합니다."
     )
-    ApiResponseBody<LoginResponse, Void> kakaoLogin(
+    ApiResponseBody<LoginResponse, Void> createKakaoLogin(
         @Valid @RequestBody LoginRequest loginRequest,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse

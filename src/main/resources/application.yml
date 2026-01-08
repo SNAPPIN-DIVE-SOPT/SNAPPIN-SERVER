@@ -17,12 +17,3 @@ springdoc:
 
 cors:
   allowed-origins: ${CORS_ALLOWED_ORIGINS}
-
-kakao:
-  auth:
-    client: ${KAKAO_CLIENT_ID}
-    redirect: ${KAKAO_REDIRECT_URI}
-
-jwt:
-  secret: ${JWT_SECRET}
-  expiration_time: ${JWT_EXPIRATION_TIME}

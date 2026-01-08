@@ -9,6 +9,7 @@ import org.sopt.snappinserver.api.auth.dto.response.LoginResponse;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -24,13 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController implements AuthApi {
 
-    private static final int REFRESH_TOKEN_MAX_AGE = 14 * 24 * 60 * 60;
-
     private final LoginUseCase loginUseCase;
+
+    @Value("${jwt.refresh-token-ttl-seconds}")
+    private long refreshTokenSeconds;
 
     @Override
     @PostMapping("/login/kakao")
-    public ApiResponseBody<LoginResponse, Void> kakaoLogin(
+    public ApiResponseBody<LoginResponse, Void> createKakaoLogin(
         @Valid @RequestBody LoginRequest loginRequest,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
@@ -51,7 +53,7 @@ public class AuthController implements AuthApi {
             .secure(false)
             .sameSite("Lax")
             .path("/")
-            .maxAge(REFRESH_TOKEN_MAX_AGE)
+            .maxAge(refreshTokenSeconds)
             .build();
     }
 

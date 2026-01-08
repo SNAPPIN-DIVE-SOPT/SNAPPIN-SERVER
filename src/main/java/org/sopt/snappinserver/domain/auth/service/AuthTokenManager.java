@@ -9,16 +9,18 @@ import org.sopt.snappinserver.domain.auth.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.auth.jwt.JwtProvider;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 public class AuthTokenManager {
 
-    private static final int REFRESH_TOKEN_TTL_DAYS = 14;
-
     private final JwtProvider jwtProvider;
     private final RefreshTokenStore refreshTokenStore;
+
+    @Value("${jwt.refresh-token-ttl-seconds}")
+    private long refreshTokenSeconds;
 
     public LoginResult issueTokens(User user, String userAgent) {
         String accessToken = jwtProvider.createAccessToken(CustomUserInfo.from(user));
@@ -32,7 +34,7 @@ public class AuthTokenManager {
     private void saveRefreshToken(Long userId, String refreshToken, String userAgent) {
         String userAgentHash =
             (userAgent == null) ? null : Integer.toHexString(userAgent.hashCode());
-        Duration ttl = Duration.ofDays(REFRESH_TOKEN_TTL_DAYS);
+        Duration ttl = Duration.ofSeconds(refreshTokenSeconds);
 
         refreshTokenStore.save(
             refreshToken,

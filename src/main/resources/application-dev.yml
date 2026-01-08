@@ -14,3 +14,12 @@ spring:
         format_sql: true
     show-sql: true
 
+kakao:
+  auth:
+    client: ${KAKAO_CLIENT_ID}
+    redirect: ${KAKAO_REDIRECT_URI}
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration_time: ${JWT_EXPIRATION_TIME}
+  refresh-token-ttl-seconds: 1209600
