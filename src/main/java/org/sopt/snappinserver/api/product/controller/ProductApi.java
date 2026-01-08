@@ -2,6 +2,7 @@ package org.sopt.snappinserver.api.product.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -22,4 +23,15 @@ public interface ProductApi {
         @PathVariable Long productId,
         @RequestParam(required = false) Long cursor
     );
+
+    @Operation(
+        summary = "촬영 가능 인원 수 조회",
+        description = "예약 과정에서 상품의 촬영 가능 최대/최소 인원 수를 조회합니다."
+    )
+    @GetMapping("/{productId}/available/people-range")
+    ApiResponseBody<ProductPeopleRangeResponse, Void>
+    getProductPeopleRange(
+        @PathVariable Long productId
+    );
+
 }
