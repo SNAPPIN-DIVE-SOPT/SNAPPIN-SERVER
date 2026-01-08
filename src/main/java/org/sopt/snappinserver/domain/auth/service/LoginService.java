@@ -1,5 +1,7 @@
 package org.sopt.snappinserver.domain.auth.service;
 
+import static org.sopt.snappinserver.domain.auth.domain.enums.SocialProvider.KAKAO;
+
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.infra.oauth.KakaoClient;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserInfo;
@@ -22,6 +24,7 @@ public class LoginService implements LoginUseCase {
         KakaoUserInfo kakaoUserInfo = fetchKakaoUserInfo(accessCode);
 
         User user = userProcessor.registerOrGetUser(
+            KAKAO,
             kakaoUserInfo.id().toString(),
             kakaoUserInfo.kakaoAccount().profile().nickname(),
             kakaoUserInfo.kakaoAccount().profile().profileImageUrl()

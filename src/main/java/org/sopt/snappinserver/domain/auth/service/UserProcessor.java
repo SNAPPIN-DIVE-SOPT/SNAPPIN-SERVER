@@ -4,6 +4,7 @@ import static org.sopt.snappinserver.domain.auth.domain.enums.SocialProvider.KAK
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.domain.entity.AuthProvider;
+import org.sopt.snappinserver.domain.auth.domain.enums.SocialProvider;
 import org.sopt.snappinserver.domain.auth.repository.AuthProviderRepository;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.domain.enums.UserRole;
@@ -19,8 +20,13 @@ public class UserProcessor {
     private final AuthProviderRepository authProviderRepository;
 
     @Transactional
-    public User registerOrGetUser(String providerId, String name, String profileImage) {
-        return authProviderRepository.findBySocialProviderAndProviderId(KAKAO, providerId)
+    public User registerOrGetUser(
+        SocialProvider socialProvider,
+        String providerId,
+        String name,
+        String profileImage
+    ) {
+        return authProviderRepository.findBySocialProviderAndProviderId(socialProvider, providerId)
             .map(AuthProvider::getUser)
             .orElseGet(() -> createUser(providerId, name, profileImage));
     }
