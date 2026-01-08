@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.auth.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.auth.code.AuthSuccessCode;
 import org.sopt.snappinserver.api.auth.dto.request.LoginRequest;
@@ -30,7 +31,7 @@ public class AuthController implements AuthApi {
     @Override
     @PostMapping("/login/kakao")
     public ApiResponseBody<LoginResponse, Void> kakaoLogin(
-        @RequestBody LoginRequest loginRequest,
+        @Valid @RequestBody LoginRequest loginRequest,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
     ) {
