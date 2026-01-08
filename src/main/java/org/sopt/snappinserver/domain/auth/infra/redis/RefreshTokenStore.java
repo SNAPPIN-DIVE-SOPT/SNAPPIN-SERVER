@@ -18,6 +18,15 @@ public class RefreshTokenStore {
             .set(key(refreshToken), value, ttl);
     }
 
+    public RefreshTokenValue find(String refreshToken) {
+        return redisTemplate.opsForValue()
+            .get(key(refreshToken));
+    }
+
+    public void delete(String refreshToken) {
+        redisTemplate.delete(key(refreshToken));
+    }
+
     private String key(String refreshToken) {
         return KEY_PREFIX + refreshToken;
     }
