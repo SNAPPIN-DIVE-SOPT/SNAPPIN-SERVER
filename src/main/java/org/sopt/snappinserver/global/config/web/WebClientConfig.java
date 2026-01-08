@@ -11,11 +11,11 @@ import reactor.netty.http.client.HttpClient;
 public class WebClientConfig {
 
     @Bean
-    public WebClient webClient() {
+    public WebClient webClient(WebClient.Builder builder) {
         HttpClient httpClient = HttpClient.create()
             .responseTimeout(Duration.ofSeconds(3));
 
-        return WebClient.builder()
+        return builder
             .clientConnector(new ReactorClientHttpConnector(httpClient))
             .build();
     }
