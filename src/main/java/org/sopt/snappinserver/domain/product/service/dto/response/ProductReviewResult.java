@@ -16,21 +16,18 @@ public record ProductReviewResult(
     String content
 ) {
 
-    public static ProductReviewResult from(Review review) {
+    public static ProductReviewResult from(
+        Review review,
+        List<ReviewPhoto> reviewPhotos
+    ) {
         return new ProductReviewResult(
             review.getId(),
             extractReviewer(review),
             review.getRating(),
             extractCreatedDate(review),
-            extractImages(review),
+            extractImages(reviewPhotos),
             review.getContent()
         );
-    }
-
-    public static List<ProductReviewResult> of(List<Review> reviews) {
-        return reviews.stream()
-            .map(ProductReviewResult::from)
-            .toList();
     }
 
     private static String extractReviewer(Review review) {
@@ -45,8 +42,8 @@ public record ProductReviewResult(
             .toLocalDate();
     }
 
-    private static List<String> extractImages(Review review) {
-        return review.getReviewPhotos().stream()
+    private static List<String> extractImages(List<ReviewPhoto> reviewPhotos) {
+        return reviewPhotos.stream()
             .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
             .map(reviewPhoto -> reviewPhoto.getPhoto().getImageUrl())
             .toList();
