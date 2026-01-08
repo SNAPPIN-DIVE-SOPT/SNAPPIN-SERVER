@@ -1,7 +1,10 @@
 package org.sopt.snappinserver.domain.auth.infra.oauth;
 
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
+import org.sopt.snappinserver.domain.auth.domain.exception.AuthException;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserInfo;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.OAuthToken;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +36,13 @@ public class KakaoClient {
                 .with("redirect_uri", redirect)
                 .with("code", accessCode))
             .retrieve()
+            .onStatus(
+                status -> status.is4xxClientError() || status.is5xxServerError(),
+                response -> response.bodyToMono(String.class)
+                    .map(body -> new AuthException(AuthErrorCode.INVALID_OAUTH_TOKEN))
+            )
             .bodyToMono(OAuthToken.class)
+            .timeout(Duration.ofSeconds(3))
             .block();
     }
 
@@ -42,7 +51,13 @@ public class KakaoClient {
             .uri("https://kapi.kakao.com/v2/user/me")
             .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .retrieve()
+            .onStatus(
+                status -> status.is4xxClientError() || status.is5xxServerError(),
+                response -> response.bodyToMono(String.class)
+                    .map(body -> new AuthException(AuthErrorCode.INVALID_OAUTH_TOKEN))
+            )
             .bodyToMono(KakaoUserInfo.class)
+            .timeout(Duration.ofSeconds(3))
             .block();
     }
 }
