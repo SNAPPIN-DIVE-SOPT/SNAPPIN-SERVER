@@ -59,4 +59,18 @@ public class AuthTokenManager {
             throw new AuthException(AuthErrorCode.SHA_256_UNSUPPORTED);
         }
     }
+
+    public void logout(Long userId, String refreshToken) {
+        if (refreshToken == null) {
+            return;
+        }
+        validateRefreshTokenOwner(userId, refreshToken);
+        refreshTokenStore.delete(refreshToken);
+    }
+
+    private void validateRefreshTokenOwner(Long userId, String refreshToken) {
+        if(!refreshTokenStore.find(refreshToken).userId().equals(userId)) {
+            throw new AuthException(AuthErrorCode.LOGOUT_FORBIDDEN);
+        }
+    }
 }

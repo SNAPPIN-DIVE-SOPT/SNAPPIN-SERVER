@@ -28,6 +28,7 @@ public enum AuthErrorCode implements ErrorCode {
     REFRESH_TOKEN_COOKIE_REQUIRED(401, "AUTH_401_005", "리프레시 토큰 쿠키는 필수입니다."),
 
     // 403 FORBIDDEN
+    LOGOUT_FORBIDDEN(403, "AUTH_403_001", "다른 사용자를 로그아웃할 수 없습니다."),
 
     // 404 NOT FOUND
     USER_NOT_FOUND(404, "AUTH_404_001", "해당 유저를 찾을 수 없습니다."),
