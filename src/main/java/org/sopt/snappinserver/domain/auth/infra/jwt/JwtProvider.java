@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.auth.jwt;
+package org.sopt.snappinserver.domain.auth.infra.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
