@@ -14,6 +14,8 @@ import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,10 +36,11 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         validateCursorSize(cursor);
 
         // 리뷰 조회 (Review + Reservation + User fetch join)
+        Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
         List<Review> reviews =
             (cursor == null)
-                ? reviewRepository.findTop6WithUserByProductId(productId)
-                : reviewRepository.findTop6WithUserByProductIdAndCursor(productId, cursor);
+                ? reviewRepository.findTop6WithUserByProductId(productId, pageable)
+                : reviewRepository.findTop6WithUserByProductIdAndCursor(productId, cursor, pageable);
 
         boolean hasNext = reviews.size() > PAGE_SIZE;
         if (hasNext) {
