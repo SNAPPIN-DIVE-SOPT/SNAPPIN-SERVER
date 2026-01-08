@@ -2,8 +2,11 @@ package org.sopt.snappinserver.api.product.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.product.code.ProductSuccessCode;
+import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleRangeResult;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProductController implements ProductApi {
 
     private final GetProductReviewsUseCase getProductReviewsUseCase;
+    private final GetProductPeopleRangeUseCase getProductPeopleRangeUseCase;
 
     @Override
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse>
@@ -34,6 +38,22 @@ public class ProductController implements ProductApi {
             ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
             data,
             meta
+        );
+    }
+
+    @Override
+    public ApiResponseBody<ProductPeopleRangeResponse, Void>
+    getProductPeopleRange(Long productId) {
+
+        ProductPeopleRangeResult result =
+            getProductPeopleRangeUseCase.getProductPeopleRange(productId);
+
+        ProductPeopleRangeResponse response =
+            ProductPeopleRangeResponse.from(result);
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_PEOPLE_RANGE_OK,
+            response
         );
     }
 }
