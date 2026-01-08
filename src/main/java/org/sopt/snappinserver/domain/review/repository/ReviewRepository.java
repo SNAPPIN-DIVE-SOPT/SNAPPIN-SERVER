@@ -21,7 +21,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         where reservation.product.id = :productId
         order by review.id desc
     """)
-    List<Review> findTop6WithUserByProductId(
+    List<Review> findReviewsWithUserByProductId(
         @Param("productId") Long productId,
         Pageable pageable
     );
@@ -36,7 +36,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
           and review.id < :cursor
         order by review.id desc
     """)
-    List<Review> findTop6WithUserByProductIdAndCursor(
+    List<Review> findReviewsWithUserByProductIdAndCursor(
         @Param("productId") Long productId,
         @Param("cursor") Long cursor,
         Pageable pageable

@@ -39,8 +39,8 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
         List<Review> reviews =
             (cursor == null)
-                ? reviewRepository.findTop6WithUserByProductId(productId, pageable)
-                : reviewRepository.findTop6WithUserByProductIdAndCursor(productId, cursor, pageable);
+                ? reviewRepository.findReviewsWithUserByProductId(productId, pageable)
+                : reviewRepository.findReviewsWithUserByProductIdAndCursor(productId, cursor, pageable);
 
         boolean hasNext = reviews.size() > PAGE_SIZE;
         if (hasNext) {
