@@ -27,6 +27,9 @@ public class AuthController implements AuthApi {
 
     private final LoginUseCase loginUseCase;
 
+    @Value("${auth.cookie.secure}")
+    private boolean isSecure;
+
     @Value("${jwt.refresh-token-ttl-seconds}")
     private long refreshTokenSeconds;
 
@@ -50,8 +53,8 @@ public class AuthController implements AuthApi {
     private ResponseCookie getResponseCookie(LoginResult loginResult) {
         return ResponseCookie.from("refreshToken", loginResult.refreshToken())
             .httpOnly(true)
-            .secure(false)
-            .sameSite("Lax")
+            .secure(isSecure)
+            .sameSite(isSecure ? "None" : "Lax")
             .path("/")
             .maxAge(refreshTokenSeconds)
             .build();
