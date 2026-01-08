@@ -17,9 +17,11 @@ import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GetProductReviewsService implements GetProductReviewsUseCase {
 
     private static final int PAGE_SIZE = 5;
@@ -65,7 +67,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         Map<Long, List<ReviewPhoto>> photosByReviewId =
             reviewPhotos.stream()
                 .collect(Collectors.groupingBy(
-                    rp -> rp.getReview().getId()
+                    reviewPhoto -> reviewPhoto.getReview().getId()
                 ));
 
         // DTO 변환 (조합 책임은 Service)
