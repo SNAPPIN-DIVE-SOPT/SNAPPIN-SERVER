@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.auth.service;
+package org.sopt.snappinserver.domain.auth.service.token;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

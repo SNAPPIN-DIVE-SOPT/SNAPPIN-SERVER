@@ -8,6 +8,7 @@ import org.sopt.snappinserver.domain.auth.infra.oauth.KakaoClient;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.KakaoUserProfile;
 import org.sopt.snappinserver.domain.auth.infra.oauth.dto.response.OAuthToken;
 import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
+import org.sopt.snappinserver.domain.auth.service.token.AuthTokenManager;
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,13 @@ import org.springframework.stereotype.Service;
 public class LoginService implements LoginUseCase {
 
     private final KakaoClient kakaoClient;
-    private final UserProcessor userProcessor;
+    private final GetSocialUserService getSocialUserService;
     private final AuthTokenManager authTokenManager;
 
     @Override
     public LoginResult kakaoLogin(String redirectUri, String accessCode, String userAgent) {
         KakaoUserProfile kakaoUserInfo = fetchKakaoUserInfo(redirectUri, accessCode);
-        User user = userProcessor.registerOrGetUser(
+        User user = getSocialUserService.registerOrGetUser(
             KAKAO,
             kakaoUserInfo.socialId(),
             kakaoUserInfo.nickname(),

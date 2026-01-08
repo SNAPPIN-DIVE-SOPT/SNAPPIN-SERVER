@@ -7,6 +7,7 @@ import org.sopt.snappinserver.domain.auth.domain.value.TokenPair;
 import org.sopt.snappinserver.domain.auth.infra.redis.RefreshTokenStore;
 import org.sopt.snappinserver.domain.auth.infra.redis.RefreshTokenValue;
 import org.sopt.snappinserver.domain.auth.service.dto.response.ReissueTokenResult;
+import org.sopt.snappinserver.domain.auth.service.token.AuthTokenManager;
 import org.sopt.snappinserver.domain.auth.service.usecase.ReissueTokenUseCase;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
