@@ -69,8 +69,10 @@ public class AuthTokenManager {
     }
 
     private void validateRefreshTokenOwner(Long userId, String refreshToken) {
-        if(!refreshTokenStore.find(refreshToken).userId().equals(userId)) {
+        RefreshTokenValue value = refreshTokenStore.find(refreshToken);
+        if (value == null || !value.userId().equals(userId)) {
             throw new AuthException(AuthErrorCode.LOGOUT_FORBIDDEN);
         }
+
     }
 }
