@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.product.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
@@ -38,6 +39,7 @@ public interface ProductApi {
     )
     @GetMapping("/{productId}/available/people-range")
     ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @PathVariable
@@ -51,6 +53,7 @@ public interface ProductApi {
     )
     @GetMapping("/{productId}/closed-dates")
     ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @PathVariable
