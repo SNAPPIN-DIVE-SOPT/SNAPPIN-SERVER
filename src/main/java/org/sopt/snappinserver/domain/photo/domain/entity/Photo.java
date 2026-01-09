@@ -5,15 +5,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.util.List;
+import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
+import org.sopt.snappinserver.domain.mood.repository.MoodRepository.MoodWithScore;
 import org.sopt.snappinserver.domain.photo.domain.exception.PhotoErrorCode;
 import org.sopt.snappinserver.domain.photo.domain.exception.PhotoException;
 import org.sopt.snappinserver.global.entity.BaseEntity;
@@ -25,6 +26,7 @@ public class Photo extends BaseEntity {
 
     private static final int MAX_IMAGE_URL_LENGTH = 1024;
     private static final int EMBEDDING_DIMENSION = 512;
+    private static final int FIRST_RANK = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -68,4 +70,16 @@ public class Photo extends BaseEntity {
         }
     }
 
+    public List<PhotoMood> linkMoods(List<Mood> moods, List<MoodWithScore> scores) {
+        return IntStream.range(0, moods.size())
+            .mapToObj(i ->
+                PhotoMood.create(
+                    this,
+                    moods.get(i),
+                    FIRST_RANK + i,
+                    scores.get(i).getScore()
+                )
+            )
+            .toList();
+    }
 }
