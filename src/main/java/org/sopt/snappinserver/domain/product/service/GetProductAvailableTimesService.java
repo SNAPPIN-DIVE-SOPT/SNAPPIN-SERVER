@@ -98,6 +98,17 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         return Integer.parseInt(durationOption.getAnswer());
     }
 
+    // 업무 시간 기준 30분 단위의 시작 시간 슬롯 생성
+    private List<LocalTime> createTimeSlots(LocalTime workStart, LocalTime lastStartTime) {
+        List<LocalTime> slots = new ArrayList<>();
+
+        for (LocalTime time = workStart; !time.isAfter(lastStartTime);
+            time = time.plusMinutes(TIME_SLOT_INTERVAL_MINUTES)) {
+            slots.add(time);
+        }
+        return slots;
+    }
+
     // 시간 슬롯별 예약 가능 여부 계산
     private List<Reservation> getConfirmedReservations(LocalDate date, Product product) {
         LocalDateTime startOfDay = date.atStartOfDay();
@@ -125,26 +136,6 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
             .toList();
     }
 
-    // 업무 시간 기준 30분 단위의 시작 시간 슬롯 생성
-    private List<LocalTime> createTimeSlots(LocalTime workStart, LocalTime lastStartTime) {
-        List<LocalTime> slots = new ArrayList<>();
-
-        for (LocalTime time = workStart; !time.isAfter(lastStartTime);
-            time = time.plusMinutes(TIME_SLOT_INTERVAL_MINUTES)) {
-            slots.add(time);
-        }
-        return slots;
-    }
-
-    // 시간 슬롯과 예약 시간대가 겹치는지 판단
-    private boolean isOverlapping(LocalTime slot, Reservation reservation, int durationMinutes) {
-        LocalTime reservedStart = reservation.getReservedAt().toLocalTime();
-        LocalTime reservedEnd = reservedStart.plusMinutes(reservation.getDurationTime());
-
-        return slot.isBefore(reservedEnd) && slot.plusMinutes(durationMinutes)
-            .isAfter(reservedStart);
-    }
-
     // 특정 시작 시간 슬롯이 예약 가능한지 판단
     private boolean isAvailableTimeSlot(
         LocalTime slot,
@@ -154,5 +145,14 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         return reservations.stream().noneMatch(
             reservation -> isOverlapping(slot, reservation, durationMinutes)
         );
+    }
+
+    // 시간 슬롯과 예약 시간대가 겹치는지 판단
+    private boolean isOverlapping(LocalTime slot, Reservation reservation, int durationMinutes) {
+        LocalTime reservedStart = reservation.getReservedAt().toLocalTime();
+        LocalTime reservedEnd = reservedStart.plusMinutes(reservation.getDurationTime());
+
+        return slot.isBefore(reservedEnd) && slot.plusMinutes(durationMinutes)
+            .isAfter(reservedStart);
     }
 }
