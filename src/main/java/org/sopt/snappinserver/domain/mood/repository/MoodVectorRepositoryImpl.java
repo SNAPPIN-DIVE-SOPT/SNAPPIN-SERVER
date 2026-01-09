@@ -4,15 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Tuple;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@RequiredArgsConstructor
 public class MoodVectorRepositoryImpl implements MoodVectorRepository {
 
     @PersistenceContext
-    private final EntityManager em;
+    private EntityManager em;
 
     @SuppressWarnings("unchecked")
     @Override
