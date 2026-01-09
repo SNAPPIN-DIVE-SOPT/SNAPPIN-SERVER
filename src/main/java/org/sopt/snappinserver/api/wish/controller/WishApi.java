@@ -24,5 +24,6 @@ public interface WishApi {
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo userInfo,
 
-        @Valid @RequestBody WishPortfolioRequest request);
+        @Valid @RequestBody WishPortfolioRequest request
+    );
 }
