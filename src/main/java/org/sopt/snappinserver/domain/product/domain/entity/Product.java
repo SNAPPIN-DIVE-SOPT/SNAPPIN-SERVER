@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,7 +36,12 @@ public class Product extends BaseEntity {
     private static final int MAX_CAUTION_LENGTH = 1024;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq_gen")
+    @SequenceGenerator(
+        name = "product_seq_gen",
+        sequenceName = "product_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

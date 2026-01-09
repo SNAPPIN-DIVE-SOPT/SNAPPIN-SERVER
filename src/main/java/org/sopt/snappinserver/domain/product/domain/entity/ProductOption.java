@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -35,7 +36,12 @@ public class ProductOption extends BaseEntity {
     private static final int MAX_ANSWER_LENGTH = 1024;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_option_seq_gen")
+    @SequenceGenerator(
+        name = "product_option_seq_gen",
+        sequenceName = "product_option_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
