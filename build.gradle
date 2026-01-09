@@ -53,8 +53,8 @@ dependencies {
     implementation 'com.pgvector:pgvector:0.1.6'
 
     // flyway
-    implementation "org.flywaydb:flyway-core:10.20.0"
-    implementation "org.flywaydb:flyway-database-postgresql:10.20.0"
+    implementation "org.flywaydb:flyway-core:11.20.1"
+    implementation "org.flywaydb:flyway-database-postgresql:11.20.1"
 
     // h2
     testImplementation 'com.h2database:h2'
