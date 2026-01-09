@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/photos")
 @RequiredArgsConstructor
 @RestController
-public class PhotoController {
+public class PhotoController implements PhotoApi {
 
     private final ProcessPhotoUseCase processPhotoUseCase;
 
