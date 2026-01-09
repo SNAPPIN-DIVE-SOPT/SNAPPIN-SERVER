@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.photo.service.dto.request.PhotoProcessComma
 
 public interface ProcessPhotoUseCase {
 
-    void processPhoto(PhotoProcessCommand photoProcessCommand);
+    void linkPhotoWithMoodTags(PhotoProcessCommand photoProcessCommand);
 }

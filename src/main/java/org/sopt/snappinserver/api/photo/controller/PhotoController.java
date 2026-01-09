@@ -25,7 +25,7 @@ public class PhotoController implements PhotoApi {
         @Valid @RequestBody PhotoProcessRequest photoProcessRequest
     ) {
         PhotoProcessCommand photoProcessCommand = PhotoProcessCommand.from(photoProcessRequest);
-        processPhotoUseCase.processPhoto(photoProcessCommand);
+        processPhotoUseCase.linkPhotoWithMoodTags(photoProcessCommand);
 
         return ApiResponseBody.ok(PhotoSuccessCode.PHOTO_MOOD_CREATED);
     }
