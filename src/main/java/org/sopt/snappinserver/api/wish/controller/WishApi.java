@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.wish.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -17,10 +18,11 @@ public interface WishApi {
 
     @Operation(
         summary = "포트폴리오 좋아요/취소",
-        description = "로그인한 사용자가 포트폴리오에 대해 좋아요(위시)를 추가하거나, 이미 좋아요를 누른 경우 취소합니다."
+        description = "로그인한 사용자가 포트폴리오에 대해 좋아요를 추가하거나, 이미 좋아요를 누른 경우 취소합니다."
     )
     @PostMapping("/portfolios")
     ApiResponseBody<WishPortfolioResponse, Void> wishPortfolio(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo userInfo,
 
         @Valid @RequestBody

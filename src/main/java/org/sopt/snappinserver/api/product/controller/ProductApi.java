@@ -48,7 +48,7 @@ public interface ProductApi {
     );
 
     @Operation(
-        summary = "날짜별 예약 가능 여부 조회",
+        summary = "달별 휴무일 목록 조회",
         description = "상품 예약 과정에서 달별 휴무일을 조회합니다."
     )
     @GetMapping("/{productId}/closed-dates")
