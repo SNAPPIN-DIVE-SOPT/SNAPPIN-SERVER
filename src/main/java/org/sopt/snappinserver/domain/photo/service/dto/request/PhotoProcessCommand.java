@@ -5,7 +5,7 @@ import org.sopt.snappinserver.api.photo.dto.request.PhotoProcessRequest;
 
 public record PhotoProcessCommand(String imageUrl, List<Float> embedding) {
 
-    public static PhotoProcessCommand create(PhotoProcessRequest photoProcessRequest) {
+    public static PhotoProcessCommand from(PhotoProcessRequest photoProcessRequest) {
         return new PhotoProcessCommand(
             photoProcessRequest.imageUrl(),
             photoProcessRequest.embedding()
