@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.api.photo.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.photo.code.PhotoSuccessCode;
 import org.sopt.snappinserver.api.photo.dto.request.PhotoProcessRequest;
@@ -20,7 +21,7 @@ public class PhotoController implements PhotoApi {
 
     @PostMapping("/process")
     public ApiResponseBody<Void, Void> processPhoto(
-        @RequestBody PhotoProcessRequest photoProcessRequest
+        @Valid @RequestBody PhotoProcessRequest photoProcessRequest
     ) {
         PhotoProcessCommand photoProcessCommand = PhotoProcessCommand.from(photoProcessRequest);
         processPhotoUseCase.processPhoto(photoProcessCommand);
