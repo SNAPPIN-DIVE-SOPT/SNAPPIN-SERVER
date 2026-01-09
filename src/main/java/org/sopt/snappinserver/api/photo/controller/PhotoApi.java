@@ -13,7 +13,7 @@ public interface PhotoApi {
         summary = "사진 <-> 무드 태그 연결",
         description = "람다에서 벡터로 변환된 사진과 무드 태그를 연결합니다. 웹에서 연결하는 API가 아닙니다! 람다 전용 API입니다."
     )
-    ApiResponseBody<Void, Void> processPhoto(
+    ApiResponseBody<Void, Void> createPhotoMoodConnection(
         @RequestBody PhotoProcessRequest photoProcessRequest
     );
 }

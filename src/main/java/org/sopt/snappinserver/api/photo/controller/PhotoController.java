@@ -19,8 +19,9 @@ public class PhotoController implements PhotoApi {
 
     private final ProcessPhotoUseCase processPhotoUseCase;
 
+    @Override
     @PostMapping("/process")
-    public ApiResponseBody<Void, Void> processPhoto(
+    public ApiResponseBody<Void, Void> createPhotoMoodConnection(
         @Valid @RequestBody PhotoProcessRequest photoProcessRequest
     ) {
         PhotoProcessCommand photoProcessCommand = PhotoProcessCommand.from(photoProcessRequest);
