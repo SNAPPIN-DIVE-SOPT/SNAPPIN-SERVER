@@ -106,7 +106,7 @@ public class ProductController implements ProductApi {
         Long productId,
 
         @RequestParam
-        @NotBlank
+        @NotNull
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate date
     ) {
