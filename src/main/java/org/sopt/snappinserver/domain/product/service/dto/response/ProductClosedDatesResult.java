@@ -7,6 +7,7 @@ import java.util.List;
 public record ProductClosedDatesResult(
     List<LocalDate> closedDates
 ) {
+
     public static ProductClosedDatesResult of(List<LocalDate> closedDates) {
         return new ProductClosedDatesResult(
             closedDates == null ? Collections.emptyList() : List.copyOf(closedDates)

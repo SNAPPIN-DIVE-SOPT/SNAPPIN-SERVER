@@ -40,7 +40,11 @@ public class GetProductClosedDatesService implements GetProductClosedDatesUseCas
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
     }
 
-    private List<LocalDate> calculateClosedDates(Product product, YearMonth yearMonth, List<WeekDay> closedWeekDays) {
+    private List<LocalDate> calculateClosedDates(
+        Product product,
+        YearMonth yearMonth,
+        List<WeekDay> closedWeekDays
+    ) {
         LocalDate startOfMonth = yearMonth.atDay(1);
         LocalDate endOfMonth = yearMonth.atEndOfMonth();
 

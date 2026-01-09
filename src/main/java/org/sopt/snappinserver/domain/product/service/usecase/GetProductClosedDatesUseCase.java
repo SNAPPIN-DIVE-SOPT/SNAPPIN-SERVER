@@ -5,8 +5,5 @@ import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedD
 
 public interface GetProductClosedDatesUseCase {
 
-    ProductClosedDatesResult getProductClosedDates(
-        Long productId,
-        YearMonth yearMonth
-    );
+    ProductClosedDatesResult getProductClosedDates(Long productId, YearMonth yearMonth);
 }
