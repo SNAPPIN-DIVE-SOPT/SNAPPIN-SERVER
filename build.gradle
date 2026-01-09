@@ -52,6 +52,13 @@ dependencies {
     // pgvector 지원 라이브러리
     implementation 'com.pgvector:pgvector:0.1.6'
 
+    // flyway
+    implementation "org.flywaydb:flyway-core:11.20.1"
+    implementation "org.flywaydb:flyway-database-postgresql:11.20.1"
+
+    // h2
+    testImplementation 'com.h2database:h2'
+
     // Batch
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     testImplementation 'org.springframework.batch:spring-batch-test'
