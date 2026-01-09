@@ -3,7 +3,7 @@ package org.sopt.snappinserver.domain.mood.policy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.sopt.snappinserver.domain.mood.repository.MoodRepository.MoodWithScore;
+import org.sopt.snappinserver.domain.mood.repository.MoodWithScore;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -18,8 +18,12 @@ public class MoodSelector {
         List<MoodWithScore> selected = new ArrayList<>();
 
         for (MoodWithScore candidate : candidates) {
-            if (selected.size() >= lastRank) break;
-            if (hasConflict(candidate, selected)) continue;
+            if (selected.size() >= lastRank) {
+                break;
+            }
+            if (hasConflict(candidate, selected)) {
+                continue;
+            }
             selected.add(candidate);
         }
         return selected;
@@ -27,7 +31,7 @@ public class MoodSelector {
 
     private boolean hasConflict(MoodWithScore candidate, List<MoodWithScore> selected) {
         return selected.stream()
-            .anyMatch(s -> isOpposite(candidate.getName(), s.getName()));
+            .anyMatch(s -> isOpposite(candidate.name(), s.name()));
     }
 
     private boolean isOpposite(String firstTag, String secondTag) {
