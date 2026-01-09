@@ -26,9 +26,11 @@ import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatus;
 import org.sopt.snappinserver.domain.reservation.repository.ReservationRepository;
 import org.sopt.snappinserver.global.enums.WeekDay;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GetProductAvailableTimesService implements GetProductAvailableTimesUseCase {
 
     private static final int ONE_DAY = 1;
