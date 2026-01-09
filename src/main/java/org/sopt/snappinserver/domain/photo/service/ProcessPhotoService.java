@@ -34,8 +34,9 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
         Photo photo = Photo.create(photoProcessCommand.imageUrl(), photoProcessCommand.embedding());
         photoRepository.save(photo);
 
-        String vectorStr = photoProcessCommand.embedding().toString();
-        List<MoodWithScore> candidates = moodRepository.findCandidates(vectorStr);
+        List<MoodWithScore> candidates = moodRepository.findCandidates(
+            photoProcessCommand.embedding()
+        );
         List<MoodWithScore> selectedMoods = filterTop3Moods(candidates);
 
         int rank = 1;
