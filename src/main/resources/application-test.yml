@@ -9,9 +9,6 @@ spring:
     hibernate:
       ddl-auto: create-drop
 
-  flyway:
-    enabled: false
-
 
 jwt:
   secret: dGVzdC1zZWNyZXQtdGVzdC1zZWNyZXQtdGVzdC1zZWNyZXQ=

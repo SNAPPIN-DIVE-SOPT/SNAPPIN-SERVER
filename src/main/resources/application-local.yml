@@ -12,13 +12,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-        jdbc:
-          batch_size: 50
-        order_inserts: true
-        order_updates: true
-
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+    flyway:
+      enabled: false
 
   data:
     redis:

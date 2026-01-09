@@ -14,6 +14,9 @@ spring:
         format_sql: true
     show-sql: false
 
+  flyway:
+    enabled: false
+
   data:
     redis:
       host: redis
