@@ -19,6 +19,10 @@ public enum PhotoErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
+
+    // 409 Conflict
+    IMAGE_URL_ALREADY_SAVED(409, "PHOTO_409_001", "S3에 해당 키로 저장된 이미지가 이미 존재합니다."),
+
     ;
 
     private final int status;

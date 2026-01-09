@@ -1,14 +1,15 @@
 package org.sopt.snappinserver.domain.photo.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
+import org.sopt.snappinserver.domain.mood.policy.MoodSelector;
 import org.sopt.snappinserver.domain.mood.repository.MoodRepository;
 import org.sopt.snappinserver.domain.mood.repository.MoodRepository.MoodWithScore;
 import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
 import org.sopt.snappinserver.domain.photo.domain.entity.PhotoMood;
+import org.sopt.snappinserver.domain.photo.domain.exception.PhotoErrorCode;
+import org.sopt.snappinserver.domain.photo.domain.exception.PhotoException;
 import org.sopt.snappinserver.domain.photo.repository.PhotoMoodRepository;
 import org.sopt.snappinserver.domain.photo.repository.PhotoRepository;
 import org.sopt.snappinserver.domain.photo.service.dto.request.PhotoProcessCommand;
@@ -21,63 +22,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProcessPhotoService implements ProcessPhotoUseCase {
 
-    private static final List<Set<String>> OPPOSITE_PAIRS = List.of(
-        Set.of("내추럴", "연출된"),
-        Set.of("아날로그", "디지털")
-    );
+    private static final int LAST_RANK = 3;
 
     private final PhotoRepository photoRepository;
     private final MoodRepository moodRepository;
     private final PhotoMoodRepository photoMoodRepository;
+    private final MoodSelector moodSelector;
 
     @Override
     public void linkPhotoWithMoodTags(PhotoProcessCommand photoProcessCommand) {
-        Photo photo = Photo.create(photoProcessCommand.imageUrl(), photoProcessCommand.embedding());
-        photoRepository.save(photo);
+        validateImageUrlUnique(photoProcessCommand);
+        Photo photo = photoRepository.save(
+            Photo.create(photoProcessCommand.imageUrl(), photoProcessCommand.embedding())
+        );
 
         List<MoodWithScore> candidates = moodRepository.findCandidates(
             photoProcessCommand.embedding()
         );
-        List<MoodWithScore> selectedMoods = filterTop3Moods(candidates);
+        List<MoodWithScore> selectedScores = moodSelector.selectTop3(LAST_RANK, candidates);
+        List<Mood> selectedMood = getSelectedMood(selectedScores);
+        List<PhotoMood> linkedPhotoMoods = photo.linkMoods(selectedMood, selectedScores);
 
-        int rank = 1;
-        for (MoodWithScore result : selectedMoods) {
-            Mood moodProxy = moodRepository.getReferenceById(result.getId());
-            PhotoMood photoMood = PhotoMood.create(photo, moodProxy, rank++, result.getScore());
-            photoMoodRepository.save(photoMood);
-        }
+        photoMoodRepository.saveAll(linkedPhotoMoods);
     }
 
-    private List<MoodWithScore> filterTop3Moods(List<MoodWithScore> candidates) {
-        List<MoodWithScore> top3 = new ArrayList<>();
-
-        for (MoodWithScore candidate : candidates) {
-            if (top3.size() >= 3) {
-                break;
-            }
-
-            String currentMoodName = candidate.getName();
-            boolean isConflict = false;
-            for (MoodWithScore selected : top3) {
-                String selectedName = selected.getName();
-                if (isOpposite(currentMoodName, selectedName)) {
-                    isConflict = true;
-                    break;
-                }
-            }
-            if (!isConflict) {
-                top3.add(candidate);
-            }
-        }
-        return top3;
+    private List<Mood> getSelectedMood(List<MoodWithScore> selected) {
+        return selected.stream()
+            .map(m -> moodRepository.getReferenceById(m.getId()))
+            .toList();
     }
 
-    private boolean isOpposite(String firstTag, String secondTag) {
-        for (Set<String> pair : OPPOSITE_PAIRS) {
-            if (pair.contains(firstTag) && pair.contains(secondTag)) {
-                return true;
-            }
+    private void validateImageUrlUnique(PhotoProcessCommand photoProcessCommand) {
+        if(photoRepository.existsByImageUrl(photoProcessCommand.imageUrl())) {
+            throw new PhotoException(PhotoErrorCode.IMAGE_URL_ALREADY_SAVED);
         }
-        return false;
     }
 }
