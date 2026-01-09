@@ -7,7 +7,9 @@ import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesRespons
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +38,8 @@ public interface ProductApi {
     )
     @GetMapping("/{productId}/available/people-range")
     ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
+        @AuthenticationPrincipal CustomUserInfo principal,
+
         @PathVariable
         @Schema(description = "상품 아이디", example = "1")
         Long productId
@@ -47,6 +51,8 @@ public interface ProductApi {
     )
     @GetMapping("/{productId}/available/dates")
     ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
+        @AuthenticationPrincipal CustomUserInfo principal,
+
         @PathVariable
         @Schema(description = "상품 아이디", example = "1")
         Long productId,

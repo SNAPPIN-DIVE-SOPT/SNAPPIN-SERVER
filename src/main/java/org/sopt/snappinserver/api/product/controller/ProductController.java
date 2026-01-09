@@ -7,6 +7,7 @@ import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesRespons
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleRangeResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDatesUseCase;
@@ -14,6 +15,7 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRan
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +38,10 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(Long productId) {
+    public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        Long productId
+    ) {
         ProductPeopleRangeResult result = getProductPeopleRangeUseCase.getProductPeopleRange(productId);
         ProductPeopleRangeResponse response = ProductPeopleRangeResponse.from(result);
 
@@ -44,7 +49,11 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(Long productId, String date) {
+    public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        Long productId,
+        String date
+    ) {
         YearMonth yearMonth = YearMonth.parse(date);
 
         ProductClosedDatesResult result = getProductClosedDatesUseCase.getProductClosedDates(productId, yearMonth);
