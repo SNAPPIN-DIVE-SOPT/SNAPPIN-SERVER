@@ -11,8 +11,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.sopt.snappinserver.domain.mood.repository.MoodWithScore;
 import org.sopt.snappinserver.domain.photo.domain.exception.PhotoErrorCode;
@@ -25,7 +23,6 @@ import org.sopt.snappinserver.global.entity.BaseEntity;
 public class Photo extends BaseEntity {
 
     private static final int MAX_IMAGE_URL_LENGTH = 1024;
-    private static final int EMBEDDING_DIMENSION = 512;
     private static final int FIRST_RANK = 1;
 
     @Id
@@ -35,21 +32,16 @@ public class Photo extends BaseEntity {
     @Column(nullable = false, length = MAX_IMAGE_URL_LENGTH)
     private String imageUrl;
 
-    @Column(columnDefinition = "vector(" + EMBEDDING_DIMENSION + ")")
-    @JdbcTypeCode(SqlTypes.VECTOR)
-    private List<Float> embedding;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Photo(String imageUrl, List<Float> embedding) {
+    private Photo(String imageUrl) {
         this.imageUrl = imageUrl;
-        this.embedding = embedding;
     }
 
-    public static Photo create(String imageUrl, List<Float> embedding) {
+    public static Photo create(String imageUrl) {
         validatePhoto(imageUrl);
         return Photo.builder()
             .imageUrl(imageUrl)
-            .embedding(embedding)
             .build();
     }
 

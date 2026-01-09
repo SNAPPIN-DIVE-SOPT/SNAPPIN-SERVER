@@ -3,6 +3,7 @@ package org.sopt.snappinserver.domain.photo.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.sopt.snappinserver.domain.mood.policy.MoodSelector;
 import org.sopt.snappinserver.domain.mood.repository.MoodRepository;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class ProcessPhotoService implements ProcessPhotoUseCase {
 
     private static final int LAST_RANK = 3;
@@ -35,18 +37,23 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
     @Override
     public void linkPhotoWithMoodTags(PhotoProcessCommand photoProcessCommand) {
         validateImageUrlUnique(photoProcessCommand);
-        Photo photo = photoRepository.save(
-            Photo.create(photoProcessCommand.imageUrl(), photoProcessCommand.embedding())
-        );
+        log.info("성공1");
+        Photo photo = photoRepository.save(Photo.create(photoProcessCommand.imageUrl()));
+        log.info("성공2");
 
         List<MoodWithScore> candidates = moodVectorRepository.findTopCandidates(
             toVectorLiteral(photoProcessCommand.embedding())
         );
+        log.info("성공3");
         List<MoodWithScore> selectedScores = moodSelector.selectTop3(LAST_RANK, candidates);
+        log.info("성공4");
         List<Mood> selectedMood = getSelectedMood(selectedScores);
+        log.info("성공5");
         List<PhotoMood> linkedPhotoMoods = photo.linkMoods(selectedMood, selectedScores);
+        log.info("성공6");
 
         photoMoodRepository.saveAll(linkedPhotoMoods);
+        log.info("성공7");
     }
 
     private String toVectorLiteral(List<Float> embedding) {
