@@ -3,6 +3,7 @@ package org.sopt.snappinserver.api.product.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.time.LocalDate;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
@@ -62,7 +63,7 @@ public interface ProductApi {
         Long productId,
 
         @Schema(description = "조회할 날짜 (yyyy-MM-dd)", example = "2026-03-15", required = true)
-        String date
+        LocalDate date
     );
 
 

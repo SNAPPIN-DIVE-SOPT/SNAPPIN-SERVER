@@ -22,6 +22,7 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDat
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -100,15 +101,19 @@ public class ProductController implements ProductApi {
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @PathVariable @NotNull Long productId,
-        @RequestParam @NotBlank String date
-    ) {
-        LocalDate targetDate = LocalDate.parse(date);
+        @PathVariable
+        @NotNull
+        Long productId,
 
+        @RequestParam
+        @NotBlank
+        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        LocalDate date
+    ) {
         ProductAvailableTimesResult result =
             getProductAvailableTimesUseCase.getProductAvailableTimes(
                 productId,
-                targetDate
+                date
             );
 
         return ApiResponseBody.ok(
