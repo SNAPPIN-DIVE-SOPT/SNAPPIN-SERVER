@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -27,7 +28,12 @@ public class User extends BaseEntity {
     private static final int MAX_PROFILE_IMAGE_URL_LENGTH = 1024;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq_gen")
+    @SequenceGenerator(
+        name = "users_seq_gen",
+        sequenceName = "users_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @Enumerated(EnumType.STRING)
