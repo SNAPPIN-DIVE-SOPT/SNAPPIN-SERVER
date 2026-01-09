@@ -28,7 +28,7 @@ public enum PhotographerErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
-    SCHEDULE_NOT_FOUND(404, "PHOTOGRAPHER_404_002", "해당 요일에 대한 작가 스케줄이 존재하지 않습니다."),
+    SCHEDULE_NOT_FOUND(404, "PHOTOGRAPHER_404_001", "해당 요일에 대한 작가 스케줄이 존재하지 않습니다."),
 
     ;
 
