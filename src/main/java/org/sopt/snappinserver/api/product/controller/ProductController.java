@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.api.product.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -9,25 +10,30 @@ import org.sopt.snappinserver.api.product.code.ProductSuccessCode;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
-import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
+import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductAvailableTimesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleRangeResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductAvailableTimesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDatesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
-import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 @RestController
+@Validated
 public class ProductController implements ProductApi {
 
     private final GetProductReviewsUseCase getProductReviewsUseCase;
@@ -36,61 +42,78 @@ public class ProductController implements ProductApi {
     private final GetProductAvailableTimesUseCase getProductAvailableTimesUseCase;
 
     @Override
-    public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(Long productId, Long cursor) {
-        ProductReviewPageResult result = getProductReviewsUseCase.getProductReviews(productId, cursor);
-        ProductReviewsResponse data = ProductReviewsResponse.from(result);
-        ProductReviewsMetaResponse meta = ProductReviewsMetaResponse.from(result);
-
-        return ApiResponseBody.ok(ProductSuccessCode.GET_PRODUCT_REVIEWS_OK, data, meta);
-    }
-
-    @Override
-    public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
-        @AuthenticationPrincipal CustomUserInfo principal,
-        Long productId
+    @GetMapping("/{productId}/reviews")
+    public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
+        @PathVariable @NotNull Long productId,
+        @RequestParam(required = false) Long cursor
     ) {
-        ProductPeopleRangeResult result = getProductPeopleRangeUseCase.getProductPeopleRange(productId);
-        ProductPeopleRangeResponse response = ProductPeopleRangeResponse.from(result);
+        ProductReviewPageResult result =
+            getProductReviewsUseCase.getProductReviews(productId, cursor);
 
-        return ApiResponseBody.ok(ProductSuccessCode.GET_PRODUCT_PEOPLE_RANGE_OK, response);
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
+            ProductReviewsResponse.from(result),
+            ProductReviewsMetaResponse.from(result)
+        );
     }
 
     @Override
-    public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
+    @GetMapping("/{productId}/available/people-range")
+    public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
-        Long productId,
-        String date
+
+        @PathVariable @NotNull Long productId
+    ) {
+        ProductPeopleRangeResult result =
+            getProductPeopleRangeUseCase.getProductPeopleRange(productId);
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_PEOPLE_RANGE_OK,
+            ProductPeopleRangeResponse.from(result)
+        );
+    }
+
+    @Override
+    @GetMapping("/{productId}/closed-dates")
+    public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
+        @Parameter(hidden = true)
+        @AuthenticationPrincipal CustomUserInfo principal,
+
+        @PathVariable @NotNull Long productId,
+        @RequestParam @NotBlank String date
     ) {
         YearMonth yearMonth = YearMonth.parse(date);
 
-        ProductClosedDatesResult result = getProductClosedDatesUseCase.getProductClosedDates(productId, yearMonth);
-        ProductClosedDatesResponse response = ProductClosedDatesResponse.from(result);
+        ProductClosedDatesResult result =
+            getProductClosedDatesUseCase.getProductClosedDates(productId, yearMonth);
 
-        return ApiResponseBody.ok(ProductSuccessCode.GET_PRODUCT_AVAILABLE_DATE_OK, response);
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_AVAILABLE_DATE_OK,
+            ProductClosedDatesResponse.from(result)
+        );
     }
 
     @Override
+    @GetMapping("/{productId}/available/times")
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @NotNull
-        Long productId,
-
-        @NotBlank
-        String date
+        @PathVariable @NotNull Long productId,
+        @RequestParam @NotBlank String date
     ) {
         LocalDate targetDate = LocalDate.parse(date);
 
         ProductAvailableTimesResult result =
-            getProductAvailableTimesUseCase.getProductAvailableTimes(productId, targetDate);
-
-        ProductAvailableTimesResponse response =
-            ProductAvailableTimesResponse.from(result);
+            getProductAvailableTimesUseCase.getProductAvailableTimes(
+                productId,
+                targetDate
+            );
 
         return ApiResponseBody.ok(
             ProductSuccessCode.GET_PRODUCT_AVAILABLE_TIMES_OK,
-            response
+            ProductAvailableTimesResponse.from(result)
         );
     }
 }
-
