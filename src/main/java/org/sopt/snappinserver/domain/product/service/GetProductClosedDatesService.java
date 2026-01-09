@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GetProductClosedDatesService implements GetProductClosedDatesUseCase {
 
+    private static final int OPEN_MONTH_RANGE = 6;
+
     private final ProductRepository productRepository;
     private final PhotographerScheduleRepository photographerScheduleRepository;
 
@@ -28,8 +30,12 @@ public class GetProductClosedDatesService implements GetProductClosedDatesUseCas
         Product product = getProduct(productId);
         Photographer photographer = product.getPhotographer();
 
+        if (!isWithinOpenRange(yearMonth)) {
+            return ProductClosedDatesResult.of(List.of());
+        }
+
         List<WeekDay> closedWeekDays = getClosedWeekDays(photographer);
-        List<LocalDate> closedDates = calculateClosedDates(product, yearMonth, closedWeekDays);
+        List<LocalDate> closedDates = calculateClosedDates(yearMonth, closedWeekDays);
 
         return ProductClosedDatesResult.of(closedDates);
     }
@@ -41,19 +47,14 @@ public class GetProductClosedDatesService implements GetProductClosedDatesUseCas
     }
 
     private List<LocalDate> calculateClosedDates(
-        Product product,
         YearMonth yearMonth,
         List<WeekDay> closedWeekDays
     ) {
         LocalDate startOfMonth = yearMonth.atDay(1);
         LocalDate endOfMonth = yearMonth.atEndOfMonth();
 
-        LocalDate productStart = product.getStartsAt().toLocalDate();
-        LocalDate productEnd = product.getEndsAt().toLocalDate();
-
         return startOfMonth
             .datesUntil(endOfMonth.plusDays(1))
-            .filter(date -> !date.isBefore(productStart) && !date.isAfter(productEnd))
             .filter(date -> closedWeekDays.contains(WeekDay.from(date.getDayOfWeek())))
             .toList();
     }
@@ -64,5 +65,12 @@ public class GetProductClosedDatesService implements GetProductClosedDatesUseCas
             .stream()
             .map(PhotographerSchedule::getWeekDay)
             .toList();
+    }
+
+    private boolean isWithinOpenRange(YearMonth targetMonth) {
+        YearMonth startMonth = YearMonth.now();
+        YearMonth endMonth = startMonth.plusMonths(OPEN_MONTH_RANGE);
+
+        return !targetMonth.isBefore(startMonth) && !targetMonth.isAfter(endMonth);
     }
 }
