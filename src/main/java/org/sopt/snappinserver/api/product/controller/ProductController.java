@@ -1,5 +1,7 @@
 package org.sopt.snappinserver.api.product.controller;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +72,11 @@ public class ProductController implements ProductApi {
     @Override
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
         @AuthenticationPrincipal CustomUserInfo principal,
+
+        @NotNull
         Long productId,
+
+        @NotBlank
         String date
     ) {
         LocalDate targetDate = LocalDate.parse(date);
