@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,7 +30,12 @@ public class Mood extends BaseEntity {
     private static final int MAX_DEFINITION_LENGTH = 1024;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mood_seq_gen")
+    @SequenceGenerator(
+        name = "mood_seq_gen",
+        sequenceName = "mood_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @Enumerated(EnumType.STRING)
