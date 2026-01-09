@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
 
+@Schema(description = "상품 달별 휴무일 조회 응답 DTO")
 public record ProductClosedDatesResponse(
 
     @Schema(
