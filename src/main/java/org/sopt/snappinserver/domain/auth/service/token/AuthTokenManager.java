@@ -92,6 +92,5 @@ public class AuthTokenManager {
         if (value == null || !value.userId().equals(userId)) {
             throw new AuthException(AuthErrorCode.LOGOUT_FORBIDDEN);
         }
-
     }
 }
