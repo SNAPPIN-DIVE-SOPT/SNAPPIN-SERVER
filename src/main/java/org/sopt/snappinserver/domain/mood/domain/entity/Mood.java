@@ -26,6 +26,7 @@ public class Mood extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 10;
     private static final int EMBEDDING_DIMENSION = 512;
+    private static final int MAX_DEFINITION_LENGTH = 1024;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -38,29 +39,40 @@ public class Mood extends BaseEntity {
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     private String name;
 
+    @Column(nullable = false, length = MAX_DEFINITION_LENGTH)
+    private String definition;
+
     @Column(columnDefinition = "vector(" + EMBEDDING_DIMENSION + ")")
     @JdbcTypeCode(SqlTypes.VECTOR)
     private List<Float> embedding;
 
     @Builder(access = AccessLevel.PRIVATE)
-    private Mood(MoodCategory category, String name, List<Float> embedding) {
+    private Mood(MoodCategory category, String name, String definition, List<Float> embedding) {
         this.category = category;
         this.name = name;
+        this.definition = definition;
         this.embedding = embedding;
     }
 
-    public static Mood create(MoodCategory category, String name, List<Float> embedding) {
-        validateMood(category, name);
+    public static Mood create(
+        MoodCategory category,
+        String name,
+        String definition,
+        List<Float> embedding
+    ) {
+        validateMood(category, name, definition);
         return Mood.builder()
             .category(category)
             .name(name)
+            .definition(definition)
             .embedding(embedding)
             .build();
     }
 
-    private static void validateMood(MoodCategory category, String name) {
+    private static void validateMood(MoodCategory category, String name, String definition) {
         validateCategoryExists(category);
         validateName(name);
+        validateDefinition(definition);
     }
 
     private static void validateCategoryExists(MoodCategory category) {
@@ -83,6 +95,23 @@ public class Mood extends BaseEntity {
     private static void validateNameLength(String name) {
         if (name.length() > MAX_NAME_LENGTH) {
             throw new MoodException(MoodErrorCode.NAME_TOO_LONG);
+        }
+    }
+
+    private static void validateDefinition(String definition) {
+        validateDefinitionExists(definition);
+        validateDefinitionLength(definition);
+    }
+
+    private static void validateDefinitionExists(String definition) {
+        if (definition == null || definition.isBlank()) {
+            throw new MoodException(MoodErrorCode.DEFINITION_REQUIRED);
+        }
+    }
+
+    private static void validateDefinitionLength(String definition) {
+        if (definition.length() > MAX_DEFINITION_LENGTH) {
+            throw new MoodException(MoodErrorCode.DEFINITION_TOO_LONG);
         }
     }
 
