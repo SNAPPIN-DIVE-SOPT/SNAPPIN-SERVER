@@ -14,11 +14,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationErrorCode;
 import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationException;
+import org.sopt.snappinserver.global.entity.BaseEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ReservationAdditionalPayment {
+public class ReservationAdditionalPayment extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 100;
     private static final int MIN_AMOUNT_VALUE = 10;
