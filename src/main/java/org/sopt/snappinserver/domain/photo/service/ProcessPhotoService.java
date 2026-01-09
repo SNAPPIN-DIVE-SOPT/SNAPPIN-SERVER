@@ -30,7 +30,6 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
     private final MoodRepository moodRepository;
     private final PhotoMoodRepository photoMoodRepository;
 
-    @Transactional
     public void processPhoto(PhotoProcessCommand photoProcessCommand) {
         Photo photo = Photo.create(photoProcessCommand.imageUrl(), photoProcessCommand.embedding());
         photoRepository.save(photo);
