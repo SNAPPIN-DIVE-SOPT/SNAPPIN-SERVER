@@ -93,7 +93,15 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
             .findByProductAndProductOptionCategory(product, ProductOptionCategory.DURATION_TIME)
             .orElseThrow(() -> new ProductException(ProductErrorCode.DURATION_TIME_REQUIRED));
 
-        return Integer.parseInt(durationOption.getAnswer());
+        try {
+            int duration = Integer.parseInt(durationOption.getAnswer());
+            if (duration <= 0) {
+                throw new ProductException(ProductErrorCode.INVALID_PRODUCT_OPTION_FORMAT);
+            }
+            return duration;
+        } catch (NumberFormatException e) {
+            throw new ProductException(ProductErrorCode.INVALID_PRODUCT_OPTION_FORMAT);
+        }
     }
 
     // 업무 시간 기준 30분 단위의 시작 시간 슬롯 생성
