@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.auth.infra.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -43,28 +44,20 @@ public class JwtProvider {
             .compact();
     }
 
-    public void validate(String token) {
-        Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token);
-    }
-
-    public Long getUserId(String token) {
+    public Claims parseAndValidate(String token) {
         return Jwts.parser()
             .verifyWith(key)
             .build()
             .parseSignedClaims(token)
-            .getPayload()
-            .get(CLAIM_USER_ID, Long.class);
+            .getPayload();
     }
 
-    public String getRole(String token) {
-        return Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .get(CLAIM_ROLE, String.class);
+    public Long getUserId(Claims claims) {
+        return claims.get(CLAIM_USER_ID, Long.class);
     }
+
+    public String getRole(Claims claims) {
+        return claims.get(CLAIM_ROLE, String.class);
+    }
+
 }

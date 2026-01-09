@@ -4,8 +4,10 @@ import static org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode.
 import static org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode.INVALID_ACCESS_TOKEN;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,13 +18,10 @@ import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
-import org.sopt.snappinserver.domain.auth.domain.exception.AuthException;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.auth.infra.jwt.JwtProvider;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.sopt.snappinserver.global.response.dto.ErrorMeta;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,10 +60,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String accessToken = header.substring(7);
 
         try {
-            jwtProvider.validate(accessToken);
+            Claims claims = jwtProvider.parseAndValidate(accessToken);
 
-            Long userId = jwtProvider.getUserId(accessToken);
-            String role = jwtProvider.getRole(accessToken);
+            Long userId = jwtProvider.getUserId(claims);
+            String role = jwtProvider.getRole(claims);
 
             CustomUserInfo principal = new CustomUserInfo(userId, role);
 
@@ -83,7 +82,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException e) {
             sendError(response, request, EXPIRED_ACCESS_TOKEN);
             return;
-        } catch (MalformedJwtException | IllegalArgumentException e) {
+        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException e) {
             sendError(response, request, INVALID_ACCESS_TOKEN);
             return;
         }
