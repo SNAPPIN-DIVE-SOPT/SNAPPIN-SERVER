@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
@@ -64,5 +65,24 @@ public interface ProductApi {
         @Schema(description = "조회할 연/월 (yyyy-MM)", example = "2026-03", required = true)
         String date
     );
+
+    @Operation(
+        summary = "시간대별 예약 가능 여부 조회",
+        description = "상품 예약 과정에서 각 일자의 시간대별 예약 가능 여부를 조회합니다."
+    )
+    @GetMapping("/{productId}/available/times")
+    ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
+        @Parameter(hidden = true)
+        @AuthenticationPrincipal CustomUserInfo principal,
+
+        @PathVariable
+        @Schema(description = "상품 아이디", example = "1")
+        Long productId,
+
+        @RequestParam
+        @Schema(description = "조회할 날짜 (yyyy-MM-dd)", example = "2026-03-15", required = true)
+        String date
+    );
+
 
 }
