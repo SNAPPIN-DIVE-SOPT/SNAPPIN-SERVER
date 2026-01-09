@@ -38,7 +38,8 @@ public enum ProductErrorCode implements ErrorCode {
     ),
 
     // 500 SERVER ERROR
-    INVALID_PRODUCT_OPTION_FORMAT(500, "PRODUCT_500_001", "상품 옵션 데이터 형식이 올바르지 않습니다.");
+    INVALID_PRODUCT_OPTION_FORMAT(500, "PRODUCT_500_001", "상품 옵션 데이터 형식이 올바르지 않습니다."),
+    INVALID_PRODUCT_PEOPLE_RANGE(500, "PRODUCT_500_002", "최소 인원이 최대 인원보다 클 수 없습니다.");
 
     private final int status;
     private final String code;

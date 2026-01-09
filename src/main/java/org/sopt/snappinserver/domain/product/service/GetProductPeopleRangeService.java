@@ -26,6 +26,8 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
         int minPeople = getMinPeople(options);
         int maxPeople = getMaxPeople(options);
 
+        validatePeopleRange(minPeople, maxPeople);
+
         return new ProductPeopleRangeResult(minPeople, maxPeople);
     }
 
@@ -69,6 +71,14 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
             .orElseThrow(() ->
                 new ProductException(ProductErrorCode.PRODUCT_PEOPLE_RANGE_NOT_FOUND)
             );
+    }
+
+    private static void validatePeopleRange(int minPeople, int maxPeople) {
+        if (minPeople > maxPeople) {
+            throw new ProductException(
+                ProductErrorCode.INVALID_PRODUCT_PEOPLE_RANGE
+            );
+        }
     }
 
 
