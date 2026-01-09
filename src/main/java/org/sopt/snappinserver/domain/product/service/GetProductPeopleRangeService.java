@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCase {
 
+    private static final int DEFAULT_MIN_PEOPLE = 1;
     private final ProductOptionRepository productOptionRepository;
 
     @Override
@@ -58,7 +59,7 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
             )
             .mapToInt(this::parsePeopleCount)
             .findFirst()
-            .orElse(1);
+            .orElse(DEFAULT_MIN_PEOPLE);
     }
 
     private int getMaxPeople(List<ProductOption> options) {
