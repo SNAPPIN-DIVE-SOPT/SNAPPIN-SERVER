@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -36,7 +37,12 @@ public class AuthProvider extends BaseEntity {
     private static final int MAX_PROVIDER_ID_LENGTH = 300;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "auth_provider_seq_gen")
+    @SequenceGenerator(
+        name = "auth_provider_seq_gen",
+        sequenceName = "auth_provider_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
