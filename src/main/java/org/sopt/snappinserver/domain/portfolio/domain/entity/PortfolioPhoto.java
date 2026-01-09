@@ -24,7 +24,7 @@ public class PortfolioPhoto extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "portfolio_photo_seq_gen")
     @SequenceGenerator(
         name = "portfolio_photo_seq_gen",
-        sequenceName = "portfolio_photo_seq_",
+        sequenceName = "portfolio_photo_seq",
         allocationSize = 1
     )
     private Long id;
