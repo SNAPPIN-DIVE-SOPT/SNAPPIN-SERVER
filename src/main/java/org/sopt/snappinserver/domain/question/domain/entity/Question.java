@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,12 @@ public class Question extends BaseEntity {
     private static final int MAX_CONTENTS_LENGTH = 200;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "question_seq_gen")
+    @SequenceGenerator(
+        name = "question_seq_gen",
+        sequenceName = "question_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @Enumerated(EnumType.STRING)
