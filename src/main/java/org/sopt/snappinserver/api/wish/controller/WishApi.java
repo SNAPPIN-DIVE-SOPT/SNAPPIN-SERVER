@@ -2,7 +2,6 @@ package org.sopt.snappinserver.api.wish.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.sopt.snappinserver.api.wish.dto.request.WishPortfolioRequest;
@@ -25,8 +24,5 @@ public interface WishApi {
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo userInfo,
 
-        @Valid @RequestBody
-        @Schema(description = "상품 아이디", example = "1")
-        WishPortfolioRequest request
-    );
+        @Valid @RequestBody WishPortfolioRequest request);
 }
