@@ -25,22 +25,17 @@ public class WishController implements WishApi {
         @AuthenticationPrincipal CustomUserInfo userInfo,
         WishPortfolioRequest request
     ) {
-        WishPortfolioResult result =
-            postWishPortfolioUseCase.execute(
-                userInfo.userId(),
-                request.portfolioId()
-            );
-
-        WishPortfolioResponse response =
-            WishPortfolioResponse.from(result);
-
-        return ApiResponseBody.ok(
-            resolveSuccessCode(result),
-            response
+        WishPortfolioResult result = postWishPortfolioUseCase.togglePortfolioWish(
+            userInfo.userId(),
+            request.portfolioId()
         );
+
+        WishPortfolioResponse response = WishPortfolioResponse.from(result);
+
+        return ApiResponseBody.ok(decideSuccessCode(result), response);
     }
 
-    private WishSuccessCode resolveSuccessCode(WishPortfolioResult result) {
+    private WishSuccessCode decideSuccessCode(WishPortfolioResult result) {
         return result.liked()
             ? WishSuccessCode.POST_WISH_LIKE_PORTFOLIO_OK
             : WishSuccessCode.POST_WISH_CANCEL_PORTFOLIO_OK;
