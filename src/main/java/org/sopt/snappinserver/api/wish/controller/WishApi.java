@@ -20,7 +20,7 @@ public interface WishApi {
         description = "로그인한 사용자가 포트폴리오에 대해 좋아요를 추가하거나, 이미 좋아요를 누른 경우 취소합니다."
     )
     @PostMapping("/portfolios")
-    ApiResponseBody<WishPortfolioResponse, Void> wishPortfolio(
+    ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo userInfo,
 

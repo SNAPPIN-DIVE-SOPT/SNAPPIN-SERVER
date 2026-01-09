@@ -21,7 +21,7 @@ public class WishController implements WishApi {
 
 
     @Override
-    public ApiResponseBody<WishPortfolioResponse, Void> wishPortfolio(
+    public ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
         @AuthenticationPrincipal CustomUserInfo userInfo,
         WishPortfolioRequest request
     ) {
