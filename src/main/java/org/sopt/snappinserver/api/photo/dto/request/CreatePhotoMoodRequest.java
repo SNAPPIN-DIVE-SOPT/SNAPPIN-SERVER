@@ -7,7 +7,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.Length;
 
 @Schema(name = "무드 태그와 연결할 사진 정보 DTO")
-public record PhotoProcessRequest(
+public record CreatePhotoMoodRequest(
 
     @Schema(name = "사진의 S3 key 값")
     @NotBlank @Length(max = 1024) String imageUrl,

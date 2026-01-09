@@ -3,7 +3,7 @@ package org.sopt.snappinserver.api.photo.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.photo.code.PhotoSuccessCode;
-import org.sopt.snappinserver.api.photo.dto.request.PhotoProcessRequest;
+import org.sopt.snappinserver.api.photo.dto.request.CreatePhotoMoodRequest;
 import org.sopt.snappinserver.domain.photo.service.dto.request.PhotoProcessCommand;
 import org.sopt.snappinserver.domain.photo.service.usecase.ProcessPhotoUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -22,9 +22,9 @@ public class PhotoController implements PhotoApi {
     @Override
     @PostMapping("/process")
     public ApiResponseBody<Void, Void> createPhotoMoodConnection(
-        @Valid @RequestBody PhotoProcessRequest photoProcessRequest
+        @Valid @RequestBody CreatePhotoMoodRequest createPhotoMoodRequest
     ) {
-        PhotoProcessCommand photoProcessCommand = PhotoProcessCommand.from(photoProcessRequest);
+        PhotoProcessCommand photoProcessCommand = PhotoProcessCommand.from(createPhotoMoodRequest);
         processPhotoUseCase.linkPhotoWithMoodTags(photoProcessCommand);
 
         return ApiResponseBody.ok(PhotoSuccessCode.PHOTO_MOOD_CREATED);
