@@ -14,7 +14,7 @@ import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class ReissueTokenService implements ReissueTokenUseCase {
@@ -28,9 +28,9 @@ public class ReissueTokenService implements ReissueTokenUseCase {
         RefreshTokenValue refreshTokenValue = refreshTokenStore.find(refreshToken);
         validateRefreshTokenValueExists(refreshTokenValue);
 
-        authTokenManager.validateUserAgent(userAgent, refreshTokenValue.userAgentHash());
         User user = userRepository.findById(refreshTokenValue.userId())
             .orElseThrow(() -> new AuthException(AuthErrorCode.USER_NOT_FOUND));
+        authTokenManager.validateUserAgent(userAgent, refreshTokenValue.userAgentHash());
         refreshTokenStore.delete(refreshToken);
 
         TokenPair tokenPair = authTokenManager.issueTokenPair(user, userAgent);
