@@ -74,7 +74,7 @@ public class AuthController implements AuthApi {
 
     @Override
     @PostMapping("/reissue")
-    public ApiResponseBody<CreateAccessTokenResponse, Void> createRefreshedAccessToken(
+    public ApiResponseBody<CreateAccessTokenResponse, Void> createReissuedTokens(
         @CookieValue(name = "refreshToken", required = false) String refreshToken,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
@@ -96,6 +96,20 @@ public class AuthController implements AuthApi {
         );
     }
 
+    @Override
+    @PostMapping("/logout")
+    public ApiResponseBody<Void, Void> logout(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        @CookieValue(name = "refreshToken", required = false) String refreshToken,
+        HttpServletResponse httpServletResponse
+    ) {
+        logoutUseCase.logout(principal.userId(), refreshToken);
+        ResponseCookie deletedCookie = getDeletedCookie();
+        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, deletedCookie.toString());
+
+        return ApiResponseBody.ok(AuthSuccessCode.LOGOUT_SUCCESS);
+    }
+
     private ResponseCookie getResponseCookie(String refreshTokenValue) {
         return ResponseCookie.from("refreshToken", refreshTokenValue)
             .httpOnly(true)
@@ -110,20 +124,6 @@ public class AuthController implements AuthApi {
         if (refreshToken == null || refreshToken.isBlank()) {
             throw new AuthException(AuthErrorCode.REFRESH_TOKEN_COOKIE_REQUIRED);
         }
-    }
-
-    @Override
-    @PostMapping("/logout")
-    public ApiResponseBody<Void, Void> logout(
-        @AuthenticationPrincipal CustomUserInfo principal,
-        @CookieValue(name = "refreshToken", required = false) String refreshToken,
-        HttpServletResponse httpServletResponse
-    ) {
-        logoutUseCase.logout(principal.userId(), refreshToken);
-        ResponseCookie deletedCookie = getDeletedCookie();
-        httpServletResponse.addHeader(HttpHeaders.SET_COOKIE, deletedCookie.toString());
-
-        return ApiResponseBody.ok(AuthSuccessCode.LOGOUT_SUCCESS);
     }
 
     private ResponseCookie getDeletedCookie() {

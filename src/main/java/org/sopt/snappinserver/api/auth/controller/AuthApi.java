@@ -39,7 +39,7 @@ public interface AuthApi {
         summary = "토큰 재발급",
         description = "accessToken 만료 시, 기존 Refresh Token 으로 새로운 accessToken 을 반환하고, 새로운 refreshToken 으로 쿠키를 교체합니다."
     )
-    ApiResponseBody<CreateAccessTokenResponse, Void> createRefreshedAccessToken(
+    ApiResponseBody<CreateAccessTokenResponse, Void> createReissuedTokens(
 
         @Schema(description = "재발급 때 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
         @CookieValue(name = "refreshToken") String refreshToken,
@@ -51,11 +51,16 @@ public interface AuthApi {
 
     @Operation(
         summary = "로그아웃",
-        description = "accessToken, refreshToken 을 받아 사용자를 로그아웃 처리합니다."
+        description = "accessToken 으로 인증된 사용자를 기준으로 refreshToken 을 무효화하여 사용자를 로그아웃 처리합니다."
     )
     ApiResponseBody<Void, Void> logout(
+
+        @Schema(description = "인증이 필요합니다.")
         @AuthenticationPrincipal CustomUserInfo principal,
+
+        @Schema(description = "로그아웃 시 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
         @CookieValue(name = "refreshToken", required = false) String refreshToken,
+
         HttpServletResponse response
     );
 
