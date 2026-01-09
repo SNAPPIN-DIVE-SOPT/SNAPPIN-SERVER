@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
-import org.sopt.snappinserver.domain.mood.repository.MoodRepository.MoodWithScore;
+import org.sopt.snappinserver.domain.mood.repository.MoodWithScore;
 import org.sopt.snappinserver.domain.photo.domain.exception.PhotoErrorCode;
 import org.sopt.snappinserver.domain.photo.domain.exception.PhotoException;
 import org.sopt.snappinserver.global.entity.BaseEntity;
@@ -77,7 +77,7 @@ public class Photo extends BaseEntity {
                     this,
                     moods.get(i),
                     FIRST_RANK + i,
-                    scores.get(i).getScore()
+                    scores.get(i).score()
                 )
             )
             .toList();
