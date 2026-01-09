@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
@@ -29,7 +30,12 @@ public class AvailableLocation extends BaseEntity {
     private static final int MAX_SIDO_LENGTH = 10;
     private static final int MAX_SIGUNGU_LENGTH = 50;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "available_location_seq_gen")
+    @SequenceGenerator(
+        name = "available_location_seq_gen",
+        sequenceName = "available_location_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @Column(name = "sido", nullable = false, length = MAX_SIDO_LENGTH)

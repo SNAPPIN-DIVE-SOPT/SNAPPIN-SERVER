@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +23,12 @@ public class Place extends BaseEntity {
     private static final int MAX_ADDRESS_LENGTH = 255;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "place_seq_gen")
+    @SequenceGenerator(
+        name = "place_seq_gen",
+        sequenceName = "place_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
