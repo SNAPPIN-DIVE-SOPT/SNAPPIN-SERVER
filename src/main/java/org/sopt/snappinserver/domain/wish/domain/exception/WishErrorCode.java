@@ -18,8 +18,9 @@ public enum WishErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
-
-    ;
+    USER_NOT_FOUND(404, "WISH_404_001", "존재하지 않는 사용자입니다."),
+    PRODUCT_NOT_FOUND(404, "WISH_404_002", "존재하지 않는 상품입니다."),
+    PORTFOLIO_NOT_FOUND(404, "WISH_404_003", "존재하지 않는 포트폴리오입니다.");
 
     private final int status;
     private final String code;
