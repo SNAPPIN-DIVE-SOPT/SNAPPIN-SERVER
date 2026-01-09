@@ -35,21 +35,8 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
     private List<ProductOption> getPeopleRangeOptions(Long productId) {
         return productOptionRepository.findByProductIdAndProductOptionCategoryIn(
             productId,
-            List.of(
-                ProductOptionCategory.MIN_PEOPLE,
-                ProductOptionCategory.MAX_PEOPLE
-            )
+            List.of(ProductOptionCategory.MIN_PEOPLE, ProductOptionCategory.MAX_PEOPLE)
         );
-    }
-
-    private int parsePeopleCount(ProductOption option) {
-        try {
-            return Integer.parseInt(option.getAnswer());
-        } catch (NumberFormatException e) {
-            throw new ProductException(
-                ProductErrorCode.INVALID_PRODUCT_OPTION_FORMAT
-            );
-        }
     }
 
     private int getMinPeople(List<ProductOption> options) {
@@ -74,17 +61,21 @@ public class GetProductPeopleRangeService implements GetProductPeopleRangeUseCas
             );
     }
 
+    private int parsePeopleCount(ProductOption option) {
+        try {
+            return Integer.parseInt(option.getAnswer());
+        } catch (NumberFormatException e) {
+            throw new ProductException(ProductErrorCode.INVALID_PRODUCT_OPTION_FORMAT);
+        }
+    }
+
     private static void validatePeopleRange(int minPeople, int maxPeople) {
         if (minPeople <= 0 || maxPeople <= 0) {
-            throw new ProductException(
-                ProductErrorCode.INVALID_PRODUCT_PEOPLE_RANGE
-            );
+            throw new ProductException(ProductErrorCode.INVALID_PRODUCT_PEOPLE_RANGE);
         }
 
         if (minPeople > maxPeople) {
-            throw new ProductException(
-                ProductErrorCode.INVALID_PRODUCT_PEOPLE_RANGE
-            );
+            throw new ProductException(ProductErrorCode.INVALID_PRODUCT_PEOPLE_RANGE);
         }
     }
 

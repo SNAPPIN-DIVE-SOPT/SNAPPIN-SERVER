@@ -22,9 +22,7 @@ public class ProductController implements ProductApi {
     private final GetProductPeopleRangeUseCase getProductPeopleRangeUseCase;
 
     @Override
-    public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse>
-    getProductReviews(Long productId, Long cursor) {
-
+    public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(Long productId, Long cursor) {
         ProductReviewPageResult result =
             getProductReviewsUseCase.getProductReviews(productId, cursor);
 
@@ -42,9 +40,7 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ApiResponseBody<ProductPeopleRangeResponse, Void>
-    getProductPeopleRange(Long productId) {
-
+    public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(Long productId) {
         ProductPeopleRangeResult result =
             getProductPeopleRangeUseCase.getProductPeopleRange(productId);
 
