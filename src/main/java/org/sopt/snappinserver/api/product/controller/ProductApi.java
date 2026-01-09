@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.product.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
@@ -18,10 +19,14 @@ public interface ProductApi {
         description = "커서 기반 페이지네이션 방식으로 상품 리뷰 목록을 조회합니다."
     )
     @GetMapping("/{productId}/reviews")
-    ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse>
-    getProductReviews(
-        @PathVariable Long productId,
-        @RequestParam(required = false) Long cursor
+    ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
+        @PathVariable
+        @Schema(description = "상품 아이디", example = "1")
+        Long productId,
+
+        @RequestParam(required = false)
+        @Schema(description = "다음 페이지 조회를 위한 커서 값", example = "6")
+        Long cursor
     );
 
     @Operation(
@@ -29,9 +34,10 @@ public interface ProductApi {
         description = "예약 과정에서 상품의 촬영 가능 최대/최소 인원 수를 조회합니다."
     )
     @GetMapping("/{productId}/available/people-range")
-    ApiResponseBody<ProductPeopleRangeResponse, Void>
-    getProductPeopleRange(
-        @PathVariable Long productId
+    ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
+        @PathVariable
+        @Schema(description = "상품 아이디", example = "1")
+        Long productId
     );
 
 }
