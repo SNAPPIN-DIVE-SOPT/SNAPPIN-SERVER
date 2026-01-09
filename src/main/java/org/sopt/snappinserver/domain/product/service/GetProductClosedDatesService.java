@@ -46,19 +46,6 @@ public class GetProductClosedDatesService implements GetProductClosedDatesUseCas
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
     }
 
-    private List<LocalDate> calculateClosedDates(
-        YearMonth yearMonth,
-        List<WeekDay> closedWeekDays
-    ) {
-        LocalDate startOfMonth = yearMonth.atDay(1);
-        LocalDate endOfMonth = yearMonth.atEndOfMonth();
-
-        return startOfMonth
-            .datesUntil(endOfMonth.plusDays(1))
-            .filter(date -> closedWeekDays.contains(WeekDay.from(date.getDayOfWeek())))
-            .toList();
-    }
-
     private List<WeekDay> getClosedWeekDays(Photographer photographer) {
         return photographerScheduleRepository
             .findAllByPhotographerAndDayOffTrue(photographer)
@@ -72,5 +59,18 @@ public class GetProductClosedDatesService implements GetProductClosedDatesUseCas
         YearMonth endMonth = startMonth.plusMonths(OPEN_MONTH_RANGE);
 
         return !targetMonth.isBefore(startMonth) && !targetMonth.isAfter(endMonth);
+    }
+
+    private List<LocalDate> calculateClosedDates(
+        YearMonth yearMonth,
+        List<WeekDay> closedWeekDays
+    ) {
+        LocalDate startOfMonth = yearMonth.atDay(1);
+        LocalDate endOfMonth = yearMonth.atEndOfMonth();
+
+        return startOfMonth
+            .datesUntil(endOfMonth.plusDays(1))
+            .filter(date -> closedWeekDays.contains(WeekDay.from(date.getDayOfWeek())))
+            .toList();
     }
 }
