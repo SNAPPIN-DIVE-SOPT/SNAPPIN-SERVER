@@ -34,8 +34,7 @@ public enum ProductErrorCode implements ErrorCode {
 
     // 404 NOT FOUND
     PRODUCT_NOT_FOUND(404, "PRODUCT_404_001", "존재하지 않는 상품입니다."),
-    PRODUCT_PEOPLE_RANGE_NOT_FOUND(404, "PRODUCT_404_002", "촬영 가능 인원 정보가 존재하지 않습니다."
-    ),
+    PRODUCT_PEOPLE_RANGE_NOT_FOUND(404, "PRODUCT_404_002", "촬영 가능 인원 정보가 존재하지 않습니다."),
 
     // 500 SERVER ERROR
     INVALID_PRODUCT_OPTION_FORMAT(500, "PRODUCT_500_001", "상품 옵션 데이터 형식이 올바르지 않습니다."),
