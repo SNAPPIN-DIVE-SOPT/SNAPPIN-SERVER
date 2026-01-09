@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.global.enums;
 
+import java.time.DayOfWeek;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +16,10 @@ public enum WeekDay {
     SATURDAY("토요일"),
     SUNDAY("일요일"),
     ;
+
+    public static WeekDay from(DayOfWeek dayOfWeek) {
+        return WeekDay.valueOf(dayOfWeek.name());
+    }
 
     private final String day;
 }

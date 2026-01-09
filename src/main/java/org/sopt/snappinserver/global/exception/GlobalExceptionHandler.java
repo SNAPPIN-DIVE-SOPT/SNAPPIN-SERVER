@@ -2,6 +2,7 @@ package org.sopt.snappinserver.global.exception;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.sopt.snappinserver.global.response.dto.ErrorMeta;
@@ -48,6 +49,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.NOT_FOUND)
             .body(ApiResponseBody.onFailure(CommonErrorCode.RESOURCE_NOT_FOUND, meta));
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleDateTimeParseException(
+        DateTimeParseException exception,
+        HttpServletRequest request
+    ) {
+        log.error("DateTimeParseException: {}", exception.getMessage());
+
+        ErrorMeta meta = new ErrorMeta(
+            request.getRequestURI(),
+            Instant.now()
+        );
+
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponseBody.onFailure(CommonErrorCode.INVALID_MAPPING_PARAMETER, meta));
     }
 
     @ExceptionHandler(BusinessException.class)
