@@ -26,3 +26,13 @@ auth:
 
 cors:
   allowed-origins: http://localhost:8080
+
+cloud:
+  aws:
+    credentials:
+      access-key: asdf
+      secret-key: asdf
+    region:
+      static: asfd
+    s3:
+      bucket: asdf
