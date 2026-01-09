@@ -15,7 +15,7 @@ public enum ProductErrorCode implements ErrorCode {
     PRICE_REQUIRED(400, "PRODUCT_400_004", "가격은 필수입니다."),
     PRICE_TOO_EXPENSIVE(400, "PRODUCT_400_005", "가격은 100만원 이하입니다."),
     PRICE_TOO_CHEAP(400, "PRODUCT_400_006", "가격은 10원 이상입니다."),
-    SNAP_CATEGORY_REQUIRED(400,"PRODUCT_400_007", "촬영 종류는 필수입니다."),
+    SNAP_CATEGORY_REQUIRED(400, "PRODUCT_400_007", "촬영 종류는 필수입니다."),
     DESCRIPTION_TOO_LONG(400, "PRODUCT_400_008", "상품 소개 길이는 1024자 이하입니다."),
     EQUIPMENT_TOO_LONG(400, "PRODUCT_400_009", "사용 장비 설명 길이는 512자 이하입니다."),
     PROCESS_DESCRIPTION_TOO_LONG(400, "PRODUCT_400_010", "촬영 진행 순서 길이는 1024자 이하입니다."),
@@ -33,7 +33,12 @@ public enum ProductErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
-    PRODUCT_NOT_FOUND(404, "PRODUCT_404_001", "존재하지 않는 상품입니다.");
+    PRODUCT_NOT_FOUND(404, "PRODUCT_404_001", "존재하지 않는 상품입니다."),
+    PRODUCT_PEOPLE_RANGE_NOT_FOUND(404, "PRODUCT_404_002", "촬영 가능 인원 정보가 존재하지 않습니다."),
+
+    // 500 SERVER ERROR
+    INVALID_PRODUCT_OPTION_FORMAT(500, "PRODUCT_500_001", "상품 옵션 데이터 형식이 올바르지 않습니다."),
+    INVALID_PRODUCT_PEOPLE_RANGE(500, "PRODUCT_500_002", "최대/최소 인원 수가 유효한 값이 아닙니다.");
 
     private final int status;
     private final String code;
