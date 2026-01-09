@@ -1,7 +1,5 @@
 package org.sopt.snappinserver.domain.product.service;
 
-import static org.sopt.snappinserver.domain.product.domain.exception.ProductErrorCode.PRODUCT_NOT_FOUND;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -51,7 +49,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
 
         // 휴무일인 경우 예약 불가
         if (schedule.isDayOff()) {
-            return new ProductAvailableTimesResult(date, List.of());
+            throw new ProductException(ProductErrorCode.PRODUCT_UNAVAILABLE_DATE);
         }
 
         int durationMinutes = getDurationMinutes(product);
@@ -79,7 +77,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
     // 상품 조회
     private Product getProduct(Long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new ProductException(PRODUCT_NOT_FOUND));
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
     }
 
     // 작가의 요일별 스케줄 조회

@@ -29,6 +29,7 @@ public enum ProductErrorCode implements ErrorCode {
     ANSWER_TOO_LONG(400, "PRODUCT_400_018", ""),
     INVALID_CURSOR(400, "PRODUCT_400_019", "유효하지 않은 커서 값입니다."),
     DURATION_TIME_REQUIRED(400, "PRODUCT_400_020", "촬영 시간 옵션은 필수입니다."),
+    PRODUCT_UNAVAILABLE_DATE(400, "PRODUCT_400_021", "예약이 불가능한 날짜입니다."),
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
