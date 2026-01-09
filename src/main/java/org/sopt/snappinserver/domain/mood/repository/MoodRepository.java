@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.domain.mood.repository;
 
-import com.pgvector.PGvector;
 import java.util.List;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.springframework.data.jpa.repository.JpaRepository;
