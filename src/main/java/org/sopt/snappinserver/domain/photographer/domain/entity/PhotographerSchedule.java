@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import java.time.LocalTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -28,7 +29,12 @@ import org.sopt.snappinserver.global.enums.WeekDay;
 public class PhotographerSchedule extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "photographer_schedule_seq_gen")
+    @SequenceGenerator(
+        name = "photographer_schedule_seq_gen",
+        sequenceName = "photographer_schedule_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

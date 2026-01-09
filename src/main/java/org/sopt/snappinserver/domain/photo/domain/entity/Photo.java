@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.AccessLevel;
@@ -26,7 +27,12 @@ public class Photo extends BaseEntity {
     private static final int FIRST_RANK = 1;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "photo_seq_gen")
+    @SequenceGenerator(
+        name = "photo_seq_gen",
+        sequenceName = "photo_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @Column(nullable = false, length = MAX_IMAGE_URL_LENGTH)

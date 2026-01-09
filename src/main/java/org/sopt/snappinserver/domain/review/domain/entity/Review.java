@@ -20,7 +20,12 @@ public class Review extends BaseEntity {
     private static final int MAX_CONTENT_LENGTH = 512;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_seq_gen")
+    @SequenceGenerator(
+        name = "review_seq_gen",
+        sequenceName = "review_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)

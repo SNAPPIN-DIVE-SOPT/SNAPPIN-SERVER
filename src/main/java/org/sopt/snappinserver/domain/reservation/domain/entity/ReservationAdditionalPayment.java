@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,7 +26,12 @@ public class ReservationAdditionalPayment extends BaseEntity {
     private static final int MIN_AMOUNT_VALUE = 10;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "reservation_additional_payment_seq_gen")
+    @SequenceGenerator(
+        name = "reservation_additional_payment_seq_gen",
+        sequenceName = "reservation_additional_payment_seq",
+        allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
