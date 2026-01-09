@@ -1,5 +1,8 @@
 package org.sopt.snappinserver.global.config.security;
 
+import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.global.security.JwtAccessDeniedHandler;
+import org.sopt.snappinserver.global.security.TokenAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,8 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -36,6 +41,9 @@ public class SecurityConfig {
         "/api/v1/products/*/reservations"
     };
 
+    private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -46,16 +54,21 @@ public class SecurityConfig {
             )
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-
+            .anonymous(AbstractHttpConfigurer::disable)
+            .exceptionHandling(e -> e
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers(AUTHENTICATED_URLS).authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login/kakao").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/reissue").permitAll()
                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_URLS).permitAll()
                 .anyRequest().authenticated()
-            );
+            )
+            .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

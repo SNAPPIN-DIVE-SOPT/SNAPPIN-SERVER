@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.auth.service;
+package org.sopt.snappinserver.domain.auth.service.token;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -9,11 +9,11 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthException;
+import org.sopt.snappinserver.domain.auth.domain.value.TokenPair;
 import org.sopt.snappinserver.domain.auth.infra.redis.RefreshTokenStore;
 import org.sopt.snappinserver.domain.auth.infra.redis.RefreshTokenValue;
-import org.sopt.snappinserver.domain.auth.jwt.CustomUserInfo;
-import org.sopt.snappinserver.domain.auth.jwt.JwtProvider;
-import org.sopt.snappinserver.domain.auth.service.dto.response.LoginResult;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.auth.infra.jwt.JwtProvider;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,13 +30,13 @@ public class AuthTokenManager {
     @Value("${jwt.refresh-token-ttl-seconds}")
     private long refreshTokenSeconds;
 
-    public LoginResult issueTokens(User user, String userAgent) {
+    public TokenPair issueTokenPair(User user, String userAgent) {
         String accessToken = jwtProvider.createAccessToken(CustomUserInfo.from(user));
         String refreshToken = UUID.randomUUID().toString();
 
         saveRefreshToken(user.getId(), refreshToken, userAgent);
 
-        return new LoginResult(accessToken, refreshToken);
+        return new TokenPair(accessToken, refreshToken);
     }
 
     private void saveRefreshToken(Long userId, String refreshToken, String userAgent) {
@@ -50,6 +50,25 @@ public class AuthTokenManager {
         );
     }
 
+    public void validateUserAgent(String requestUserAgent, String userAgentHash) {
+        if (userAgentHash == null) {
+            return;
+        }
+
+        validateUserAgentExists(requestUserAgent);
+        String currentHash = hashUserAgent(requestUserAgent);
+
+        if (!userAgentHash.equals(currentHash)) {
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+        }
+    }
+
+    private void validateUserAgentExists(String requestUserAgent) {
+        if (requestUserAgent == null) {
+            throw new AuthException(AuthErrorCode.INVALID_REFRESH_TOKEN);
+        }
+    }
+
     private String hashUserAgent(String userAgent) {
         try {
             MessageDigest digest = MessageDigest.getInstance(HASH_ALGORITHM);
@@ -57,6 +76,21 @@ public class AuthTokenManager {
             return HexFormat.of().formatHex(hash);
         } catch (NoSuchAlgorithmException e) {
             throw new AuthException(AuthErrorCode.SHA_256_UNSUPPORTED);
+        }
+    }
+
+    public void logout(Long userId, String refreshToken) {
+        if (refreshToken == null) {
+            return;
+        }
+        validateRefreshTokenOwner(userId, refreshToken);
+        refreshTokenStore.delete(refreshToken);
+    }
+
+    private void validateRefreshTokenOwner(Long userId, String refreshToken) {
+        RefreshTokenValue value = refreshTokenStore.find(refreshToken);
+        if (value == null || !value.userId().equals(userId)) {
+            throw new AuthException(AuthErrorCode.LOGOUT_FORBIDDEN);
         }
     }
 }

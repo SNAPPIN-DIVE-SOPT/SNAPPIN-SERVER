@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Component
-public class UserProcessor {
+public class GetSocialUserService {
 
     private final UserRepository userRepository;
     private final AuthProviderRepository authProviderRepository;

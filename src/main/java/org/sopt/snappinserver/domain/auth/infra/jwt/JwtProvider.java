@@ -1,11 +1,12 @@
-package org.sopt.snappinserver.domain.auth.jwt;
+package org.sopt.snappinserver.domain.auth.infra.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
 import java.time.Instant;
 import java.util.Date;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class JwtProvider {
     private static final String CLAIM_USER_ID = "userId";
     private static final String CLAIM_ROLE = "role";
 
-    private final Key key;
+    private final SecretKey key;
     private final long accessTokenExpTime;
 
     public JwtProvider(
@@ -42,4 +43,21 @@ public class JwtProvider {
             .signWith(key)
             .compact();
     }
+
+    public Claims parseAndValidate(String token) {
+        return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
+    }
+
+    public Long getUserId(Claims claims) {
+        return claims.get(CLAIM_USER_ID, Long.class);
+    }
+
+    public String getRole(Claims claims) {
+        return claims.get(CLAIM_ROLE, String.class);
+    }
+
 }

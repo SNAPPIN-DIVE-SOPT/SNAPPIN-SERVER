@@ -29,6 +29,17 @@ public record ApiResponseBody<T, M>(
     M meta
 ) {
 
+    public static <T> ApiResponseBody<T, Void> ok(SuccessCode successCode) {
+        return new ApiResponseBody<>(
+            true,
+            successCode.getStatus(),
+            successCode.getMessage(),
+            successCode.getCode(),
+            null,
+            null
+        );
+    }
+
     public static <T> ApiResponseBody<T, Void> ok(SuccessCode successCode, T data) {
         return new ApiResponseBody<>(
             true,

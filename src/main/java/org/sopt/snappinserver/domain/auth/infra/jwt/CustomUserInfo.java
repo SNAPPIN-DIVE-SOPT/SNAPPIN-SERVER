@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.auth.jwt;
+package org.sopt.snappinserver.domain.auth.infra.jwt;
 
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 

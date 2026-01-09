@@ -11,6 +11,12 @@ public enum CommonErrorCode implements ErrorCode {
     // 400 BAD REQUEST
     INVALID_MAPPING_PARAMETER(400, "COMMON_400_001", "매핑할 수 없는 값입니다."),
 
+    // 401 UNAUTHENTICATED
+    UNAUTHORIZED(401, "COMMON_401_001", "인증에 실패했습니다."),
+
+    // 403 FORBIDDEN
+    FORBIDDEN(403, "COMMON_403_001", "접근 권한이 없습니다."),
+
     // 404 NOT FOUND
     RESOURCE_NOT_FOUND(404, "COMMON_404_001", "존재하지 않는 리소스입니다."),
 
