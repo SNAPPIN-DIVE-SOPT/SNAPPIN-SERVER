@@ -8,6 +8,7 @@ import org.sopt.snappinserver.api.category.dto.response.CategoriesResponse;
 import org.sopt.snappinserver.api.category.dto.response.CategoryResponse;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController implements CategoryApi {
 
     @Override
+    @GetMapping
     public ApiResponseBody<CategoriesResponse, Void> getCategories() {
         List<CategoryResponse> categories =
                 Arrays.stream(SnapCategory.values())
