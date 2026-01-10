@@ -17,7 +17,6 @@ public class S3Service {
 
     private final S3Presigner s3Presigner;
 
-    @NotBlank
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
 
