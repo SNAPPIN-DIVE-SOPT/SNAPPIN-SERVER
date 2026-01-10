@@ -17,10 +17,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sopt.snappinserver.domain.photographer.domain.exception.PhotographerErrorCode;
 import org.sopt.snappinserver.domain.photographer.domain.exception.PhotographerException;
-import org.sopt.snappinserver.global.enums.Gender;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.global.entity.BaseEntity;
-import org.sopt.snappinserver.global.enums.SnapCategory;
+import org.sopt.snappinserver.global.enums.Gender;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -54,10 +53,6 @@ public class Photographer extends BaseEntity {
     @Column(nullable = false)
     private Gender gender;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private SnapCategory specialty;
-
     @Column(length = MAX_BIO_LENGTH)
     private String bio;
 
@@ -67,14 +62,12 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        SnapCategory specialty,
         String bio
     ) {
         this.user = user;
         this.name = name;
         this.nickname = nickname;
         this.gender = gender;
-        this.specialty = specialty;
         this.bio = bio;
     }
 
@@ -83,16 +76,14 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        SnapCategory specialty,
         String bio
     ) {
-        validatePhotographer(user, name, nickname, gender, specialty, bio);
+        validatePhotographer(user, name, nickname, gender, bio);
         return Photographer.builder()
             .user(user)
             .name(name)
             .nickname(nickname)
             .gender(gender)
-            .specialty(specialty)
             .bio(bio)
             .build();
     }
@@ -102,14 +93,12 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        SnapCategory specialty,
         String bio
     ) {
         validateUserExists(user);
         validateName(name);
         validateNickname(nickname);
         validateGenderExists(gender);
-        validateSpecialtyExists(specialty);
         validateBioLength(bio);
     }
 
@@ -156,12 +145,6 @@ public class Photographer extends BaseEntity {
     private static void validateGenderExists(Gender gender) {
         if (gender == null) {
             throw new PhotographerException(PhotographerErrorCode.GENDER_REQUIRED);
-        }
-    }
-
-    private static void validateSpecialtyExists(SnapCategory specialty) {
-        if (specialty == null) {
-            throw new PhotographerException(PhotographerErrorCode.SPECIALTY_REQUIRED);
         }
     }
 
