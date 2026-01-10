@@ -46,7 +46,7 @@ public class ProductController implements ProductApi {
     @GetMapping("/{productId}/reviews")
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
         @NotNull @PathVariable Long productId,
-        @RequestParam(required = false) Long cursor
+        @RequestParam(value = "cursor", required = false) Long cursor
     ) {
         ProductReviewPageResult result =
             getProductReviewsUseCase.getProductReviews(productId, cursor);
@@ -61,6 +61,7 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/available/people-range")
     public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @NotNull @PathVariable Long productId
@@ -77,10 +78,11 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/closed-dates")
     public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @NotNull @PathVariable Long productId,
-        @NotBlank @RequestParam String date
+        @NotBlank @RequestParam(value = "date") String date
     ) {
         YearMonth yearMonth = YearMonth.parse(date);
 
@@ -96,11 +98,12 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/available/times")
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
+        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @NotNull @PathVariable Long productId,
 
-        @NotNull @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        @NotNull @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate date
     ) {
         ProductAvailableTimesResult result =
