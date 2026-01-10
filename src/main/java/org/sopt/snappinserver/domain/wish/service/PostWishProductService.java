@@ -40,7 +40,7 @@ public class PostWishProductService implements PostWishProductUseCase {
 
     private Product getProduct(Long productId) {
         return productRepository.findById(productId)
-            .orElseThrow(() -> new WishException(WishErrorCode.PORTFOLIO_NOT_FOUND));
+            .orElseThrow(() -> new WishException(WishErrorCode.PRODUCT_NOT_FOUND));
     }
 
     private WishProductResult cancelWish(WishProduct existingWish, Long productId) {
