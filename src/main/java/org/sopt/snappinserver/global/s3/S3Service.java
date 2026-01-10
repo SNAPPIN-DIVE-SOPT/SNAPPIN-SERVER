@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.global.s3;
 
-import jakarta.validation.constraints.NotBlank;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,7 @@ public class S3Service {
 
     public String getPresignedUrl(String storedFileName) {
         try {
-            validateStoredFileNameExsits(storedFileName);
+            validateStoredFileNameExists(storedFileName);
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
                 .key(storedFileName)
@@ -40,7 +39,7 @@ public class S3Service {
         }
     }
 
-    private static void validateStoredFileNameExsits(String storedFileName) {
+    private static void validateStoredFileNameExists(String storedFileName) {
         if(storedFileName == null || storedFileName.isBlank()) {
             throw new S3Exception(S3ErrorCode.S3_KEY_REQUIRED);
         }
