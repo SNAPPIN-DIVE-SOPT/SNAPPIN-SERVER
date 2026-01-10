@@ -4,6 +4,7 @@ import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
@@ -34,7 +35,7 @@ public class S3Service {
                 );
 
             return presignedRequest.url().toString();
-        } catch (Exception e) {
+        } catch (SdkException e) {
             throw new S3Exception(S3ErrorCode.S3_SERVICE_UNAVAILABLE);
         }
     }
