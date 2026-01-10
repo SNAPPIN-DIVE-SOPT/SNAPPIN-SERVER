@@ -12,7 +12,7 @@ public enum S3ErrorCode implements ErrorCode {
     S3_KEY_REQUIRED(400, "S3_400_001", "S3 키는 필수입니다."),
 
     // 503 Service Unavailable
-    S3_SERVICE_UNAVAILABLE(503, "S3_503_001", "Presigned Url 발급에 실패했습니다."),
+    S3_SERVICE_UNAVAILABLE(503, "S3_503_001", "Presigned URL 발급에 실패했습니다."),
     ;
 
     private final int status;
