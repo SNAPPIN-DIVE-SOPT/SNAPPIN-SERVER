@@ -18,7 +18,7 @@ public class PhotographerController implements PhotographerApi {
     private final GetPhotographerProfileUseCase getPhotographerProfileUseCase;
 
     @Override
-    @GetMapping
+    @GetMapping("/{photographerId}")
     public ApiResponseBody<PhotographerProfileResponse, Void> getPhotographerProfile(
         Long photographerId
     ) {
