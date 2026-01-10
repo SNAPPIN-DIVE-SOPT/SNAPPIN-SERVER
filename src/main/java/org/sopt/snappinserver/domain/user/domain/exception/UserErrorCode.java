@@ -20,6 +20,7 @@ public enum UserErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
+    USER_NOT_FOUND(404, "USER_404_001","존재하지 않는 사용자입니다.")
 
     ;
 
