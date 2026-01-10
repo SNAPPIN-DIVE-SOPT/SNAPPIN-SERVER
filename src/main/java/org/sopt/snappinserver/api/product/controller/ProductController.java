@@ -45,7 +45,7 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/reviews")
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
-        @PathVariable @NotNull Long productId,
+        @NotNull @PathVariable Long productId,
         @RequestParam(required = false) Long cursor
     ) {
         ProductReviewPageResult result =
@@ -61,10 +61,9 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/available/people-range")
     public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
-        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @PathVariable @NotNull Long productId
+        @NotNull @PathVariable Long productId
     ) {
         ProductPeopleRangeResult result =
             getProductPeopleRangeUseCase.getProductPeopleRange(productId);
@@ -78,11 +77,10 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/closed-dates")
     public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
-        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @PathVariable @NotNull Long productId,
-        @RequestParam @NotBlank String date
+        @NotNull @PathVariable Long productId,
+        @NotBlank @RequestParam String date
     ) {
         YearMonth yearMonth = YearMonth.parse(date);
 
@@ -98,16 +96,11 @@ public class ProductController implements ProductApi {
     @Override
     @GetMapping("/{productId}/available/times")
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
-        @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @PathVariable
-        @NotNull
-        Long productId,
+        @NotNull @PathVariable Long productId,
 
-        @RequestParam
-        @NotNull
-        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        @NotNull @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate date
     ) {
         ProductAvailableTimesResult result =

@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.product.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaRespons
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Tag(name = "06 - Product", description = "상품 관련 API")
 public interface ProductApi {
@@ -32,7 +34,8 @@ public interface ProductApi {
         description = "예약 과정에서 상품의 촬영 가능 최대/최소 인원 수를 조회합니다."
     )
     ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
-        CustomUserInfo principal,
+        @Parameter(hidden = true)
+        @AuthenticationPrincipal CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
         Long productId
@@ -43,7 +46,8 @@ public interface ProductApi {
         description = "상품 예약 과정에서 달별 휴무일을 조회합니다."
     )
     ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
-        CustomUserInfo principal,
+        @Parameter(hidden = true)
+        @AuthenticationPrincipal CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
         Long productId,
@@ -57,7 +61,8 @@ public interface ProductApi {
         description = "상품 예약 과정에서 각 일자의 시간대별 예약 가능 여부를 조회합니다."
     )
     ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
-        CustomUserInfo principal,
+        @Parameter(hidden = true)
+        @AuthenticationPrincipal CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
         Long productId,
