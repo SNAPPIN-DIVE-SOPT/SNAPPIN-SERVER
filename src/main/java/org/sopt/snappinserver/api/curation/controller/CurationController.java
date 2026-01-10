@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.api.curation.controller;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.curation.code.CurationSuccessCode;
 import org.sopt.snappinserver.api.curation.dto.response.GetCurationQuestionPhotosResponse;
@@ -24,7 +25,7 @@ public class CurationController implements CurationApi {
     @GetMapping
     public ApiResponseBody<GetCurationQuestionPhotosResponse, Void> getCurationQuestion(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @RequestParam(required = false) Integer step
+        @NotNull(message = "단계는 필수입니다.") @RequestParam Integer step
     ) {
         GetCurationQuestionResult result = getCurationQuestionUseCase.getCurationQuestionPhotos(
             userInfo.userId(),
