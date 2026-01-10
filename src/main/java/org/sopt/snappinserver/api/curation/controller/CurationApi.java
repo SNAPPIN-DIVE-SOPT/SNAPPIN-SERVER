@@ -10,7 +10,6 @@ import jakarta.validation.constraints.NotNull;
 import org.sopt.snappinserver.api.curation.dto.response.GetCurationQuestionPhotosResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,7 +29,7 @@ public interface CurationApi {
         @Schema(description = "조회할 단계", example = "1")
         @NotNull(message = "단계는 필수입니다.")
         @Min(value = 1, message = "단계는 1 이상이어야 합니다.")
-        @Max(value = 5, message = "단계는 10 이하여야 합니다.")
+        @Max(value = 5, message = "단계는 5 이하여야 합니다.")
         @RequestParam Integer step
     );
 
