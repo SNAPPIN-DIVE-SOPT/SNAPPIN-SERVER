@@ -7,11 +7,12 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishPortfolioResu
 public record WishPortfolioResponse(
     @Schema(description = "포트폴리오 아이디", example = "101")
     Long portfolioId,
+
     @Schema(description = "좋아요 상태 (요청 처리 후)", example = "true")
-    Boolean liked
+    boolean liked
 ) {
 
     public static WishPortfolioResponse from(WishPortfolioResult result) {
-        return new WishPortfolioResponse(result.portfolioId(), result.liked());
+        return new WishPortfolioResponse(result.portfolioId(), Boolean.TRUE.equals(result.liked()));
     }
 }
