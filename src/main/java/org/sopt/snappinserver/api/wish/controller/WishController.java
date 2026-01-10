@@ -26,9 +26,8 @@ public class WishController implements WishApi {
     private final PostWishProductUseCase postWishProductUseCase;
 
     @Override
-    @PostMapping("/portfolios")
     public ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
-        @AuthenticationPrincipal CustomUserInfo userInfo,
+        CustomUserInfo userInfo,
         WishPortfolioRequest request
     ) {
         WishPortfolioResult result = postWishPortfolioUseCase.togglePortfolioWish(
@@ -46,9 +45,8 @@ public class WishController implements WishApi {
     }
 
     @Override
-    @PostMapping("/products")
     public ApiResponseBody<WishProductResponse, Void> updateWishProduct(
-        @AuthenticationPrincipal CustomUserInfo userInfo,
+        CustomUserInfo userInfo,
         WishProductRequest request
     ) {
         WishProductResult result = postWishProductUseCase.toggleProductWish(
