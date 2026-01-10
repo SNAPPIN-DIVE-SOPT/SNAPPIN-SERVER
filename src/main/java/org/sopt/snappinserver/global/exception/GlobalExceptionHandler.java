@@ -13,14 +13,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    /* =========================
+     * 1. RequestBody 파싱 실패
+     * ========================= */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleHttpMessageNotReadable(
         HttpMessageNotReadableException exception,
@@ -28,33 +33,39 @@ public class GlobalExceptionHandler {
     ) {
         log.error("HttpMessageNotReadableException: {}", exception.getMessage());
 
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
+        return badRequest(
+            CommonErrorCode.INVALID_MAPPING_PARAMETER,
+            request
         );
-
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponseBody.onFailure(CommonErrorCode.INVALID_MAPPING_PARAMETER, meta));
     }
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleNoResourceFoundException(
-        NoResourceFoundException exception,
+    /* =========================
+     * 2. RequestParam 바인딩 오류
+     *  - step 없음
+     *  - step=
+     *  - step=abc
+     * ========================= */
+    @ExceptionHandler({
+        MissingServletRequestParameterException.class,
+        MethodArgumentTypeMismatchException.class
+    })
+    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleRequestParamBindingException(
+        Exception exception,
         HttpServletRequest request
     ) {
-        log.error("NoResourceFoundException: {}", exception.getMessage());
+        log.error("RequestParam binding error: {}", exception.getMessage());
 
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
+        return badRequest(
+            CommonErrorCode.INVALID_REQUEST_VARIABLE,
+            "단계는 필수입니다.",
+            request
         );
-
-        return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(ApiResponseBody.onFailure(CommonErrorCode.RESOURCE_NOT_FOUND, meta));
     }
 
+    /* =========================
+     * 3. RequestParam / PathVariable 검증 실패
+     *  (@NotNull, @Min, @Max 등)
+     * ========================= */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleConstraintViolation(
         ConstraintViolationException exception,
@@ -67,23 +78,18 @@ public class GlobalExceptionHandler {
             .map(ConstraintViolation::getMessage)
             .orElse("잘못된 요청입니다.");
 
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
+        return badRequest(
+            CommonErrorCode.INVALID_REQUEST_VARIABLE,
+            message,
+            request
         );
-
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponseBody.onFailure(
-                    CommonErrorCode.INVALID_REQUEST_VARIABLE,
-                    message,
-                    meta
-                )
-            );
     }
 
+    /* =========================
+     * 4. RequestBody @Valid 검증 실패
+     * ========================= */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleMethodArgumentNotValidException(
+    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleMethodArgumentNotValid(
         MethodArgumentNotValidException exception,
         HttpServletRequest request
     ) {
@@ -96,21 +102,16 @@ public class GlobalExceptionHandler {
             .map(FieldError::getDefaultMessage)
             .orElse("잘못된 요청입니다.");
 
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
+        return badRequest(
+            CommonErrorCode.INVALID_MAPPING_PARAMETER,
+            message,
+            request
         );
-
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponseBody.onFailure(
-                    CommonErrorCode.INVALID_MAPPING_PARAMETER,
-                    message,
-                    meta
-                )
-            );
     }
 
+    /* =========================
+     * 5. 날짜 파싱 실패
+     * ========================= */
     @ExceptionHandler(DateTimeParseException.class)
     public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleDateTimeParseException(
         DateTimeParseException exception,
@@ -118,53 +119,97 @@ public class GlobalExceptionHandler {
     ) {
         log.error("DateTimeParseException: {}", exception.getMessage());
 
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
+        return badRequest(
+            CommonErrorCode.INVALID_MAPPING_PARAMETER,
+            request
         );
-
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(ApiResponseBody.onFailure(CommonErrorCode.INVALID_MAPPING_PARAMETER, meta));
     }
 
+    /* =========================
+     * 6. 존재하지 않는 엔드포인트
+     * ========================= */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleNoResourceFound(
+        NoResourceFoundException exception,
+        HttpServletRequest request
+    ) {
+        log.error("NoResourceFoundException: {}", exception.getMessage());
+
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(ApiResponseBody.onFailure(
+                CommonErrorCode.RESOURCE_NOT_FOUND,
+                meta(request)
+            ));
+    }
+
+    /* =========================
+     * 7. 도메인 / 비즈니스 예외
+     * ========================= */
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handle(
+    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleBusinessException(
         BusinessException exception,
         HttpServletRequest request
     ) {
-        log.error("[errorCode={}] {}", exception.getErrorCode().getCode(), exception.getMessage());
-
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
-        );
+        log.error("[{}] {}", exception.getErrorCode().getCode(), exception.getMessage());
 
         return ResponseEntity
             .status(exception.getErrorCode().getStatus())
-            .body(ApiResponseBody.onFailure(exception.getErrorCode(), meta));
+            .body(ApiResponseBody.onFailure(
+                exception.getErrorCode(),
+                meta(request)
+            ));
     }
 
+    /* =========================
+     * 8. 1~7에서 잡지 못한 예외 (어떤 예외가 발생했는지 실제 발생 예외를 message에 던짐)
+     * ========================= */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handle(
+    public ResponseEntity<ApiResponseBody<Void, ErrorMeta>> handleUnexpected(
         Exception exception,
         HttpServletRequest request
     ) {
-        log.error("{}: {}", exception.getClass().getName(), exception.getMessage());
-
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
-        );
+        log.error("Unhandled exception", exception);
 
         return ResponseEntity
             .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(
-                ApiResponseBody.onFailure(
-                    CommonErrorCode.INTERNAL_SERVER_ERROR,
-                    exception.getMessage(),
-                    meta
-                )
-            );
+            .body(ApiResponseBody.onFailure(
+                CommonErrorCode.INTERNAL_SERVER_ERROR,
+                exception.getMessage(),
+                meta(request)
+            ));
+    }
+
+    private ResponseEntity<ApiResponseBody<Void, ErrorMeta>> badRequest(
+        CommonErrorCode errorCode,
+        HttpServletRequest request
+    ) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponseBody.onFailure(
+                errorCode,
+                meta(request)
+            ));
+    }
+
+    private ResponseEntity<ApiResponseBody<Void, ErrorMeta>> badRequest(
+        CommonErrorCode errorCode,
+        String message,
+        HttpServletRequest request
+    ) {
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(ApiResponseBody.onFailure(
+                errorCode,
+                message,
+                meta(request)
+            ));
+    }
+
+    private ErrorMeta meta(HttpServletRequest request) {
+        return new ErrorMeta(
+            request.getRequestURI(),
+            Instant.now()
+        );
     }
 }
