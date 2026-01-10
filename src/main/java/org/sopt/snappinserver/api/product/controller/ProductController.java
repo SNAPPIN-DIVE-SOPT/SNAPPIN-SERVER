@@ -4,21 +4,27 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.product.code.ProductSuccessCode;
+import org.sopt.snappinserver.api.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
+import org.sopt.snappinserver.api.product.dto.response.ProductReservationResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.product.service.dto.request.ProductReservationCommand;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductAvailableTimesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleRangeResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReservationResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductAvailableTimesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDatesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
+import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +39,7 @@ public class ProductController implements ProductApi {
     private final GetProductPeopleRangeUseCase getProductPeopleRangeUseCase;
     private final GetProductClosedDatesUseCase getProductClosedDatesUseCase;
     private final GetProductAvailableTimesUseCase getProductAvailableTimesUseCase;
+    private final PostProductReservationUseCase postProductReservationUseCase;
 
     @Override
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
@@ -51,7 +58,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
-        CustomUserInfo principal,
+        @AuthenticationPrincipal CustomUserInfo principal,
         Long productId
     ) {
         ProductPeopleRangeResult result =
@@ -65,7 +72,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
-        CustomUserInfo principal,
+        @AuthenticationPrincipal CustomUserInfo principal,
         Long productId,
         String date
     ) {
@@ -82,7 +89,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
-        CustomUserInfo principal,
+        @AuthenticationPrincipal CustomUserInfo principal,
         Long productId,
         LocalDate date
     ) {
@@ -97,4 +104,25 @@ public class ProductController implements ProductApi {
             ProductAvailableTimesResponse.from(result)
         );
     }
+
+    @Override
+    public ApiResponseBody<ProductReservationResponse, Void> postProductReservation(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        Long productId,
+        ProductReservationRequest request
+    ) {
+        ProductReservationResult result =
+            postProductReservationUseCase.reserve(
+                productId,
+                principal.userId(),
+                ProductReservationCommand.from(request)
+            );
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.POST_PRODUCT_RESERVATION_OK,
+            ProductReservationResponse.from(result)
+        );
+    }
+
+
 }
