@@ -7,6 +7,7 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult
 public record WishProductResponse(
     @Schema(description = "상품 아이디", example = "101")
     Long productId,
+
     @Schema(description = "좋아요 상태 (요청 처리 후)", example = "true")
     Boolean liked
 ) {
