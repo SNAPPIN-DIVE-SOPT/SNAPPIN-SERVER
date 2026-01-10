@@ -16,9 +16,11 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfolioRe
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedPortfoliosUseCase;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
 
     private final WishPortfolioRepository wishPortfolioRepository;
@@ -43,10 +45,10 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
             .findAllByUser(user)
             .stream()
             .map(WishPortfolio::getPortfolio)
-            .map(this::toWishedPortfolioResult).toList();
+            .map(this::mapToWishedPortfolioResult).toList();
     }
 
-    private WishedPortfolioResult toWishedPortfolioResult(Portfolio portfolio) {
+    private WishedPortfolioResult mapToWishedPortfolioResult(Portfolio portfolio) {
         String imageUrl = portfolioPhotoRepository
             .findFirstByPortfolioOrderByDisplayOrderAsc(portfolio)
             .map(PortfolioPhoto::getPhoto)
