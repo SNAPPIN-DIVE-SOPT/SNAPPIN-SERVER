@@ -8,7 +8,8 @@ public record ProductReservationResponse(
 
     @Schema(description = "생성된 예약 ID", example = "501") Long reservationId,
 
-    @Schema(description = "예약 상태", example = "RESERVATION_REQUESTED") String status) {
+    @Schema(description = "예약 상태", example = "RESERVATION_REQUESTED") String status
+) {
 
     public static ProductReservationResponse from(ProductReservationResult result) {
         return new ProductReservationResponse(result.reservationId(), result.status().name());
