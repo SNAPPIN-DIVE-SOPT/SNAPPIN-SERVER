@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import org.sopt.snappinserver.api.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
+import org.sopt.snappinserver.api.product.dto.response.ProductReservationResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -18,6 +20,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "06 - Product", description = "상품 관련 API")
@@ -43,7 +47,7 @@ public interface ProductApi {
     @GetMapping("/{productId}/available/people-range")
     ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
         @Parameter(hidden = true)
-        @AuthenticationPrincipal CustomUserInfo principal,
+        CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
         @PathVariable @NotNull Long productId
@@ -56,7 +60,7 @@ public interface ProductApi {
     @GetMapping("/{productId}/closed-dates")
     ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
         @Parameter(hidden = true)
-        @AuthenticationPrincipal CustomUserInfo principal,
+        CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
         @PathVariable @NotNull Long productId,
@@ -72,7 +76,7 @@ public interface ProductApi {
     @GetMapping("/{productId}/available/times")
     ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
         @Parameter(hidden = true)
-        @AuthenticationPrincipal CustomUserInfo principal,
+        CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
         @PathVariable @NotNull Long productId,
@@ -82,5 +86,20 @@ public interface ProductApi {
         @NotNull LocalDate date
     );
 
+
+    @Operation(
+        summary = "예약하기",
+        description = "고객이 선택한 정보를 바탕으로 예약을 요청합니다."
+    )
+    @PostMapping("/{productId}/reservations")
+    ApiResponseBody<ProductReservationResponse, Void> postProductReservation(
+        @Parameter(hidden = true)
+        CustomUserInfo principal,
+
+        @Schema(description = "상품 아이디", example = "1")
+        @PathVariable @NotNull Long productId,
+
+        @RequestBody @NotNull ProductReservationRequest request
+    );
 
 }
