@@ -9,10 +9,10 @@ public record WishProductResponse(
     Long productId,
 
     @Schema(description = "좋아요 상태 (요청 처리 후)", example = "true")
-    Boolean liked
+    boolean liked
 ) {
 
     public static WishProductResponse from(WishProductResult result) {
-        return new WishProductResponse(result.productId(), result.liked());
+        return new WishProductResponse(result.productId(), Boolean.TRUE.equals(result.liked()));
     }
 }
