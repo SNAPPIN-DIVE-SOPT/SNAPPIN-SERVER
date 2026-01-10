@@ -29,7 +29,7 @@ public class CurationController implements CurationApi {
         @RequestParam Integer step
     ) {
         validateLoginUser(userInfo);
-        GetCurationQuestionResult result = getCurationQuestionUseCase.getCurationQuestionPhotos(
+        GetCurationQuestionResult result = getCurationQuestionUseCase.retrieveCurationQuestionPhotos(
             userInfo.userId(),
             step
         );
@@ -39,7 +39,7 @@ public class CurationController implements CurationApi {
     }
 
     private void validateLoginUser(CustomUserInfo userInfo) {
-        if(userInfo == null) {
+        if (userInfo == null) {
             throw new CurationException(CurationErrorCode.CURATION_LOGIN_REQUIRED);
         }
     }

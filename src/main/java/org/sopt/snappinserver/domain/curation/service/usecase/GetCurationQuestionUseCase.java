@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.curation.service.dto.response.GetCurationQu
 
 public interface GetCurationQuestionUseCase {
 
-    GetCurationQuestionResult getCurationQuestionPhotos(Long userId, Integer step);
+    GetCurationQuestionResult retrieveCurationQuestionPhotos(Long userId, Integer step);
 }

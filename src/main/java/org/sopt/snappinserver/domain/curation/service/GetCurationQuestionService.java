@@ -30,14 +30,14 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
     private final S3Service s3Service;
 
     @Override
-    public GetCurationQuestionResult getCurationQuestionPhotos(Long userId, Integer step) {
+    public GetCurationQuestionResult retrieveCurationQuestionPhotos(Long userId, Integer step) {
         validateLoginUser(userId);
         validateStep(step);
 
         Question question = getMoodCurationQuestionByStep(step);
         List<QuestionPhoto> questionPhotos = questionPhotoRepository
             .findQuestionPhotoByQuestion(question);
-        List<GetPhotoResult> photos = getGetPhotoResults(questionPhotos);
+        List<GetPhotoResult> photos = mapToPhotoResults(questionPhotos);
 
         return GetCurationQuestionResult.of(question, photos);
     }
@@ -70,7 +70,7 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
             .orElseThrow(() -> new CurationException(CurationErrorCode.QUESTION_NOT_FOUND));
     }
 
-    private List<GetPhotoResult> getGetPhotoResults(List<QuestionPhoto> questionPhotos) {
+    private List<GetPhotoResult> mapToPhotoResults(List<QuestionPhoto> questionPhotos) {
         return questionPhotos.stream()
             .map(questionPhoto -> {
                 Photo photo = questionPhoto.getPhoto();
