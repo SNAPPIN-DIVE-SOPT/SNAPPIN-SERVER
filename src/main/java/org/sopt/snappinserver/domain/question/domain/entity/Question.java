@@ -45,10 +45,10 @@ public class Question extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "question_domain", nullable = false)
     private QuestionDomain questionDomain;
 
-    @Column(nullable = false)
+    @Column(name = "step", nullable = false)
     private Integer step;
 
     @Column(nullable = false, length = MAX_CONTENTS_LENGTH)
