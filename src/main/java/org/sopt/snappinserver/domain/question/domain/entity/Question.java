@@ -65,6 +65,7 @@ public class Question extends BaseEntity {
         validateQuestion(questionDomain, step, contents);
         return Question.builder()
             .questionDomain(questionDomain)
+            .step(step)
             .contents(contents)
             .build();
     }
