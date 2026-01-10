@@ -20,16 +20,15 @@ public enum ProductErrorCode implements ErrorCode {
     EQUIPMENT_TOO_LONG(400, "PRODUCT_400_009", "사용 장비 설명 길이는 512자 이하입니다."),
     PROCESS_DESCRIPTION_TOO_LONG(400, "PRODUCT_400_010", "촬영 진행 순서 길이는 1024자 이하입니다."),
     CAUTION_TOO_LONG(400, "PRODUCT_400_011", "기타 주의 사항 길이는 1024자 이하입니다."),
-    STARTS_AT_REQUIRED(400, "PRODUCT_400_012", "예약 운영 시작일은 필수입니다."),
-    ENDS_AT_REQUIRED(400, "PRODUCT_400_013", "예약 운영 종료일은 필수입니다."),
-    STARTS_AT_AFTER_ENDS_AT(400, "PRODUCT_400_014", "예약 운영 시작일이 예약 운영 종료일보다 앞서야 합니다."),
-    PRODUCT_REQUIRED(400, "PRODUCT_400_015", ""),
-    PRODUCT_OPTION_CATEGORY_REQUIRED(400, "PRODUCT_400_016", ""),
-    ANSWER_REQUIRED(400, "PRODUCT_400_017", ""),
-    ANSWER_TOO_LONG(400, "PRODUCT_400_018", ""),
-    INVALID_CURSOR(400, "PRODUCT_400_019", "유효하지 않은 커서 값입니다."),
-    DURATION_TIME_REQUIRED(400, "PRODUCT_400_020", "촬영 시간 옵션은 필수입니다."),
-    PRODUCT_UNAVAILABLE_DATE(400, "PRODUCT_400_021", "예약이 불가능한 날짜입니다."),
+    STARTS_AT_AFTER_ENDS_AT(400, "PRODUCT_400_012", "예약 운영 시작일이 예약 운영 종료일보다 앞서야 합니다."),
+    PRODUCT_REQUIRED(400, "PRODUCT_400_013", "상품은 필수입니다."),
+    PRODUCT_OPTION_CATEGORY_REQUIRED(400, "PRODUCT_400_014", "상품 옵션 종류는 필수입니다."),
+    ANSWER_REQUIRED(400, "PRODUCT_400_015", "상품 옵션 내용은 필수입니다."),
+    ANSWER_TOO_LONG(400, "PRODUCT_400_016", "상품 옵션 내용 길이는 1024자 이하입니다."),
+    INVALID_CURSOR(400, "PRODUCT_400_017", "유효하지 않은 커서 값입니다."),
+    DURATION_TIME_REQUIRED(400, "PRODUCT_400_018", "촬영 시간 옵션은 필수입니다."),
+    PRODUCT_UNAVAILABLE_DATE(400, "PRODUCT_400_019", "예약이 불가능한 날짜입니다."),
+
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
