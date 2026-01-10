@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
@@ -23,7 +25,7 @@ public interface ProductApi {
     )
     ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
         @Schema(description = "상품 아이디", example = "1")
-        Long productId,
+        @NotNull Long productId,
 
         @Schema(description = "다음 페이지 조회를 위한 커서 값", example = "6")
         Long cursor
@@ -38,7 +40,7 @@ public interface ProductApi {
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
-        Long productId
+        @NotNull Long productId
     );
 
     @Operation(
@@ -50,10 +52,10 @@ public interface ProductApi {
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
-        Long productId,
+        @NotNull Long productId,
 
         @Schema(description = "조회할 연/월 (yyyy-MM)", example = "2026-03", required = true)
-        String date
+        @NotBlank String date
     );
 
     @Operation(
@@ -65,10 +67,10 @@ public interface ProductApi {
         @AuthenticationPrincipal CustomUserInfo principal,
 
         @Schema(description = "상품 아이디", example = "1")
-        Long productId,
+        @NotNull Long productId,
 
         @Schema(description = "조회할 날짜 (yyyy-MM-dd)", example = "2026-03-15", required = true)
-        LocalDate date
+        @NotNull LocalDate date
     );
 
 
