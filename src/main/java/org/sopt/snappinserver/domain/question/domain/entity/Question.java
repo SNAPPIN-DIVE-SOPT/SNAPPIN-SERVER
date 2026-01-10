@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +22,15 @@ import org.sopt.snappinserver.global.entity.BaseEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@Table(
+    name = "question",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_question_domain_step",
+            columnNames = {"question_domain", "step"}
+        )
+    }
+)
 public class Question extends BaseEntity {
 
     private static final int MAX_CONTENTS_LENGTH = 200;
