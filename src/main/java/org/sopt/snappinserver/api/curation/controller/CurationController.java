@@ -26,7 +26,7 @@ public class CurationController implements CurationApi {
         @AuthenticationPrincipal CustomUserInfo userInfo,
         @RequestParam(required = false) Integer step
     ) {
-        GetCurationQuestionResult result = getCurationQuestionUseCase.getCurationQuestionPhotos(
+        GetCurationQuestionResult result = getCurationQuestionUseCase.retrieveCurationQuestionPhotos(
             userInfo.userId(),
             step
         );
