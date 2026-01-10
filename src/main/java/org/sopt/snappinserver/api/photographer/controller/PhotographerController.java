@@ -23,7 +23,7 @@ public class PhotographerController implements PhotographerApi {
         Long photographerId
     ) {
         GetPhotographerProfileResult result = getPhotographerProfileUseCase
-            .findPhotographerProfile(photographerId);
+            .getPhotographerProfile(photographerId);
         PhotographerProfileResponse response = PhotographerProfileResponse.from(result);
 
         return ApiResponseBody.ok(PhotographerSuccessCode.GET_PHOTOGRAPHER_PROFILE_OK, response);

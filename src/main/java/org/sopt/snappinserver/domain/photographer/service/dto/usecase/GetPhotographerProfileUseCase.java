@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotog
 
 public interface GetPhotographerProfileUseCase {
 
-    GetPhotographerProfileResult findPhotographerProfile(Long photographerId);
+    GetPhotographerProfileResult getPhotographerProfile(Long photographerId);
 }

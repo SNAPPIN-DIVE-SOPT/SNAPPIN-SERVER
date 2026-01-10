@@ -24,7 +24,7 @@ public class GetPhotographerProfileService implements GetPhotographerProfileUseC
     private final PhotographerSpecialtyRepository photographerSpecialtyRepository;
     private final PhotographerAvailableLocationRepository photographerAvailableLocationRepository;
 
-    public GetPhotographerProfileResult findPhotographerProfile(Long photographerId) {
+    public GetPhotographerProfileResult getPhotographerProfile(Long photographerId) {
         Photographer photographer = getExistingPhotographer(photographerId);
 
         List<PhotographerSpecialty> specialties = photographerSpecialtyRepository
