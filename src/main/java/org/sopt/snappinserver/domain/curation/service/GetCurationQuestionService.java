@@ -36,7 +36,7 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
 
         Question question = getMoodCurationQuestionByStep(step);
         List<QuestionPhoto> questionPhotos = questionPhotoRepository
-            .findQuestionPhotoByQuestion(question);
+            .findAllByQuestion(question);
         List<GetPhotoResult> photos = mapToPhotoResults(questionPhotos);
 
         return GetCurationQuestionResult.of(question, photos);
