@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.wish.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
@@ -10,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WishPortfolioRepository extends JpaRepository<WishPortfolio, Long> {
     Optional<WishPortfolio> findByUserAndPortfolio(User user, Portfolio portfolio);
+
+    List<WishPortfolio> findAllByUser(User user);
 }
