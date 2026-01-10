@@ -43,10 +43,9 @@ public class ProductController implements ProductApi {
     private final GetProductAvailableTimesUseCase getProductAvailableTimesUseCase;
 
     @Override
-    @GetMapping("/{productId}/reviews")
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
-        @PathVariable Long productId,
-        @RequestParam(value = "cursor", required = false) Long cursor
+        Long productId,
+        Long cursor
     ) {
         ProductReviewPageResult result =
             getProductReviewsUseCase.getProductReviews(productId, cursor);
@@ -59,10 +58,9 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    @GetMapping("/{productId}/available/people-range")
     public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
-        @AuthenticationPrincipal CustomUserInfo principal,
-        @PathVariable Long productId
+        CustomUserInfo principal,
+        Long productId
     ) {
         ProductPeopleRangeResult result =
             getProductPeopleRangeUseCase.getProductPeopleRange(productId);
@@ -74,11 +72,10 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    @GetMapping("/{productId}/closed-dates")
     public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
-        @AuthenticationPrincipal CustomUserInfo principal,
-        @PathVariable Long productId,
-        @RequestParam(value = "date") String date
+        CustomUserInfo principal,
+        Long productId,
+        String date
     ) {
         YearMonth yearMonth = YearMonth.parse(date);
 
@@ -92,11 +89,9 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    @GetMapping("/{productId}/available/times")
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
-        @AuthenticationPrincipal CustomUserInfo principal,
-        @PathVariable Long productId,
-        @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        CustomUserInfo principal,
+        Long productId,
         LocalDate date
     ) {
         ProductAvailableTimesResult result =
