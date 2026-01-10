@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sopt.snappinserver.domain.photographer.domain.exception.PhotographerErrorCode;
 import org.sopt.snappinserver.domain.photographer.domain.exception.PhotographerException;
+import org.sopt.snappinserver.global.entity.BaseEntity;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 
 @Getter
@@ -33,13 +34,13 @@ import org.sopt.snappinserver.global.enums.SnapCategory;
         )
     }
 )
-public class PhotographerSpecialty {
+public class PhotographerSpecialty extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "photographer_specialty_seq_gen")
     @SequenceGenerator(
-        name = "photographer_seq_gen",
-        sequenceName = "photographer_seq",
+        name = "photographer_specialty_seq_gen",
+        sequenceName = "photographer_specialty_seq",
         allocationSize = 1
     )
     private Long id;
