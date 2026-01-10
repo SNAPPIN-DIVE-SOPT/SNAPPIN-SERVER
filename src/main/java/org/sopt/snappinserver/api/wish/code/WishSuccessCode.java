@@ -11,8 +11,8 @@ public enum WishSuccessCode implements SuccessCode {
     POST_WISH_LIKE_PORTFOLIO_OK(200, "WISH_200_001", "포트폴리오 좋아요 처리에 성공했습니다."),
     POST_WISH_CANCEL_PORTFOLIO_OK(200, "WISH_200_002", "포트폴리오 좋아요 취소에 성공했습니다."),
     POST_WISH_LIKE_PRODUCT_OK(200, "WISH_200_003", "상품 좋아요 처리에 성공했습니다."),
-    POST_WISH_CANCEL_PRODUCT_OK(200, "WISH_200_004", "상품 좋아요 취소에 성공했습니다.");
-
+    POST_WISH_CANCEL_PRODUCT_OK(200, "WISH_200_004", "상품 좋아요 취소에 성공했습니다."),
+    GET_WISHED_PORTFOLIOS_OK(200, "WISH_200_005", "좋아요한 포트폴리오 목록 조회에 성공했습니다.");
 
     private final int status;
     private final String code;
