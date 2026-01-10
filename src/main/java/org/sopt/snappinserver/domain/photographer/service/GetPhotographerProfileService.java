@@ -35,7 +35,7 @@ public class GetPhotographerProfileService implements GetPhotographerProfileUseC
             .findAllByPhotographer(photographer);
         validateAvailableLocationExists(availableLocations);
 
-        return null;
+        return GetPhotographerProfileResult.of(photographer, specialties, availableLocations);
     }
 
     private Photographer getExistingPhotographer(Long photographerId) {
