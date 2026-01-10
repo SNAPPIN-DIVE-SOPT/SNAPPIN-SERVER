@@ -1,19 +1,21 @@
 package org.sopt.snappinserver.global.s3;
 
-import com.amazonaws.HttpMethod;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import jakarta.validation.constraints.NotBlank;
-import java.util.Date;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 @Service
 @RequiredArgsConstructor
 public class S3Service {
 
-    private final AmazonS3 amazonS3;
+    private static final int DURATION_MINUTES = 10;
+
+    private final S3Presigner s3Presigner;
 
     @NotBlank
     @Value("${cloud.aws.s3.bucket}")
@@ -21,17 +23,18 @@ public class S3Service {
 
     public String getPresignedUrl(String storedFileName) {
         try {
-            Date expiration = new Date();
-            long expTimeMillis = expiration.getTime();
-            expTimeMillis += 1000 * 60 * 10;
-            expiration.setTime(expTimeMillis);
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(storedFileName)
+                .build();
 
-            GeneratePresignedUrlRequest generatePresignedUrlRequest =
-                new GeneratePresignedUrlRequest(bucketName, storedFileName)
-                    .withMethod(HttpMethod.GET)
-                    .withExpiration(expiration);
+            PresignedGetObjectRequest presignedRequest =
+                s3Presigner.presignGetObject(p -> p
+                    .signatureDuration(Duration.ofMinutes(DURATION_MINUTES))
+                    .getObjectRequest(getObjectRequest)
+                );
 
-            return amazonS3.generatePresignedUrl(generatePresignedUrlRequest).toString();
+            return presignedRequest.url().toString();
         } catch (Exception e) {
             throw new S3Exception(S3ErrorCode.S3_SERVICE_UNAVAILABLE);
         }
