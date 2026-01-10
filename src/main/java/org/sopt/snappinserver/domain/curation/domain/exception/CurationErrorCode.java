@@ -16,7 +16,7 @@ public enum CurationErrorCode implements ErrorCode {
     INVALID_STEP_RANGE(400, "CURATION_400_005", "무드 큐레이션 단계는 1 이상 5 이하입니다."),
 
     // 401 UNAUTHORIZED
-    CURATION_LOGIN_REQUIRED(400, "CURATION_400_001", "무드 큐레이션은 로그인이 필요합니다."),
+    CURATION_LOGIN_REQUIRED(401, "CURATION_401_001", "무드 큐레이션은 로그인이 필요합니다."),
 
     // 403 FORBIDDEN
 
