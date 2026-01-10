@@ -2,7 +2,7 @@ package org.sopt.snappinserver.api.photographer.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.photographer.code.PhotographerSuccessCode;
-import org.sopt.snappinserver.api.photographer.dto.response.PhotographerProfileResponse;
+import org.sopt.snappinserver.api.photographer.dto.response.GetPhotographerProfileResponse;
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotographerProfileResult;
 import org.sopt.snappinserver.domain.photographer.service.dto.usecase.GetPhotographerProfileUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -19,12 +19,12 @@ public class PhotographerController implements PhotographerApi {
 
     @Override
     @GetMapping("/{photographerId}")
-    public ApiResponseBody<PhotographerProfileResponse, Void> getPhotographerProfile(
+    public ApiResponseBody<GetPhotographerProfileResponse, Void> getPhotographerProfile(
         Long photographerId
     ) {
         GetPhotographerProfileResult result = getPhotographerProfileUseCase
             .getPhotographerProfile(photographerId);
-        PhotographerProfileResponse response = PhotographerProfileResponse.from(result);
+        GetPhotographerProfileResponse response = GetPhotographerProfileResponse.from(result);
 
         return ApiResponseBody.ok(PhotographerSuccessCode.GET_PHOTOGRAPHER_PROFILE_OK, response);
     }
