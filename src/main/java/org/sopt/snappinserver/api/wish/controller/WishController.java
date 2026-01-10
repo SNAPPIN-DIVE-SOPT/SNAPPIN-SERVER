@@ -60,6 +60,18 @@ public class WishController implements WishApi {
         return ApiResponseBody.ok(decideSuccessCode(result), response);
     }
 
+    @Override
+    public ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+        WishedPortfoliosResult result = getWishedPortfoliosUseCase.getWishedPortfolios(
+            userInfo.userId()
+        );
+        WishedPortfoliosResponse response = WishedPortfoliosResponse.from(result);
+
+        return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PORTFOLIOS_OK, response);
+    }
+
     private WishSuccessCode decideSuccessCode(WishPortfolioResult result) {
         return result.liked() ? WishSuccessCode.POST_WISH_LIKE_PORTFOLIO_OK
             : WishSuccessCode.POST_WISH_CANCEL_PORTFOLIO_OK;
@@ -68,18 +80,6 @@ public class WishController implements WishApi {
     private WishSuccessCode decideSuccessCode(WishProductResult result) {
         return result.liked() ? WishSuccessCode.POST_WISH_LIKE_PRODUCT_OK
             : WishSuccessCode.POST_WISH_CANCEL_PRODUCT_OK;
-    }
-
-    @Override
-    public ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
-        @AuthenticationPrincipal CustomUserInfo userInfo
-    ) {
-        WishedPortfoliosResult result =
-            getWishedPortfoliosUseCase.getWishedPortfolios(userInfo.userId());
-
-        WishedPortfoliosResponse response = WishedPortfoliosResponse.from(result);
-
-        return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PORTFOLIOS_OK, response);
     }
 }
 

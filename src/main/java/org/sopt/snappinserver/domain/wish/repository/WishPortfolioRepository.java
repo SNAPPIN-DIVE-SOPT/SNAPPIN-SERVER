@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishPortfolioRepository extends JpaRepository<WishPortfolio, Long> {
+
     Optional<WishPortfolio> findByUserAndPortfolio(User user, Portfolio portfolio);
 
     List<WishPortfolio> findAllByUser(User user);

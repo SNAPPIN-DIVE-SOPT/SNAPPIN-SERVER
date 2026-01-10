@@ -6,6 +6,7 @@ public record WishedPortfolioResponse(
     Long id,
     String imageUrl
 ) {
+
     public static WishedPortfolioResponse from(WishedPortfolioResult result) {
         return new WishedPortfolioResponse(
             result.id(),
