@@ -24,11 +24,11 @@ public record ProductReservationCommand(
     }
 
     private static void validate(ProductReservationRequest request) {
-        if (request.durationTime() <= 0) {
+        if (request.durationTime() == null || request.durationTime() <= 0) {
             throw new ProductException(ProductErrorCode.DURATION_TIME_REQUIRED);
         }
 
-        if (request.peopleCount() <= 0) {
+        if (request.peopleCount() == null || request.peopleCount() <= 0) {
             throw new ProductException(ProductErrorCode.PRODUCT_PEOPLE_RANGE_NOT_FOUND);
         }
     }
