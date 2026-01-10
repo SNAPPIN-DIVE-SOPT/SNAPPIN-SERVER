@@ -24,7 +24,7 @@ public interface CurationApi {
         @AuthenticationPrincipal CustomUserInfo userInfo,
 
         @Schema(description = "조회할 단계", example = "1")
-        @RequestParam Integer step
+        @NotNull(message = "단계는 필수입니다.") @RequestParam Integer step
     );
 
 }
