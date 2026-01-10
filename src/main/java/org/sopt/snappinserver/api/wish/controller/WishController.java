@@ -12,6 +12,7 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishPortfolioUseCase;
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishProductUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class WishController implements WishApi {
 
     @Override
     public ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
-        CustomUserInfo userInfo,
+        @AuthenticationPrincipal CustomUserInfo userInfo,
         WishPortfolioRequest request
     ) {
         WishPortfolioResult result = postWishPortfolioUseCase.togglePortfolioWish(
@@ -39,7 +40,7 @@ public class WishController implements WishApi {
 
     @Override
     public ApiResponseBody<WishProductResponse, Void> updateWishProduct(
-        CustomUserInfo userInfo,
+        @AuthenticationPrincipal CustomUserInfo userInfo,
         WishProductRequest request
     ) {
         WishProductResult result = postWishProductUseCase.toggleProductWish(

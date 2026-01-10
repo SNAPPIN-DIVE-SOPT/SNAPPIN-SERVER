@@ -10,11 +10,12 @@ import org.sopt.snappinserver.api.wish.dto.response.WishPortfolioResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishProductResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "012 - Wish", description = "좋아요 관련 API")
+@Validated
 public interface WishApi {
 
     @Operation(
@@ -23,8 +24,10 @@ public interface WishApi {
     )
     @PostMapping("/portfolios")
     ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
+
         @Parameter(hidden = true)
-        @AuthenticationPrincipal CustomUserInfo userInfo,
+        CustomUserInfo userInfo,
+
         @Valid @RequestBody WishPortfolioRequest request);
 
     @Operation(
@@ -33,7 +36,9 @@ public interface WishApi {
     )
     @PostMapping("/products")
     ApiResponseBody<WishProductResponse, Void> updateWishProduct(
+
         @Parameter(hidden = true)
-        @AuthenticationPrincipal CustomUserInfo userInfo,
+        CustomUserInfo userInfo,
+
         @Valid @RequestBody WishProductRequest request);
 }
