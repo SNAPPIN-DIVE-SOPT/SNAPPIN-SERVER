@@ -79,5 +79,3 @@ public class WishController implements WishApi {
             : WishSuccessCode.POST_WISH_CANCEL_PRODUCT_OK;
     }
 }
-
-
