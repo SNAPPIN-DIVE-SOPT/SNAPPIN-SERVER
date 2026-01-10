@@ -53,7 +53,7 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
         validateStepRange(step);
     }
 
-    private static void validateStepExists(Integer step) {
+    private void validateStepExists(Integer step) {
         if (step == null) {
             throw new CurationException(CurationErrorCode.STEP_REQUIRED);
         }
@@ -66,10 +66,7 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
     }
 
     private Question getMoodCurationQuestionByStep(Integer step) {
-        return questionRepository.findByQuestionDomainAndStep(
-                QuestionDomain.MOOD_CURATION,
-                step
-            )
+        return questionRepository.findByQuestionDomainAndStep(QuestionDomain.MOOD_CURATION, step)
             .orElseThrow(() -> new CurationException(CurationErrorCode.QUESTION_NOT_FOUND));
     }
 
