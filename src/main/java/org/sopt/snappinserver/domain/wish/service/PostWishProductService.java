@@ -1,21 +1,15 @@
 package org.sopt.snappinserver.domain.wish.service;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
-import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepository;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.repository.ProductRepository;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
-import org.sopt.snappinserver.domain.wish.domain.entity.WishPortfolio;
 import org.sopt.snappinserver.domain.wish.domain.entity.WishProduct;
 import org.sopt.snappinserver.domain.wish.domain.exception.WishErrorCode;
 import org.sopt.snappinserver.domain.wish.domain.exception.WishException;
-import org.sopt.snappinserver.domain.wish.repository.WishPortfolioRepository;
 import org.sopt.snappinserver.domain.wish.repository.WishProductRepository;
-import org.sopt.snappinserver.domain.wish.service.dto.response.WishPortfolioResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult;
-import org.sopt.snappinserver.domain.wish.service.usecase.PostWishPortfolioUseCase;
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishProductUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
