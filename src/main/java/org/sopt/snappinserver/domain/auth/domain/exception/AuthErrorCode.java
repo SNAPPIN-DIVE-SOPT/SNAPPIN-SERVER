@@ -26,6 +26,7 @@ public enum AuthErrorCode implements ErrorCode {
     INVALID_OAUTH_TOKEN(401, "AUTH_401_003", "카카오 로그인 접근 실패"),
     INVALID_REFRESH_TOKEN(401, "AUTH_401_004", "잘못된 리프레시 토큰입니다."),
     REFRESH_TOKEN_COOKIE_REQUIRED(401, "AUTH_401_005", "리프레시 토큰 쿠키는 필수입니다."),
+    LOGIN_REQUIRED(401, "AUTH_401_006", "로그인이 필요한 API입니다."),
 
     // 403 FORBIDDEN
     LOGOUT_FORBIDDEN(403, "AUTH_403_001", "다른 사용자를 로그아웃할 수 없습니다."),
