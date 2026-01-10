@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.global.config.security;
 
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.global.security.CustomAuthenticationEntryPoint;
 import org.sopt.snappinserver.global.security.JwtAccessDeniedHandler;
 import org.sopt.snappinserver.global.security.TokenAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +43,7 @@ public class SecurityConfig {
     };
 
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
@@ -56,6 +58,7 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .anonymous(AbstractHttpConfigurer::disable)
             .exceptionHandling(e -> e
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
             )
             .authorizeHttpRequests(auth -> auth
