@@ -12,8 +12,6 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishPortfolioUseCase;
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishProductUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,11 +37,6 @@ public class WishController implements WishApi {
         return ApiResponseBody.ok(decideSuccessCode(result), response);
     }
 
-    private WishSuccessCode decideSuccessCode(WishPortfolioResult result) {
-        return result.liked() ? WishSuccessCode.POST_WISH_LIKE_PORTFOLIO_OK
-            : WishSuccessCode.POST_WISH_CANCEL_PORTFOLIO_OK;
-    }
-
     @Override
     public ApiResponseBody<WishProductResponse, Void> updateWishProduct(
         CustomUserInfo userInfo,
@@ -56,6 +49,11 @@ public class WishController implements WishApi {
         WishProductResponse response = WishProductResponse.from(result);
 
         return ApiResponseBody.ok(decideSuccessCode(result), response);
+    }
+
+    private WishSuccessCode decideSuccessCode(WishPortfolioResult result) {
+        return result.liked() ? WishSuccessCode.POST_WISH_LIKE_PORTFOLIO_OK
+            : WishSuccessCode.POST_WISH_CANCEL_PORTFOLIO_OK;
     }
 
     private WishSuccessCode decideSuccessCode(WishProductResult result) {
