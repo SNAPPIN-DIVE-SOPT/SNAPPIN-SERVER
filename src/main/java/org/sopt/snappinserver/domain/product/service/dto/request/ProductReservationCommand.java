@@ -13,6 +13,7 @@ public record ProductReservationCommand(
     String requestNote
 ) {
     public static ProductReservationCommand from(ProductReservationRequest request) {
+        validate(request);
         return new ProductReservationCommand(
             LocalDateTime.of(request.date(), request.startTime()),
             request.durationTime(),
