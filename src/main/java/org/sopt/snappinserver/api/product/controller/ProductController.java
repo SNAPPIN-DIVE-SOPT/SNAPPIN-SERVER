@@ -106,7 +106,7 @@ public class ProductController implements ProductApi {
     }
 
     @Override
-    public ApiResponseBody<ProductReservationResponse, Void> postProductReservation(
+    public ApiResponseBody<ProductReservationResponse, Void> createProductReservation(
         @AuthenticationPrincipal CustomUserInfo principal,
         Long productId,
         ProductReservationRequest request

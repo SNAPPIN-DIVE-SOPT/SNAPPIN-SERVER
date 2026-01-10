@@ -92,7 +92,7 @@ public interface ProductApi {
         description = "고객이 선택한 정보를 바탕으로 예약을 요청합니다."
     )
     @PostMapping("/{productId}/reservations")
-    ApiResponseBody<ProductReservationResponse, Void> postProductReservation(
+    ApiResponseBody<ProductReservationResponse, Void> createProductReservation(
         @Parameter(hidden = true)
         CustomUserInfo principal,
 
