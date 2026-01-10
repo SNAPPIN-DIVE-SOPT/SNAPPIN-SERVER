@@ -3,6 +3,8 @@ package org.sopt.snappinserver.api.photographer.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.photographer.dto.response.PhotographerProfileResponse;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,8 @@ public interface PhotographerApi {
     )
     ApiResponseBody<PhotographerProfileResponse, Void> getPhotographerProfile(
         @Schema(description = "조회할 작가 ID")
+        @NotNull(message = "작가 ID는 필수입니다.")
+        @Positive(message = "작가 ID는 양수여야 합니다.")
         @PathVariable Long photographerId
     );
 }
