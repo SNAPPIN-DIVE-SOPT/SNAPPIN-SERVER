@@ -4,12 +4,17 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +29,11 @@ public interface ProductApi {
     )
     @GetMapping("/{productId}/reviews")
     ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
-        @PathVariable
         @Schema(description = "상품 아이디", example = "1")
-        Long productId,
+        @PathVariable @NotNull Long productId,
 
-        @RequestParam(required = false)
         @Schema(description = "다음 페이지 조회를 위한 커서 값", example = "6")
-        Long cursor
+        @RequestParam(value = "cursor", required = false) Long cursor
     );
 
     @Operation(
@@ -42,9 +45,8 @@ public interface ProductApi {
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @PathVariable
         @Schema(description = "상품 아이디", example = "1")
-        Long productId
+        @PathVariable @NotNull Long productId
     );
 
     @Operation(
@@ -56,13 +58,29 @@ public interface ProductApi {
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
 
-        @PathVariable
         @Schema(description = "상품 아이디", example = "1")
-        Long productId,
+        @PathVariable @NotNull Long productId,
 
-        @RequestParam
         @Schema(description = "조회할 연/월 (yyyy-MM)", example = "2026-03", required = true)
-        String date
+        @RequestParam(value = "date") @NotBlank String date
     );
+
+    @Operation(
+        summary = "시간대별 예약 가능 여부 조회",
+        description = "상품 예약 과정에서 각 일자의 시간대별 예약 가능 여부를 조회합니다."
+    )
+    @GetMapping("/{productId}/available/times")
+    ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
+        @Parameter(hidden = true)
+        @AuthenticationPrincipal CustomUserInfo principal,
+
+        @Schema(description = "상품 아이디", example = "1")
+        @PathVariable @NotNull Long productId,
+
+        @Schema(description = "조회할 날짜 (yyyy-MM-dd)", example = "2026-03-15", required = true)
+        @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+        @NotNull LocalDate date
+    );
+
 
 }
