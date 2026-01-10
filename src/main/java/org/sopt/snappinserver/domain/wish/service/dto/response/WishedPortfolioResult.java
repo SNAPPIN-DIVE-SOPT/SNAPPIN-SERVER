@@ -1,15 +1,8 @@
 package org.sopt.snappinserver.domain.wish.service.dto.response;
 
-import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
+public record WishedPortfolioResult(Long id, String imageUrl) {
 
-public record WishedPortfolioResult(
-    Long id,
-    String imageUrl
-) {
-    public static WishedPortfolioResult from(Portfolio portfolio) {
-        return new WishedPortfolioResult(
-            portfolio.getId(),
-            portfolio.getThumbnailImageUrl()
-        );
+    public static WishedPortfolioResult of(Long id, String imageUrl) {
+        return new WishedPortfolioResult(id, imageUrl);
     }
 }
