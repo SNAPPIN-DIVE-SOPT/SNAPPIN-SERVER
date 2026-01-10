@@ -8,7 +8,6 @@ import org.sopt.snappinserver.domain.curation.service.dto.response.GetCurationQu
 import org.sopt.snappinserver.domain.curation.service.dto.response.GetPhotoResult;
 import org.sopt.snappinserver.domain.curation.service.usecase.GetCurationQuestionUseCase;
 import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
-import org.sopt.snappinserver.domain.photo.repository.PhotoRepository;
 import org.sopt.snappinserver.domain.question.domain.entity.Question;
 import org.sopt.snappinserver.domain.question.domain.entity.QuestionPhoto;
 import org.sopt.snappinserver.domain.question.domain.enums.QuestionDomain;
@@ -28,7 +27,6 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
 
     private final QuestionRepository questionRepository;
     private final QuestionPhotoRepository questionPhotoRepository;
-    private final PhotoRepository photoRepository;
     private final S3Service s3Service;
 
     @Override
