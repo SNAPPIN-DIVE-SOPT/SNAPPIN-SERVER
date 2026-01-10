@@ -3,6 +3,7 @@ package org.sopt.snappinserver.global.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.constraints.NotNull;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -55,9 +57,11 @@ public class GlobalExceptionHandler {
     ) {
         log.error("RequestParam binding error: {}", exception.getMessage());
 
+        String message = resolveRequestParamMessage(exception, request);
+
         return badRequest(
             CommonErrorCode.INVALID_REQUEST_VARIABLE,
-            "단계는 필수입니다.",
+            message,
             request
         );
     }
@@ -212,4 +216,52 @@ public class GlobalExceptionHandler {
             Instant.now()
         );
     }
+
+    private String resolveRequestParamMessage(
+        Exception exception,
+        HttpServletRequest request
+    ) {
+        Object handler = request.getAttribute(
+            org.springframework.web.servlet.HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE
+        );
+
+        if (!(handler instanceof org.springframework.web.method.HandlerMethod handlerMethod)) {
+            return "잘못된 요청입니다.";
+        }
+
+        String paramName = extractParamName(exception);
+        if (paramName == null) {
+            return "잘못된 요청입니다.";
+        }
+
+        for (var parameter : handlerMethod.getMethod().getParameters()) {
+            if (!parameter.getName().equals(paramName)) {
+                continue;
+            }
+
+            NotNull notNull = parameter.getAnnotation(NotNull.class);
+            if (notNull != null && !notNull.message().isBlank()) {
+                return notNull.message();
+            }
+
+            RequestParam requestParam = parameter.getAnnotation(RequestParam.class);
+            if (requestParam != null && requestParam.required()) {
+                return paramName + "는 필수입니다.";
+            }
+        }
+
+        return "잘못된 요청입니다.";
+    }
+
+    private String extractParamName(Exception exception) {
+        if (exception instanceof MissingServletRequestParameterException e) {
+            return e.getParameterName();
+        }
+        if (exception instanceof MethodArgumentTypeMismatchException e) {
+            return e.getName();
+        }
+        return null;
+    }
+
+
 }
