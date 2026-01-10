@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.global.response;
+package org.sopt.snappinserver.global.s3;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;

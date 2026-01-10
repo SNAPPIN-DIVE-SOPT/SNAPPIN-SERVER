@@ -13,7 +13,7 @@ import org.sopt.snappinserver.domain.question.domain.entity.QuestionPhoto;
 import org.sopt.snappinserver.domain.question.domain.enums.QuestionDomain;
 import org.sopt.snappinserver.domain.question.repository.QuestionPhotoRepository;
 import org.sopt.snappinserver.domain.question.repository.QuestionRepository;
-import org.sopt.snappinserver.global.response.S3Service;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
