@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.photographer.code.PhotographerSuccessCode;
 import org.sopt.snappinserver.api.photographer.dto.response.GetPhotographerProfileResponse;
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotographerProfileResult;
-import org.sopt.snappinserver.domain.photographer.service.dto.usecase.GetPhotographerProfileUseCase;
+import org.sopt.snappinserver.domain.photographer.service.usecase.GetPhotographerProfileUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

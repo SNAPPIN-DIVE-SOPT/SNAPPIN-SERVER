@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.domain.photographer.service.dto.usecase;
+package org.sopt.snappinserver.domain.photographer.service.usecase;
 
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotographerProfileResult;
 

@@ -11,7 +11,7 @@ import org.sopt.snappinserver.domain.photographer.repository.PhotographerAvailab
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerRepository;
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerSpecialtyRepository;
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotographerProfileResult;
-import org.sopt.snappinserver.domain.photographer.service.dto.usecase.GetPhotographerProfileUseCase;
+import org.sopt.snappinserver.domain.photographer.service.usecase.GetPhotographerProfileUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
