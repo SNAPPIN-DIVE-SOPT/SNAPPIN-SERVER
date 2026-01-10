@@ -63,7 +63,6 @@ public class ProductController implements ProductApi {
     public ApiResponseBody<ProductPeopleRangeResponse, Void> getProductPeopleRange(
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
-
         @NotNull @PathVariable Long productId
     ) {
         ProductPeopleRangeResult result =
@@ -80,7 +79,6 @@ public class ProductController implements ProductApi {
     public ApiResponseBody<ProductClosedDatesResponse, Void> getProductClosedDates(
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
-
         @NotNull @PathVariable Long productId,
         @NotBlank @RequestParam(value = "date") String date
     ) {
@@ -100,9 +98,7 @@ public class ProductController implements ProductApi {
     public ApiResponseBody<ProductAvailableTimesResponse, Void> getProductAvailableTimes(
         @Parameter(hidden = true)
         @AuthenticationPrincipal CustomUserInfo principal,
-
         @NotNull @PathVariable Long productId,
-
         @NotNull @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         LocalDate date
     ) {
