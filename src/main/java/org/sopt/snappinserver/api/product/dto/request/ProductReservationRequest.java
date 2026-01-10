@@ -17,8 +17,8 @@ public record ProductReservationRequest(
     @Schema(description = "촬영 시간 (시간 단위)", example = "2")
     @NotNull Integer durationTime,
 
-    @Schema(description = "촬영 장소", example = "건국대")
-    @NotNull String place,
+    @Schema(description = "촬영 장소 아이디", example = "1")
+    @NotNull Long placeId,
 
     @Schema(description = "촬영 인원", example = "2")
     @NotNull Integer peopleCount,

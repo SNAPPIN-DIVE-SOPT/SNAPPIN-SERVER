@@ -40,9 +40,9 @@ public class PostProductReservationService implements PostProductReservationUseC
     ) {
         Product product = getProduct(productId);
         User user = getUser(userId);
-        Place place = getPlace(command);
+        Place placeId = getPlace(command);
 
-        Reservation reservation = createReservation(product, user, place, command);
+        Reservation reservation = createReservation(product, user, placeId, command);
         Reservation saved = reservationRepository.save(reservation);
 
         return new ProductReservationResult(saved.getId(), saved.getReservationStatus());
@@ -59,7 +59,7 @@ public class PostProductReservationService implements PostProductReservationUseC
     }
 
     private Place getPlace(ProductReservationCommand command) {
-        return placeRepository.findByName(command.place())
+        return placeRepository.findById(command.placeId())
             .orElseThrow(() -> new PlaceException(PlaceErrorCode.PLACE_NOT_FOUND));
     }
 
