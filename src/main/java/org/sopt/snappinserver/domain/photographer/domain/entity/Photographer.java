@@ -11,19 +11,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.sopt.snappinserver.domain.photographer.domain.exception.PhotographerErrorCode;
 import org.sopt.snappinserver.domain.photographer.domain.exception.PhotographerException;
-import org.sopt.snappinserver.global.enums.Gender;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.global.entity.BaseEntity;
-import org.sopt.snappinserver.global.enums.SnapCategory;
+import org.sopt.snappinserver.global.enums.Gender;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
