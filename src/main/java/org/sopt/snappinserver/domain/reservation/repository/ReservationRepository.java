@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
     List<Reservation> findAllByProductAndReservedAtBetweenAndReservationStatusIn(
         Product product,
         LocalDateTime startOfDay,
@@ -17,4 +18,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         List<ReservationStatus> statuses
     );
 
+    List<Reservation> findAllByProductAndReservationStatusIn(
+        Product product,
+        List<ReservationStatus> statuses
+    );
 }
