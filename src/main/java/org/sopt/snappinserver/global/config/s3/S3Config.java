@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.global.config.s3;
 
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
