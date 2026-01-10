@@ -40,9 +40,9 @@ public class PostProductReservationService implements PostProductReservationUseC
     ) {
         Product product = getProduct(productId);
         User user = getUser(userId);
-        Place placeId = getPlace(command);
+        Place place = getPlace(command);
 
-        Reservation reservation = createReservation(product, user, placeId, command);
+        Reservation reservation = createReservation(product, user, place, command);
         Reservation saved = reservationRepository.save(reservation);
 
         return new ProductReservationResult(saved.getId(), saved.getReservationStatus());
