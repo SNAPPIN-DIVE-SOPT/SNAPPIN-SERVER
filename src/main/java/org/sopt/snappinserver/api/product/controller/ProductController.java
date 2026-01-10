@@ -1,8 +1,5 @@
 package org.sopt.snappinserver.api.product.controller;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +19,8 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDat
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/products")
