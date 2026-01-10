@@ -7,10 +7,8 @@ import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.curation.service.dto.response.GetCurationQuestionResult;
 import org.sopt.snappinserver.domain.curation.service.usecase.GetCurationQuestionUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/curation")
@@ -23,8 +21,8 @@ public class CurationController implements CurationApi {
     @Override
     @GetMapping
     public ApiResponseBody<GetCurationQuestionPhotosResponse, Void> getCurationQuestion(
-        @AuthenticationPrincipal CustomUserInfo userInfo,
-        @RequestParam(required = false) Integer step
+        CustomUserInfo userInfo,
+        Integer step
     ) {
         GetCurationQuestionResult result = getCurationQuestionUseCase.retrieveCurationQuestionPhotos(
             userInfo.userId(),
