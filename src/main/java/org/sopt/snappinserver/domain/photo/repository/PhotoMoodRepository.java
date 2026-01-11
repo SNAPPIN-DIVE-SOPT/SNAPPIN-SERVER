@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.photo.repository;
 
+import java.util.List;
 import org.sopt.snappinserver.domain.photo.domain.entity.PhotoMood;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -7,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PhotoMoodRepository extends JpaRepository<PhotoMood, Long> {
 
+    List<PhotoMood> findAllByPhotoIdIn(List<Long> photoIds);
 }
