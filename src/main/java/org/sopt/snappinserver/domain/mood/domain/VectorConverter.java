@@ -9,12 +9,12 @@ import java.util.List;
 import org.springframework.util.StringUtils;
 
 @Converter
-public class VectorConverter implements AttributeConverter<List<Double>, String> {
+public class VectorConverter implements AttributeConverter<List<Float>, String> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(List<Double> attribute) {
+    public String convertToDatabaseColumn(List<Float> attribute) {
         if (attribute == null || attribute.isEmpty()) {
             return null;
         }
@@ -26,13 +26,13 @@ public class VectorConverter implements AttributeConverter<List<Double>, String>
     }
 
     @Override
-    public List<Double> convertToEntityAttribute(String dbData) {
+    public List<Float> convertToEntityAttribute(String dbData) {
         if (!StringUtils.hasText(dbData)) {
             return null;
         }
         try {
             return objectMapper.readValue(dbData,
-                objectMapper.getTypeFactory().constructCollectionType(List.class, Double.class));
+                objectMapper.getTypeFactory().constructCollectionType(List.class, Float.class));
         } catch (IOException e) {
             throw new IllegalStateException("Vector conversion failed", e);
         }
