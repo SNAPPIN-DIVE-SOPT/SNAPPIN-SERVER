@@ -8,7 +8,6 @@ import org.sopt.snappinserver.domain.mood.service.dto.response.GetMoodFilterList
 import org.sopt.snappinserver.domain.mood.service.usecase.GetMoodFilterListUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +18,6 @@ public class MoodController implements MoodApi {
 
     private final GetMoodFilterListUseCase getMoodFilterListUseCase;
 
-    @Override
-    @GetMapping
     public ApiResponseBody<GetMoodFilterListResponse, Void> getAllMoodFilters(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
