@@ -30,7 +30,7 @@ public enum ReservationErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
-    RESERVATION_NOT_FOUND(400, "RESERVATION_404_001", "존재하지 않는 예약입니다.");
+    RESERVATION_NOT_FOUND(404, "RESERVATION_404_001", "존재하지 않는 예약입니다.");
 
     private final int status;
     private final String code;
