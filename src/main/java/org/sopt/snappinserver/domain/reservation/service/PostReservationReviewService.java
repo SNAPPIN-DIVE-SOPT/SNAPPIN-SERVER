@@ -39,55 +39,60 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
         Long userId = command.userId();
         Long reservationId = command.reservationId();
 
-        Reservation reservation = reservationRepository.findById(reservationId)
-            .orElseThrow(() ->
-                new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND)
-            );
+        Reservation reservation = getReservation(reservationId);
 
-        // 소유자 검증
+        validateReservationClient(reservation, userId);
+        validateShootCompleted(reservation);
+        validateReviewDuplicated(reservationId);
+
+        Review review = createReview(command, reservation);
+        reviewRepository.save(review);
+
+        createAndSaveReviewPhotos(command, review);
+
+        return CreateReservationReviewResult.of(review.getId(), reservationId);
+    }
+
+    private Reservation getReservation(Long reservationId) {
+        return reservationRepository.findById(reservationId).orElseThrow(
+            () -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND)
+        );
+    }
+
+    private void validateReservationClient(Reservation reservation, Long userId) {
         if (!reservation.getUser().getId().equals(userId)) {
-            throw new ReservationException(
-                ReservationErrorCode.RESERVATION_USER_NOT_MATCH
-            );
+            throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
+    }
 
-        // 촬영 완료 상태 검증
+    private void validateShootCompleted(Reservation reservation) {
         if (reservation.getReservationStatus() != ReservationStatus.SHOOT_COMPLETED) {
-            throw new ReservationException(
-                ReservationErrorCode.RESERVATION_NOT_COMPLETED
-            );
+            throw new ReservationException(ReservationErrorCode.RESERVATION_NOT_COMPLETED);
         }
+    }
 
-        // 중복 리뷰 검증
+    private void validateReviewDuplicated(Long reservationId) {
         if (reviewRepository.existsByReservationId(reservationId)) {
             throw new ReviewException(ReviewErrorCode.REVIEW_ALREADY_EXISTS);
         }
+    }
 
-        Review review = Review.create(
-            reservation,
-            command.rating(),
-            command.content()
-        );
-        reviewRepository.save(review);
+    private Review createReview(CreateReservationReviewCommand command, Reservation reservation) {
+        return Review.create(reservation, command.rating(), command.content());
+    }
 
+    private void createAndSaveReviewPhotos(CreateReservationReviewCommand command, Review review) {
         if (command.imageUrls() != null && !command.imageUrls().isEmpty()) {
-            List<ReviewPhoto> reviewPhotos =
-                IntStream.range(0, command.imageUrls().size())
-                    .mapToObj(i -> {
-                        Photo photo = Photo.create(command.imageUrls().get(i));
-                        photoRepository.save(photo);
+            List<ReviewPhoto> reviewPhotos = IntStream.range(0, command.imageUrls().size())
+                .mapToObj(i -> {
+                    Photo photo = Photo.create(command.imageUrls().get(i));
+                    photoRepository.save(photo);
 
-                        return ReviewPhoto.create(review, photo, i + 1);
-                    })
-                    .toList();
+                    return ReviewPhoto.create(review, photo, i + 1);
+                }).toList();
 
             reviewPhotoRepository.saveAll(reviewPhotos);
         }
-
-        return CreateReservationReviewResult.of(
-            review.getId(),
-            reservationId
-        );
     }
 }
 
