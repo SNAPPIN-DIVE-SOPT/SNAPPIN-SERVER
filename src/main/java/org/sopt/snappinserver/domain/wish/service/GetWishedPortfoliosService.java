@@ -7,10 +7,10 @@ import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioPhoto;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioPhotoRepository;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
-import org.sopt.snappinserver.domain.user.domain.exception.UserErrorCode;
-import org.sopt.snappinserver.domain.user.domain.exception.UserException;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.sopt.snappinserver.domain.wish.domain.entity.WishPortfolio;
+import org.sopt.snappinserver.domain.wish.domain.exception.WishErrorCode;
+import org.sopt.snappinserver.domain.wish.domain.exception.WishException;
 import org.sopt.snappinserver.domain.wish.repository.WishPortfolioRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfolioResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
@@ -37,7 +37,7 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
 
     private User getUser(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new WishException(WishErrorCode.USER_NOT_FOUND));
     }
 
     private List<WishedPortfolioResult> getWishedPortfolioResults(User user) {
