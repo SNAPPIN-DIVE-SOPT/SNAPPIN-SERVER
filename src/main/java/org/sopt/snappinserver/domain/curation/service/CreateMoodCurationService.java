@@ -49,6 +49,10 @@ public class CreateMoodCurationService implements CreateMoodCurationUseCase {
             .orElseThrow(() -> new CurationException(CurationErrorCode.USER_NOT_FOUND));
     }
 
+    private List<PhotoMood> getPhotoMoods(CreateMoodCurationCommand command) {
+        return photoMoodRepository.findAllByPhotoIdIn(command.photoIds());
+    }
+
     private Map<Mood, Double> getMoodScores(List<PhotoMood> photoMoods) {
         return photoMoods.stream()
             .collect(Collectors.groupingBy(
@@ -77,9 +81,5 @@ public class CreateMoodCurationService implements CreateMoodCurationUseCase {
         if (command.userId() == null) {
             throw new CurationException(CurationErrorCode.CURATION_LOGIN_REQUIRED);
         }
-    }
-
-    private List<PhotoMood> getPhotoMoods(CreateMoodCurationCommand command) {
-        return photoMoodRepository.findAllByPhotoIdIn(command.photoIds());
     }
 }
