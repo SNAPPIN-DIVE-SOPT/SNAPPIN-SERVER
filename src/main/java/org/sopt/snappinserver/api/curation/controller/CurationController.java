@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.api.curation.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.curation.code.CurationSuccessCode;
 import org.sopt.snappinserver.api.curation.dto.request.CreateMoodCurationRequest;
@@ -16,7 +15,6 @@ import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,7 +45,7 @@ public class CurationController implements CurationApi {
     @PostMapping
     public ApiResponseBody<CreateMoodCurationResponse, Void> createMoodCuration(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @Valid @RequestBody CreateMoodCurationRequest request
+        CreateMoodCurationRequest request
     ) {
         CreateMoodCurationCommand command = CreateMoodCurationCommand.of(
             userInfo.userId(),
