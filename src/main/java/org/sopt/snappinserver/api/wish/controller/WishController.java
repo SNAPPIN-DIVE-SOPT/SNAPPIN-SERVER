@@ -8,7 +8,6 @@ import org.sopt.snappinserver.api.wish.dto.response.WishPortfolioResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishProductResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishedPortfoliosResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
-import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishPortfolioResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
