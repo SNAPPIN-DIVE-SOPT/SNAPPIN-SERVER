@@ -8,9 +8,11 @@ import org.sopt.snappinserver.api.wish.dto.request.WishPortfolioRequest;
 import org.sopt.snappinserver.api.wish.dto.request.WishProductRequest;
 import org.sopt.snappinserver.api.wish.dto.response.WishPortfolioResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishProductResponse;
+import org.sopt.snappinserver.api.wish.dto.response.WishedPortfoliosResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,7 +30,8 @@ public interface WishApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
-        @Valid @RequestBody WishPortfolioRequest request);
+        @Valid @RequestBody WishPortfolioRequest request
+    );
 
     @Operation(
         summary = "상품 좋아요/취소",
@@ -40,5 +43,18 @@ public interface WishApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
-        @Valid @RequestBody WishProductRequest request);
+        @Valid @RequestBody WishProductRequest request
+    );
+
+    @Operation(
+        summary = "위시 포트폴리오 목록 조회",
+        description = "사용자가 좋아요한 전체 포트폴리오 목록을 조회합니다."
+    )
+    @GetMapping("/portfolios")
+    ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo
+    );
+
 }
