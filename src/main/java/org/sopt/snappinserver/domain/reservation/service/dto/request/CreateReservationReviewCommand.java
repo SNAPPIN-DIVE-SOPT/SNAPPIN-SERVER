@@ -9,5 +9,6 @@ public record CreateReservationReviewCommand(
     String content,
     List<String> imageUrls
 ) {
+
 }
 

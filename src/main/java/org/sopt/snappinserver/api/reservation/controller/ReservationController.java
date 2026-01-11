@@ -26,24 +26,20 @@ public class ReservationController implements ReservationApi {
         Long reservationId,
         CreateReservationReviewRequest request
     ) {
-        CreateReservationReviewCommand command =
-            new CreateReservationReviewCommand(
-                userInfo.userId(),
-                reservationId,
-                request.rating(),
-                request.content(),
-                request.imageUrls()
-            );
+        CreateReservationReviewCommand command = new CreateReservationReviewCommand(
+            userInfo.userId(),
+            reservationId,
+            request.rating(),
+            request.content(),
+            request.imageUrls()
+        );
 
         CreateReservationReviewResult result =
             postReservationReviewUseCase.createReservationReview(command);
 
         return ApiResponseBody.ok(
             ReservationSuccessCode.POST_RESERVATION_REVIEW_CREATED,
-            CreateReservationReviewResponse.of(
-                result.reviewId(),
-                result.reservationId()
-            )
+            CreateReservationReviewResponse.of(result.reviewId(), result.reservationId())
         );
     }
 
