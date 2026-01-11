@@ -22,14 +22,14 @@ public enum ReservationErrorCode implements ErrorCode {
     ADDITIONAL_PAYMENT_NAME_TOO_LONG(400, "RESERVATION_400_011", "추가 요청 금액명 길이는 100자 이하입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_REQUIRED(400, "RESERVATION_400_012", "추가 요청 금액은 필수입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_TOO_SMALL(400, "RESERVATION_400_013", "추가 요청 금액은 10원 이상이어야 합니다."),
-
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
 
-    ;
+    // 409 CONFLICT
+    RESERVATION_TIME_CONFLICT(409, "RESERVATION_409_001", "해당 시간에 이미 예약이 존재합니다.");
 
     private final int status;
     private final String code;
