@@ -33,7 +33,6 @@ public class CreateMoodCurationService implements CreateMoodCurationUseCase {
     public CreateMoodCurationResult saveMoodCurationResult(
         CreateMoodCurationCommand command
     ) {
-        validateLoginUser(command);
         User user = getUser(command);
 
         List<PhotoMood> photoMoods = getPhotoMoods(command);
@@ -83,12 +82,6 @@ public class CreateMoodCurationService implements CreateMoodCurationUseCase {
             Mood mood = top3Moods.get(i);
             Curation curation = Curation.create(user, mood, i + 1);
             curationRepository.save(curation);
-        }
-    }
-
-    private void validateLoginUser(CreateMoodCurationCommand command) {
-        if (command.userId() == null) {
-            throw new CurationException(CurationErrorCode.CURATION_LOGIN_REQUIRED);
         }
     }
 }
