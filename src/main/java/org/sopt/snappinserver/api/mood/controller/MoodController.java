@@ -24,7 +24,8 @@ public class MoodController implements MoodApi {
     public ApiResponseBody<GetMoodFilterListResponse, Void> getAllMoodFilters(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
-        GetMoodFilterListResult result = getMoodFilterListUseCase.getMoodFilters(userInfo.userId());
+        Long userId = (userInfo != null) ? userInfo.userId() : null;
+        GetMoodFilterListResult result = getMoodFilterListUseCase.getMoodFilters(userId);
         GetMoodFilterListResponse response = GetMoodFilterListResponse.from(result);
 
         return ApiResponseBody.ok(MoodSuccessCode.GET_ALL_MOOD_TAGS_OK, response);

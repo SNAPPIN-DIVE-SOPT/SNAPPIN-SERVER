@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.mood.service;
 
+import jakarta.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ public class GetMoodFilterListService implements GetMoodFilterListUseCase {
     private final MoodRepository moodRepository;
 
     @Override
-    public GetMoodFilterListResult getMoodFilters(Long userId) {
+    public GetMoodFilterListResult getMoodFilters(@Nullable Long userId) {
         List<Mood> moods = moodRepository.findAll();
 
         if (userId == null) {
