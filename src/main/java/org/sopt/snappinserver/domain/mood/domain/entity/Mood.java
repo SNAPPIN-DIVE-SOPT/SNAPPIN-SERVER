@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.domain.mood.domain.entity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,8 +14,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.sopt.snappinserver.domain.mood.domain.VectorConverter;
 import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.mood.domain.exception.MoodErrorCode;
 import org.sopt.snappinserver.domain.mood.domain.exception.MoodException;
@@ -26,7 +26,6 @@ import org.sopt.snappinserver.global.entity.BaseEntity;
 public class Mood extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 10;
-    private static final int EMBEDDING_DIMENSION = 512;
     private static final int MAX_DEFINITION_LENGTH = 1024;
 
     @Id
@@ -48,8 +47,8 @@ public class Mood extends BaseEntity {
     @Column(nullable = false, length = MAX_DEFINITION_LENGTH)
     private String definition;
 
-    @Column(columnDefinition = "vector(" + EMBEDDING_DIMENSION + ")")
-    @JdbcTypeCode(SqlTypes.VECTOR)
+    @Convert(converter = VectorConverter.class)
+    @Column(columnDefinition = "vector")
     private List<Float> embedding;
 
     @Builder(access = AccessLevel.PRIVATE)
