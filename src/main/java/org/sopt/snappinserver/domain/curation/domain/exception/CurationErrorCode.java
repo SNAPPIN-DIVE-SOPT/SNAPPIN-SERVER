@@ -23,6 +23,7 @@ public enum CurationErrorCode implements ErrorCode {
     // 404 NOT FOUND
     QUESTION_NOT_FOUND(404, "CURATION_404_001", "해당 무드 큐레이션 질문을 찾을 수 없습니다."),
     PHOTO_NOT_FOUND(404, "CURATION_404_002", "해당 이미지를 찾을 수 없습니다."),
+    USER_NOT_FOUND(404, "CURATION_404_003", "유저 정보를 찾을 수 없습니다."),
 
     ;
 
