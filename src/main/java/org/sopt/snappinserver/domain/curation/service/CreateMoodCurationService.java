@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CreateMoodCurationService implements CreateMoodCurationUseCase {
 
+    public static final int PHOTO_MOODS_SIZE = 15;
     private final UserRepository userRepository;
     private final PhotoMoodRepository photoMoodRepository;
     private final CurationRepository curationRepository;
@@ -50,7 +51,15 @@ public class CreateMoodCurationService implements CreateMoodCurationUseCase {
     }
 
     private List<PhotoMood> getPhotoMoods(CreateMoodCurationCommand command) {
-        return photoMoodRepository.findAllByPhotoIdIn(command.photoIds());
+        List<PhotoMood> photoMoods = photoMoodRepository.findAllByPhotoIdIn(command.photoIds());
+        validatePhotoMoodsExists(photoMoods);
+        return photoMoods;
+    }
+
+    private void validatePhotoMoodsExists(List<PhotoMood> photoMoods) {
+        if(photoMoods.size() != PHOTO_MOODS_SIZE) {
+            throw new CurationException(CurationErrorCode.PHOTO_ID_NOT_FOUND);
+        }
     }
 
     private Map<Mood, Double> getMoodScores(List<PhotoMood> photoMoods) {
