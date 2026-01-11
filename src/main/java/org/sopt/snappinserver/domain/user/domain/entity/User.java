@@ -26,6 +26,8 @@ public class User extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 50;
     private static final int MAX_PROFILE_IMAGE_URL_LENGTH = 1024;
+    private static final String CLIENT_ROLE = "CLIENT";
+    private static final String PHOTOGRAPHER_ROLE = "PHOTOGRAPHER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq_gen")
@@ -66,6 +68,7 @@ public class User extends BaseEntity {
         validateUserRoleExists(role);
         validateNameExists(name);
         validateNameLength(name);
+        validateProfileImageUrl(profileImageUrl);
     }
 
     private static void validateUserRoleExists(UserRole role) {
@@ -87,11 +90,27 @@ public class User extends BaseEntity {
     }
 
     private static void validateProfileImageUrl(String profileImageUrl) {
-        if(profileImageUrl == null || profileImageUrl.isBlank()) {
+        validateProfileImageExists(profileImageUrl);
+        validateProfileImageLength(profileImageUrl);
+    }
 
+    private static void validateProfileImageExists(String profileImageUrl) {
+        if (profileImageUrl == null || profileImageUrl.isBlank()) {
+            throw new UserException(UserErrorCode.PROFILE_IMAGE_URL_REQUIRED);
         }
-        if(profileImageUrl.length() > MAX_PROFILE_IMAGE_URL_LENGTH) {
+    }
 
+    private static void validateProfileImageLength(String profileImageUrl) {
+        if (profileImageUrl.length() > MAX_PROFILE_IMAGE_URL_LENGTH) {
+            throw new UserException(UserErrorCode.PROFILE_IMAGE_URL_TOO_LONG);
         }
+    }
+
+    public boolean isLoginByClient() {
+        return this.role.name().equals(CLIENT_ROLE);
+    }
+
+    public boolean isLoginByPhotographer() {
+        return this.role.name().equals(PHOTOGRAPHER_ROLE);
     }
 }
