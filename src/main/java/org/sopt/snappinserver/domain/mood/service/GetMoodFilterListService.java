@@ -10,6 +10,7 @@ import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.sopt.snappinserver.domain.mood.repository.MoodRepository;
 import org.sopt.snappinserver.domain.mood.service.dto.response.GetMoodFilterListResult;
 import org.sopt.snappinserver.domain.mood.service.usecase.GetMoodFilterListUseCase;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +24,7 @@ public class GetMoodFilterListService implements GetMoodFilterListUseCase {
 
     @Override
     public GetMoodFilterListResult getMoodFilters(@Nullable Long userId) {
-        List<Mood> moods = moodRepository.findAll();
-
+        List<Mood> moods = moodRepository.findAll(Sort.by("id"));
         if (userId == null) {
             return GetMoodFilterListResult.from(moods, Set.of());
         }
