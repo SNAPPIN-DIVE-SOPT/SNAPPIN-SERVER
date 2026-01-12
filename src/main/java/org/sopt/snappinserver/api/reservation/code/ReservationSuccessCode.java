@@ -11,7 +11,7 @@ public enum ReservationSuccessCode implements SuccessCode {
     // 200 OK
 
     // 201 CREATED
-    POST_RESERVATION_REVIEW_CREATED(201, "RESERVATION_201_001", "상품 리뷰 등록에 성공했습니다.");
+    POST_RESERVATION_REVIEW_CREATED(201, "RESERVATION_201_001", "예약 리뷰 등록에 성공했습니다.");
 
     private final int status;
     private final String code;
