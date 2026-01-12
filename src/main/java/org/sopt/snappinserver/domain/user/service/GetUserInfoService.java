@@ -19,7 +19,9 @@ import org.sopt.snappinserver.domain.user.service.dto.response.GetPhotographerIn
 import org.sopt.snappinserver.domain.user.service.dto.response.GetUserInfoResult;
 import org.sopt.snappinserver.domain.user.service.usecase.GetUserInfoUseCase;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class GetUserInfoService implements GetUserInfoUseCase {
