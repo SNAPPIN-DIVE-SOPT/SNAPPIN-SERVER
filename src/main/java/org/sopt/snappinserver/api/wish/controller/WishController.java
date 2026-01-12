@@ -7,11 +7,14 @@ import org.sopt.snappinserver.api.wish.dto.request.WishProductRequest;
 import org.sopt.snappinserver.api.wish.dto.response.WishPortfolioResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishProductResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishedPortfoliosResponse;
+import org.sopt.snappinserver.api.wish.dto.response.WishedProductsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishPortfolioResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
+import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedPortfoliosUseCase;
+import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedProductsUseCase;
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishPortfolioUseCase;
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishProductUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -27,6 +30,7 @@ public class WishController implements WishApi {
     private final PostWishPortfolioUseCase postWishPortfolioUseCase;
     private final PostWishProductUseCase postWishProductUseCase;
     private final GetWishedPortfoliosUseCase getWishedPortfoliosUseCase;
+    private final GetWishedProductsUseCase getWishedProductsUseCase;
 
     @Override
     public ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
@@ -66,6 +70,18 @@ public class WishController implements WishApi {
         WishedPortfoliosResponse response = WishedPortfoliosResponse.from(result);
 
         return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PORTFOLIOS_OK, response);
+    }
+
+    @Override
+    public ApiResponseBody<WishedProductsResponse, Void> getWishedProducts(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+        WishedProductsResult result = getWishedProductsUseCase.getWishedProducts(
+            userInfo.userId()
+        );
+        WishedProductsResponse response = WishedProductsResponse.from(result);
+
+        return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PRODUCTS_OK, response);
     }
 
     private WishSuccessCode decideSuccessCode(WishPortfolioResult result) {
