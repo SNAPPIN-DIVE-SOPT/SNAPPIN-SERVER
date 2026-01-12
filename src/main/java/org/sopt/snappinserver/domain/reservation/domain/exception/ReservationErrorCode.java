@@ -22,8 +22,8 @@ public enum ReservationErrorCode implements ErrorCode {
     ADDITIONAL_PAYMENT_NAME_TOO_LONG(400, "RESERVATION_400_011", "추가 요청 금액명 길이는 100자 이하입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_REQUIRED(400, "RESERVATION_400_012", "추가 요청 금액은 필수입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_TOO_SMALL(400, "RESERVATION_400_013", "추가 요청 금액은 10원 이상이어야 합니다."),
-    RESERVATION_USER_NOT_MATCH(400, "RESERVATION_400_14", "사용자가 예약의 소유자가 아닙니다."),
-    RESERVATION_NOT_COMPLETED(400, "RESERVATION_400_15", "촬영이 완료된 예약만 리뷰를 작성할 수 있습니다."),
+    RESERVATION_USER_NOT_MATCH(400, "RESERVATION_400_014", "사용자가 예약의 소유자가 아닙니다."),
+    RESERVATION_NOT_COMPLETED(400, "RESERVATION_400_015", "촬영이 완료된 예약만 리뷰를 작성할 수 있습니다."),
 
     // 401 UNAUTHORIZED
 
