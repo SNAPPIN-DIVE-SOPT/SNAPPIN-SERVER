@@ -60,8 +60,8 @@ dependencies {
     testImplementation 'org.springframework.batch:spring-batch-test'
 
     // AWS
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.681')
-    implementation 'com.amazonaws:aws-java-sdk-s3'
+    implementation platform("software.amazon.awssdk:bom:2.40.16")
+    implementation "software.amazon.awssdk:s3"
 
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'

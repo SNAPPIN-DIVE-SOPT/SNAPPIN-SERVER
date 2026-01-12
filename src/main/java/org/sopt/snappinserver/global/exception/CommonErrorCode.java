@@ -10,6 +10,7 @@ public enum CommonErrorCode implements ErrorCode {
 
     // 400 BAD REQUEST
     INVALID_MAPPING_PARAMETER(400, "COMMON_400_001", "매핑할 수 없는 값입니다."),
+    INVALID_REQUEST_VARIABLE(400, "COMMON_400_002", "엔드포인트에 잘못된 요청값이 있습니다."),
 
     // 401 UNAUTHENTICATED
     UNAUTHORIZED(401, "COMMON_401_001", "인증에 실패했습니다."),

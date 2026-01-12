@@ -22,6 +22,7 @@ public enum PhotographerErrorCode implements ErrorCode {
     END_TIME_REQUIRED(400, "PHOTOGRAPHER_400_011", "종료 시각은 필수입니다."),
     START_TIME_AFTER_THAN_END_TIME(400, "PHOTOGRAPHER_400_012", "스케줄 시작 시간이 종료 시간보다 늦을 수 없습니다."),
     BIO_TOO_LONG(400, "PHOTOGRAPHER_400_013", "한 줄 소개 길이는 200자 이하입니다."),
+    AVAILABLE_LOCATION_REQUIRED(400, "PHOTOGRAPHER_400_014", "활동 지역은 필수입니다."),
 
     // 401 UNAUTHORIZED
 
@@ -29,6 +30,9 @@ public enum PhotographerErrorCode implements ErrorCode {
 
     // 404 NOT FOUND
     SCHEDULE_NOT_FOUND(404, "PHOTOGRAPHER_404_001", "해당 요일에 대한 작가 스케줄이 존재하지 않습니다."),
+    PHOTOGRAPHER_NOT_FOUND(404, "PHOTOGRAPHER_404_002", "해당 작가가 존재하지 않습니다."),
+    PHOTOGRAPHER_SPECIALTY_NOT_FOUND(404, "PHOTOGRAPHER_404_003", "해당 작가의 촬영 상품이 존재하지 않습니다."),
+    PHOTOGRAPHER_AVAILABLE_LOCATION_NOT_FOUND(404, "PHOTOGRAPHER_404_004", "해당 작가 활동 지역이 존재하지 않습니다."),
 
     ;
 

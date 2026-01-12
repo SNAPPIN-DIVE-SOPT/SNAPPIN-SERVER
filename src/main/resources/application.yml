@@ -9,6 +9,11 @@ spring:
     jdbc:
       initialize-schema: never
 
+  security:
+    user:
+      name: disabled
+      password: disabled
+
 springdoc:
   swagger-ui:
     tags-sorter: alpha

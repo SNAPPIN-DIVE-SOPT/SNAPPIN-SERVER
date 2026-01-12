@@ -66,6 +66,7 @@ public class User extends BaseEntity {
         validateUserRoleExists(role);
         validateNameExists(name);
         validateNameLength(name);
+        validateProfileImageUrl(profileImageUrl);
     }
 
     private static void validateUserRoleExists(UserRole role) {
@@ -87,11 +88,23 @@ public class User extends BaseEntity {
     }
 
     private static void validateProfileImageUrl(String profileImageUrl) {
-        if(profileImageUrl == null || profileImageUrl.isBlank()) {
+        validateProfileImageExists(profileImageUrl);
+        validateProfileImageLength(profileImageUrl);
+    }
 
+    private static void validateProfileImageExists(String profileImageUrl) {
+        if (profileImageUrl == null || profileImageUrl.isBlank()) {
+            throw new UserException(UserErrorCode.PROFILE_IMAGE_URL_REQUIRED);
         }
-        if(profileImageUrl.length() > MAX_PROFILE_IMAGE_URL_LENGTH) {
+    }
 
+    private static void validateProfileImageLength(String profileImageUrl) {
+        if (profileImageUrl.length() > MAX_PROFILE_IMAGE_URL_LENGTH) {
+            throw new UserException(UserErrorCode.PROFILE_IMAGE_URL_TOO_LONG);
         }
+    }
+
+    public boolean isLoginByClient() {
+        return this.role == UserRole.CLIENT;
     }
 }

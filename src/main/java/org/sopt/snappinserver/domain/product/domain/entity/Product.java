@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
-import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,12 +69,6 @@ public class Product extends BaseEntity {
     @Column(length = MAX_CAUTION_LENGTH)
     private String caution;
 
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
-    private LocalDateTime startsAt;
-
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE", nullable = false)
-    private LocalDateTime endsAt;
-
     @Builder(access = AccessLevel.PRIVATE)
     private Product(
         Photographer photographer,
@@ -85,9 +78,7 @@ public class Product extends BaseEntity {
         String description,
         String equipment,
         String processDescription,
-        String caution,
-        LocalDateTime startsAt,
-        LocalDateTime endsAt
+        String caution
     ) {
         this.photographer = photographer;
         this.title = title;
@@ -97,8 +88,6 @@ public class Product extends BaseEntity {
         this.equipment = equipment;
         this.processDescription = processDescription;
         this.caution = caution;
-        this.startsAt = startsAt;
-        this.endsAt = endsAt;
     }
 
     public static Product create(
@@ -109,9 +98,7 @@ public class Product extends BaseEntity {
         String description,
         String equipment,
         String processDescription,
-        String caution,
-        LocalDateTime startsAt,
-        LocalDateTime endsAt
+        String caution
     ) {
         validateProduct(
             photographer,
@@ -121,9 +108,7 @@ public class Product extends BaseEntity {
             description,
             equipment,
             processDescription,
-            caution,
-            startsAt,
-            endsAt
+            caution
         );
         return Product.builder()
             .photographer(photographer)
@@ -134,8 +119,6 @@ public class Product extends BaseEntity {
             .equipment(equipment)
             .processDescription(processDescription)
             .caution(caution)
-            .startsAt(startsAt)
-            .endsAt(endsAt)
             .build();
     }
 
@@ -147,9 +130,7 @@ public class Product extends BaseEntity {
         String description,
         String equipment,
         String processDescription,
-        String caution,
-        LocalDateTime startsAt,
-        LocalDateTime endsAt
+        String caution
     ) {
         validatePhotographerExists(photographer);
         validateTitle(title);
@@ -159,7 +140,6 @@ public class Product extends BaseEntity {
         validateEquipmentLength(equipment);
         validateProcessDescriptionLength(processDescription);
         validateCautionLength(caution);
-        validateTime(startsAt, endsAt);
     }
 
     private static void validatePhotographerExists(Photographer photographer) {
@@ -237,30 +217,6 @@ public class Product extends BaseEntity {
     private static void validateCautionLength(String caution) {
         if (caution != null && caution.length() > MAX_CAUTION_LENGTH) {
             throw new ProductException(ProductErrorCode.CAUTION_TOO_LONG);
-        }
-    }
-
-    private static void validateTime(LocalDateTime startsAt, LocalDateTime endsAt) {
-        validateStartsAtExists(startsAt);
-        validateEndsAtExists(endsAt);
-        validateTimeOrder(startsAt, endsAt);
-    }
-
-    private static void validateStartsAtExists(LocalDateTime startsAt) {
-        if (startsAt == null) {
-            throw new ProductException(ProductErrorCode.STARTS_AT_REQUIRED);
-        }
-    }
-
-    private static void validateEndsAtExists(LocalDateTime endsAt) {
-        if (endsAt == null) {
-            throw new ProductException(ProductErrorCode.ENDS_AT_REQUIRED);
-        }
-    }
-
-    private static void validateTimeOrder(LocalDateTime startsAt, LocalDateTime endsAt) {
-        if (startsAt.isAfter(endsAt) || startsAt.isEqual(endsAt)) {
-            throw new ProductException(ProductErrorCode.STARTS_AT_AFTER_ENDS_AT);
         }
     }
 }

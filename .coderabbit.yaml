@@ -99,6 +99,24 @@ reviews:
         - path variable은 camelCase 사용
         - 리소스 식별은 path variable
         - 필터링/검색은 query string 사용
+        
+        [Annotation 위치 기준]
+        - 검증 관련 (@Valid, @NotNull 등):	인터페이스에 위치
+        - 요청 관련 (@RequestBody, @RequestParam, @PathVariable):	인터페이스에 위치
+        - 인증 관련 (@AuthenticationPrincipal): 컨트롤러 구현체에 위치
+          단, 인증 관련 어노테이션은 인터페이스에서 @parameter(hidden = true) 붙여서 스웨거에 표시되지 않는 것으로 구현
+        
+        [Layer별 검증 책임]
+        1. API Layer (Interface/Controller)
+        - 책임: 요청 데이터의 형식(Format) 검증
+        - 내용: Null 여부, 타입, 숫자 범위, 이메일 형식 등
+        - 예외: 위반 시 400 Bad Request
+        2. Service Layer
+        - 책임: 원칙적으로 Service는 API 레이어의 형식 검증 결과를 신뢰 후 데이터의 의미 및 비즈니스 규칙 검증
+        - 내용: 유저 권한 확인, 내부 비즈니스 로직
+        - 원칙: API 단과 검증과 중복 금지
+        - 방어 로직: 타 서비스에서 해당 서비스를 사용할 경우에만 서비스 단 검증 로직 추가
+        - 예외: 위반 시 BusinessException (Custom Error Code)
 
   # 자동 리뷰 트리거 설정
   auto_review:

@@ -3,10 +3,20 @@ package org.sopt.snappinserver.api.wish.controller;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.wish.code.WishSuccessCode;
 import org.sopt.snappinserver.api.wish.dto.request.WishPortfolioRequest;
+import org.sopt.snappinserver.api.wish.dto.request.WishProductRequest;
 import org.sopt.snappinserver.api.wish.dto.response.WishPortfolioResponse;
+import org.sopt.snappinserver.api.wish.dto.response.WishProductResponse;
+import org.sopt.snappinserver.api.wish.dto.response.WishedPortfoliosResponse;
+import org.sopt.snappinserver.api.wish.dto.response.WishedProductsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishPortfolioResult;
+import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult;
+import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
+import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsResult;
+import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedPortfoliosUseCase;
+import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedProductsUseCase;
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishPortfolioUseCase;
+import org.sopt.snappinserver.domain.wish.service.usecase.PostWishProductUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class WishController implements WishApi {
 
     private final PostWishPortfolioUseCase postWishPortfolioUseCase;
-
+    private final PostWishProductUseCase postWishProductUseCase;
+    private final GetWishedPortfoliosUseCase getWishedPortfoliosUseCase;
+    private final GetWishedProductsUseCase getWishedProductsUseCase;
 
     @Override
     public ApiResponseBody<WishPortfolioResponse, Void> updateWishPortfolio(
@@ -29,15 +41,56 @@ public class WishController implements WishApi {
             userInfo.userId(),
             request.portfolioId()
         );
-
         WishPortfolioResponse response = WishPortfolioResponse.from(result);
 
         return ApiResponseBody.ok(decideSuccessCode(result), response);
     }
 
+    @Override
+    public ApiResponseBody<WishProductResponse, Void> updateWishProduct(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        WishProductRequest request
+    ) {
+        WishProductResult result = postWishProductUseCase.toggleProductWish(
+            userInfo.userId(),
+            request.productId()
+        );
+        WishProductResponse response = WishProductResponse.from(result);
+
+        return ApiResponseBody.ok(decideSuccessCode(result), response);
+    }
+
+    @Override
+    public ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+        WishedPortfoliosResult result = getWishedPortfoliosUseCase.getWishedPortfolios(
+            userInfo.userId()
+        );
+        WishedPortfoliosResponse response = WishedPortfoliosResponse.from(result);
+
+        return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PORTFOLIOS_OK, response);
+    }
+
+    @Override
+    public ApiResponseBody<WishedProductsResponse, Void> getWishedProducts(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+        WishedProductsResult result = getWishedProductsUseCase.getWishedProducts(
+            userInfo.userId()
+        );
+        WishedProductsResponse response = WishedProductsResponse.from(result);
+
+        return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PRODUCTS_OK, response);
+    }
+
     private WishSuccessCode decideSuccessCode(WishPortfolioResult result) {
-        return result.liked()
-            ? WishSuccessCode.POST_WISH_LIKE_PORTFOLIO_OK
+        return result.liked() ? WishSuccessCode.POST_WISH_LIKE_PORTFOLIO_OK
             : WishSuccessCode.POST_WISH_CANCEL_PORTFOLIO_OK;
+    }
+
+    private WishSuccessCode decideSuccessCode(WishProductResult result) {
+        return result.liked() ? WishSuccessCode.POST_WISH_LIKE_PRODUCT_OK
+            : WishSuccessCode.POST_WISH_CANCEL_PRODUCT_OK;
     }
 }

@@ -85,4 +85,11 @@ public class AvailableLocation extends BaseEntity {
             throw new PlaceException(PlaceErrorCode.SIGUNGU_TOO_LONG);
         }
     }
+
+    public String getFullLocation() {
+        if (sigungu == null || sigungu.isBlank()) {
+            return sido;
+        }
+        return sido + " " + sigungu;
+    }
 }
