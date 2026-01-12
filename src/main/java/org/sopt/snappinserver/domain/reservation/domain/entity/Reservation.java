@@ -189,4 +189,8 @@ public class Reservation extends BaseEntity {
             throw new ReservationException(ReservationErrorCode.RESERVATION_STATUS_REQUIRED);
         }
     }
+
+    public boolean validateReservationClient(Long userId) {
+        return this.user.getId().equals(userId);
+    }
 }
