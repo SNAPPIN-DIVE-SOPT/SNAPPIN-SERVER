@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.review.repository;
 
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 import org.sopt.snappinserver.domain.review.domain.entity.Review;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
 
-    // 첫 페이지 조회 (cursor 없음)
+    // 리뷰 목록 첫 페이지 조회 (cursor 없음)
     @Query("""
         select review
         from Review review
@@ -26,7 +27,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         Pageable pageable
     );
 
-    // 커서 이후 페이지 조회
+    // 커서 이후 리뷰 목록 페이지 조회
     @Query("""
         select review
         from Review review
@@ -41,4 +42,20 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         @Param("cursor") Long cursor,
         Pageable pageable
     );
+
+    // 상품 기반 리뷰 수치(개수, 평균 별점) 조회
+    @Query("""
+            select new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
+                count(review),
+                avg(review.rating)
+            )
+            from Review review
+            join review.reservation reservation
+            where reservation.product.id = :productId
+        """)
+    ProductReviewStatsResult findReviewStatsByProductId(
+        @Param("productId") Long productId
+    );
 }
+
+

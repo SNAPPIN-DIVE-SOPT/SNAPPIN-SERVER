@@ -9,6 +9,7 @@ import org.sopt.snappinserver.api.wish.dto.request.WishProductRequest;
 import org.sopt.snappinserver.api.wish.dto.response.WishPortfolioResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishProductResponse;
 import org.sopt.snappinserver.api.wish.dto.response.WishedPortfoliosResponse;
+import org.sopt.snappinserver.api.wish.dto.response.WishedProductsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.validation.annotation.Validated;
@@ -52,6 +53,17 @@ public interface WishApi {
     )
     @GetMapping("/portfolios")
     ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo
+    );
+
+    @Operation(
+        summary = "위시 상품 목록 조회",
+        description = "사용자가 좋아요한 전체 상품 목록을 조회합니다."
+    )
+    @GetMapping("/products")
+    ApiResponseBody<WishedProductsResponse, Void> getWishedProducts(
 
         @Parameter(hidden = true)
         CustomUserInfo userInfo

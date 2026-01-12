@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.wish.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
@@ -9,5 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WishProductRepository extends JpaRepository<WishProduct, Long> {
+
     Optional<WishProduct> findByUserAndProduct(User user, Product product);
+
+    List<WishProduct> findAllByUser(User user);
+
 }
