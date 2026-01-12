@@ -83,14 +83,13 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
 
     private void createAndSaveReviewPhotos(CreateReservationReviewCommand command, Review review) {
         if (command.imageUrls() != null && !command.imageUrls().isEmpty()) {
-            List<ReviewPhoto> reviewPhotos = IntStream.range(0, command.imageUrls().size())
-                .mapToObj(i -> {
-                    Photo photo = Photo.create(command.imageUrls().get(i));
-                    photoRepository.save(photo);
+            List<Photo> photos = command.imageUrls().stream().map(Photo::create).toList();
+            photoRepository.saveAll(photos);
 
-                    return ReviewPhoto.create(review, photo, i + 1);
-                }).toList();
-
+            List<ReviewPhoto> reviewPhotos = IntStream
+                .range(0, photos.size())
+                .mapToObj(i -> ReviewPhoto.create(review, photos.get(i), i + 1))
+                .toList();
             reviewPhotoRepository.saveAll(reviewPhotos);
         }
     }
