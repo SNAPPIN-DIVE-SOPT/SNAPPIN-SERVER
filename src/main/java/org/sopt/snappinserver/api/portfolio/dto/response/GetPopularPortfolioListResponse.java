@@ -3,7 +3,6 @@ package org.sopt.snappinserver.api.portfolio.dto.response;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
-import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioResult;
 
 @Schema(description = "비로그인 시 인기 무드 기반 포폴 목록 추천 조회 응답 DTO")
 public record GetPopularPortfolioListResponse(

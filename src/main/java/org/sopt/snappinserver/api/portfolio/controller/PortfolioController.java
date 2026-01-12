@@ -4,7 +4,6 @@ import static org.sopt.snappinserver.api.portfolio.code.PortfolioSuccessCode.GET
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioListResponse;
-import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioResponse;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
