@@ -1,7 +1,6 @@
 package org.sopt.snappinserver.domain.user.service;
 
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.curation.repository.CurationRepositoryCustom;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
@@ -36,12 +35,12 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     @Override
     public GetUserInfoResult getUserInfo(Long userId) {
         User user = getUser(userId);
-        Optional<Photographer> photographerOpt = photographerRepository.findByUser(user);
+        Photographer photographer = photographerRepository.findByUser(user)
+            .orElse(null);
 
-        if (user.isLoginByClient()) {
-            return getClientInfo(user, photographerOpt);
-        }
-        return getPhotographerInfo(user, photographerOpt);
+        return user.isLoginByClient()
+            ? getClientInfo(user)
+            : getPhotographerInfo(user, photographer);
     }
 
     private User getUser(Long userId) {
@@ -50,14 +49,13 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     }
 
     private GetUserInfoResult getClientInfo(
-        User user,
-        Optional<Photographer> photographerOptional
+        User user
     ) {
         List<Long> moodIds = curationRepository.findTop3MoodIdsByUserId(user.getId());
         List<String> moodNames = getMoodNames(moodIds);
         GetClientInfoResult clientInfo = new GetClientInfoResult(user.getName(), moodNames);
 
-        return GetUserInfoResult.of(user, photographerOptional, clientInfo, null);
+        return GetUserInfoResult.of(user, null, clientInfo, null);
     }
 
     private List<String> getMoodNames(List<Long> moodIds) {
@@ -67,12 +65,10 @@ public class GetUserInfoService implements GetUserInfoUseCase {
             .toList();
     }
 
-
     private GetUserInfoResult getPhotographerInfo(
         User user,
-        Optional<Photographer> photographerOptional
+        Photographer photographer
     ) {
-        Photographer photographer = getPhotographer(photographerOptional);
         List<String> specialties = getSpecialties(photographer);
         List<String> locations = getAvailableLocations(photographer);
         GetPhotographerInfoResult photographerInfo = new GetPhotographerInfoResult(
@@ -82,12 +78,7 @@ public class GetUserInfoService implements GetUserInfoUseCase {
             locations
         );
 
-        return GetUserInfoResult.of(user, photographerOptional, null, photographerInfo);
-    }
-
-    private static Photographer getPhotographer(Optional<Photographer> photographerOptional) {
-        return photographerOptional
-            .orElseThrow(() -> new UserException(UserErrorCode.PHOTOGRAPHER_NOT_FOUND));
+        return GetUserInfoResult.of(user, photographer, null, photographerInfo);
     }
 
     private List<String> getSpecialties(Photographer photographer) {

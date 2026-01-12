@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.domain.user.service.dto.response;
 
-import java.util.Optional;
 import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 
@@ -14,7 +13,7 @@ public record GetUserInfoResult(
 ) {
     public static GetUserInfoResult of(
         User user,
-        Optional<Photographer> photographer,
+        Photographer photographer,
         GetClientInfoResult clientInfo,
         GetPhotographerInfoResult photographerInfo
     ) {
@@ -22,7 +21,7 @@ public record GetUserInfoResult(
             user.getId(),
             user.getRole().name(),
             user.getProfileImageUrl(),
-            photographer.isPresent(),
+            photographer != null,
             clientInfo,
             photographerInfo
         );
