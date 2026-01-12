@@ -22,8 +22,7 @@ public enum PlaceErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
-
-    ;
+    PLACE_NOT_FOUND(404, "PLACE_404_001", "존재하지 않는 장소입니다.");
 
     private final int status;
     private final String code;

@@ -18,4 +18,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         List<ReservationStatus> statuses
     );
 
+    List<Reservation> findAllByProductAndReservationStatusIn(
+        Product product,
+        List<ReservationStatus> statuses
+    );
 }
