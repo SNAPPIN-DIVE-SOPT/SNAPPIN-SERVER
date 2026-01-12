@@ -1,7 +1,6 @@
 package org.sopt.snappinserver.domain.mood.service;
 
 import jakarta.annotation.Nullable;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +30,6 @@ public class GetMoodFilterListService implements GetMoodFilterListUseCase {
 
         List<Long> top3MoodIds = curationRepository.findTop3MoodIdsByUserId(userId);
 
-        return GetMoodFilterListResult.from(moods, new HashSet<>(top3MoodIds));
+        return GetMoodFilterListResult.from(moods, Set.copyOf(top3MoodIds));
     }
 }
