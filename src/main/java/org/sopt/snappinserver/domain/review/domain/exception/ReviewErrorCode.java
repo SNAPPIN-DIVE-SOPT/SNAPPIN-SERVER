@@ -15,7 +15,7 @@ public enum ReviewErrorCode implements ErrorCode {
     RATING_SCORE_TOO_BIG(400, "REVIEW_400_004", "별점은 5점 이하입니다."),
     CONTENT_REQUIRED(400, "REVIEW_400_005", "본문은 필수입니다."),
     CONTENT_TOO_LONG(400, "REVIEW_400_006", "본문 길이는 512자 이하입니다."),
-
+    REVIEW_ALREADY_EXISTS(400, "REVIEW_400_007", "이미 존재하는 리뷰입니다.")
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN

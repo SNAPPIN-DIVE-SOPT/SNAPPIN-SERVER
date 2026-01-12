@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
+    boolean existsByReservationId(Long reservationId);
 
     // 첫 페이지 조회 (cursor 없음)
     @Query("""
