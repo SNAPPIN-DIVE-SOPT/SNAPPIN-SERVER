@@ -9,7 +9,7 @@ import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 public enum MoodSuccessCode implements SuccessCode {
 
     // 200 OK
-    GET_ALL_MOOD_TAGS_OK(200, "MOOD_200_001", "성공적으로 전체 무드 필터값을 조회했습니다."),
+    GET_ALL_MOOD_OK(200, "MOOD_200_001", "성공적으로 전체 무드 필터값을 조회했습니다."),
 
     // 201 CREATED
 

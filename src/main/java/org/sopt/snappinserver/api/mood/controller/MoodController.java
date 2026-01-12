@@ -28,6 +28,6 @@ public class MoodController implements MoodApi {
         GetMoodFilterListResult result = getMoodFilterListUseCase.getMoodFilters(userId);
         GetMoodFilterListResponse response = GetMoodFilterListResponse.from(result);
 
-        return ApiResponseBody.ok(MoodSuccessCode.GET_ALL_MOOD_TAGS_OK, response);
+        return ApiResponseBody.ok(MoodSuccessCode.GET_ALL_MOOD_OK, response);
     }
 }
