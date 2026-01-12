@@ -23,6 +23,6 @@ public record CreateReservationReviewRequest(
         example = "[\"https://cdn.example.com/review/1.jpg\", \"https://cdn.example.com/review/2.jpg\"]",
         nullable = true
     )
-    List<String> imageUrls
+    List<@NotBlank String> imageUrls
 ) {
 }
