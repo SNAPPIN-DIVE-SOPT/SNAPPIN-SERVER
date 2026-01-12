@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -24,7 +25,7 @@ public interface ReservationApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
-        @PathVariable Long reservationId,
+        @PathVariable @NotNull Long reservationId,
 
         @Valid @RequestBody CreateReservationReviewRequest request
     );
