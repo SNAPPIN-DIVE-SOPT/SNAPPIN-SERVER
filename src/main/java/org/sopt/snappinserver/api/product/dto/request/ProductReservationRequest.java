@@ -14,8 +14,8 @@ public record ProductReservationRequest(
     @Schema(description = "촬영 시작 시간", example = "10:00")
     @NotNull LocalTime startTime,
 
-    @Schema(description = "촬영 시간 (시간 단위)", example = "2")
-    @NotNull Integer durationTime,
+    @Schema(description = "촬영 시간 (0.5시간 단위)", example = "2.5")
+    @NotNull Double durationTime,
 
     @Schema(description = "촬영 장소 아이디", example = "1")
     @NotNull Long placeId,

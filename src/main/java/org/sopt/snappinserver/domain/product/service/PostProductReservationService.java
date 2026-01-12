@@ -51,7 +51,10 @@ public class PostProductReservationService implements PostProductReservationUseC
         Reservation reservation = createReservation(product, user, place, command);
         Reservation saved = reservationRepository.save(reservation);
 
-        return new ProductReservationResult(saved.getId(), saved.getReservationStatus());
+        return new ProductReservationResult(
+            saved.getId(),
+            saved.getReservationStatus()
+        );
     }
 
     private Product getProduct(Long productId) {
@@ -74,7 +77,7 @@ public class PostProductReservationService implements PostProductReservationUseC
         ProductReservationCommand command
     ) {
         LocalDateTime startAt = command.reservedAt();
-        LocalDateTime endAt = startAt.plusHours(command.durationTime());
+        LocalDateTime endAt = startAt.plusMinutes(command.durationTime());
 
         List<Reservation> reservations =
             reservationRepository.findAllByProductAndReservationStatusIn(
@@ -87,9 +90,9 @@ public class PostProductReservationService implements PostProductReservationUseC
                 )
             );
 
-        boolean exists = reservations.stream().anyMatch(r -> {
-            LocalDateTime existingStart = r.getReservedAt();
-            LocalDateTime existingEnd = r.getReservedAt().plusHours(r.getDurationTime());
+        boolean exists = reservations.stream().anyMatch(reservation -> {
+            LocalDateTime existingStart = reservation.getReservedAt();
+            LocalDateTime existingEnd = existingStart.plusMinutes(reservation.getDurationTime());
 
             return existingStart.isBefore(endAt) && existingEnd.isAfter(startAt);
         });
@@ -98,7 +101,6 @@ public class PostProductReservationService implements PostProductReservationUseC
             throw new ReservationException(ReservationErrorCode.RESERVATION_TIME_CONFLICT);
         }
     }
-
 
     private Reservation createReservation(
         Product product,
@@ -115,6 +117,7 @@ public class PostProductReservationService implements PostProductReservationUseC
             command.peopleCount(),
             command.requestNote(),
             ReservationStatus.RESERVATION_REQUESTED,
-            null);
+            null
+        );
     }
 }

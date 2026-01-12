@@ -12,19 +12,26 @@ public record ProductReservationCommand(
     Integer peopleCount,
     String requestNote
 ) {
+
     public static ProductReservationCommand from(ProductReservationRequest request) {
-        validate(request);
+        validateReservation(request);
+
+        int durationMinutes = (int) (request.durationTime() * 60);
+
         return new ProductReservationCommand(
             LocalDateTime.of(request.date(), request.startTime()),
-            request.durationTime(),
+            durationMinutes,
             request.placeId(),
             request.peopleCount(),
             request.requestNote()
         );
     }
 
-    private static void validate(ProductReservationRequest request) {
-        if (request.durationTime() == null || request.durationTime() <= 0) {
+    private static void validateReservation(ProductReservationRequest request) {
+        if (request.durationTime() == null
+            || request.durationTime() <= 0
+            || request.durationTime() % 0.5 != 0
+        ) {
             throw new ProductException(ProductErrorCode.DURATION_TIME_REQUIRED);
         }
 
