@@ -39,7 +39,7 @@ public class ReservationController implements ReservationApi {
 
         return ApiResponseBody.ok(
             ReservationSuccessCode.POST_RESERVATION_REVIEW_CREATED,
-            CreateReservationReviewResponse.of(result.reviewId(), result.reservationId())
+            CreateReservationReviewResponse.from(result)
         );
     }
 

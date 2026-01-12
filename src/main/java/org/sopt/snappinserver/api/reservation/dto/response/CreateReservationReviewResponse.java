@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.reservation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.CreateReservationReviewResult;
 
 @Schema(description = "예약 리뷰 등록 응답 DTO")
 public record CreateReservationReviewResponse(
@@ -12,10 +13,12 @@ public record CreateReservationReviewResponse(
     Long reservationId
 ) {
 
-    public static CreateReservationReviewResponse of(
-        Long reviewId,
-        Long reservationId
+    public static CreateReservationReviewResponse from(
+        CreateReservationReviewResult result
     ) {
-        return new CreateReservationReviewResponse(reviewId, reservationId);
+        return new CreateReservationReviewResponse(
+            result.reviewId(),
+            result.reservationId()
+        );
     }
 }
