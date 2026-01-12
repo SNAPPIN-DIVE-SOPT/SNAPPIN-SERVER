@@ -21,6 +21,7 @@ import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -82,7 +83,7 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
     }
 
     private void createAndSaveReviewPhotos(CreateReservationReviewCommand command, Review review) {
-        if (command.imageUrls() != null && !command.imageUrls().isEmpty()) {
+        if (!CollectionUtils.isEmpty(command.imageUrls())) {
             List<Photo> photos = command.imageUrls().stream().map(Photo::create).toList();
             photoRepository.saveAll(photos);
 
