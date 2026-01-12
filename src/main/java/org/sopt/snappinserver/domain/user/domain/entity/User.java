@@ -26,8 +26,6 @@ public class User extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 50;
     private static final int MAX_PROFILE_IMAGE_URL_LENGTH = 1024;
-    private static final String CLIENT_ROLE = "CLIENT";
-    private static final String PHOTOGRAPHER_ROLE = "PHOTOGRAPHER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_seq_gen")
@@ -107,10 +105,6 @@ public class User extends BaseEntity {
     }
 
     public boolean isLoginByClient() {
-        return this.role.name().equals(CLIENT_ROLE);
-    }
-
-    public boolean isLoginByPhotographer() {
-        return this.role.name().equals(PHOTOGRAPHER_ROLE);
+        return this.role == UserRole.CLIENT;
     }
 }
