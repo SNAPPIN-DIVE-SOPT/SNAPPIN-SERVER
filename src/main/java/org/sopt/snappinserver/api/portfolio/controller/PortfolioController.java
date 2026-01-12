@@ -7,16 +7,19 @@ import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioList
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/portfolios")
 @RequiredArgsConstructor
 @RestController
-public class PortfolioController {
+public class PortfolioController implements PortfolioApi {
 
     private final GetPopularPortfolioListUseCase getPopularPortfolioListUseCase;
 
+    @Override
+    @GetMapping("/popular")
     public ApiResponseBody<GetPopularPortfolioListResponse, Void> getPopularPortfolios() {
         GetPopularPortfolioListResult result = getPopularPortfolioListUseCase
             .getPopularPortfolioList();
