@@ -11,7 +11,9 @@ import org.sopt.snappinserver.domain.mood.repository.MoodRepository;
 import org.sopt.snappinserver.domain.mood.service.dto.response.GetMoodFilterListResult;
 import org.sopt.snappinserver.domain.mood.service.usecase.GetMoodFilterListUseCase;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class GetMoodFilterListService implements GetMoodFilterListUseCase {
