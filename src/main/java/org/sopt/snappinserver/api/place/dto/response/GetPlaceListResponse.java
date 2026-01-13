@@ -7,7 +7,7 @@ import org.sopt.snappinserver.domain.place.service.dto.response.GetPlaceListResu
 @Schema(description = "촬영 장소 목록 검색 API")
 public record GetPlaceListResponse(
 
-    @Schema
+    @Schema(description = "검색된 촬영 장소 목록")
     List<GetPlaceResponse> places
 ) {
 
