@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.global.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -10,15 +9,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.auth.infra.jwt.JwtProvider;
-import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.sopt.snappinserver.global.response.dto.ErrorMeta;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -31,8 +26,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
+    public static final String AUTH_ERROR_ATTR = "AUTH_ERROR";
+
     private final JwtProvider jwtProvider;
-    private final ObjectMapper objectMapper;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
@@ -78,35 +74,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
-        } catch (ExpiredJwtException | MalformedJwtException
-                 | IllegalArgumentException | UnsupportedJwtException e
-        ) {
-            filterChain.doFilter(request, response);
-            return;
+        } catch (ExpiredJwtException e) {
+            request.setAttribute(AUTH_ERROR_ATTR, "EXPIRED_ACCESS_TOKEN");
+        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException e) {
+            request.setAttribute(AUTH_ERROR_ATTR, "INVALID_ACCESS_TOKEN");
         }
 
         filterChain.doFilter(request, response);
     }
-
-    private void sendError(
-        HttpServletResponse response,
-        HttpServletRequest request,
-        AuthErrorCode errorCode
-    ) throws IOException {
-
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
-        );
-
-        ApiResponseBody<Void, ErrorMeta> body =
-            ApiResponseBody.onFailure(errorCode, meta);
-
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(
-            objectMapper.writeValueAsString(body)
-        );
-    }
-
 }

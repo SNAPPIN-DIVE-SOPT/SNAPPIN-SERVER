@@ -26,10 +26,16 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         HttpServletResponse response,
         AuthenticationException authException
     ) throws IOException {
+        Object reason = request.getAttribute(TokenAuthenticationFilter.AUTH_ERROR_ATTR);
+
+        AuthErrorCode code =
+            "EXPIRED_ACCESS_TOKEN".equals(reason) ? AuthErrorCode.EXPIRED_ACCESS_TOKEN :
+                "INVALID_ACCESS_TOKEN".equals(reason) ? AuthErrorCode.INVALID_ACCESS_TOKEN :
+                    AuthErrorCode.LOGIN_REQUIRED;
 
         ApiResponseBody<Void, ErrorMeta> body =
             ApiResponseBody.onFailure(
-                AuthErrorCode.LOGIN_REQUIRED,
+                code,
                 new ErrorMeta(request.getRequestURI(), Instant.now())
             );
 
@@ -38,4 +44,3 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.getWriter().write(objectMapper.writeValueAsString(body));
     }
 }
-
