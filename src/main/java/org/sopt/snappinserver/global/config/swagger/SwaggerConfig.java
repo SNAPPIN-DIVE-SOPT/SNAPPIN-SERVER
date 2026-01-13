@@ -32,7 +32,7 @@ public class SwaggerConfig {
     public OpenAPI openAPI() {
         return new OpenAPI()
             .addSecurityItem(new SecurityRequirement().addList("JWT"))
-            .components(new Components().addSecuritySchemes("JWT", createAPIKeyScheme()))
+            .components(new Components().addSecuritySchemes("JWT", createJwtSecurityScheme()))
             .info(apiInfo());
     }
 
@@ -109,7 +109,7 @@ public class SwaggerConfig {
         };
     }
 
-    private SecurityScheme createAPIKeyScheme() {
+    private SecurityScheme createJwtSecurityScheme() {
         return new SecurityScheme().type(SecurityScheme.Type.HTTP)
             .bearerFormat("JWT")
             .scheme("bearer");
