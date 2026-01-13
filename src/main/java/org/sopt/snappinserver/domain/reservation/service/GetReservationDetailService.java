@@ -89,7 +89,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
             getThumbnail(product),
             product.getTitle(),
             stats != null ? stats.averageRating() : 0.0,
-            stats == null ? 0 : Math.toIntExact(stats.reviewCount()),
+            stats != null ? Math.toIntExact(stats.reviewCount()) : 0,
             product.getPhotographer().getName(),
             product.getPrice(),
             getMoodNames(product)
