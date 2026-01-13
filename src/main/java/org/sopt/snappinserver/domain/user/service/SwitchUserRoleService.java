@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 @Service
-public class SwitchUserUserRoleService implements SwitchUserRoleUseCase {
+public class SwitchUserRoleService implements SwitchUserRoleUseCase {
 
     private final UserRepository userRepository;
     private final PhotographerRepository photographerRepository;
