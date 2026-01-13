@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -40,7 +42,28 @@ public class S3Service {
         }
     }
 
-    private static void validateStoredFileNameExists(String storedFileName) {
+    public String getUploadPresignedUrl(
+        String storedFileName,
+        String contentType
+    ) {
+        validateStoredFileNameExists(storedFileName);
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+            .bucket(bucketName)
+            .key(storedFileName)
+            .contentType(contentType)
+            .build();
+
+        PresignedPutObjectRequest presignedRequest =
+            s3Presigner.presignPutObject(p -> p
+                .signatureDuration(Duration.ofMinutes(DURATION_MINUTES))
+                .putObjectRequest(putObjectRequest)
+            );
+
+        return presignedRequest.url().toString();
+    }
+
+    private void validateStoredFileNameExists(String storedFileName) {
         if(storedFileName == null || storedFileName.isBlank()) {
             throw new S3Exception(S3ErrorCode.S3_KEY_REQUIRED);
         }
