@@ -12,7 +12,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import java.time.LocalTime;
-import javax.sound.sampled.Port;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +38,7 @@ public class Portfolio {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
     @Column(length = MAX_DESCRIPTION_LENGTH)
