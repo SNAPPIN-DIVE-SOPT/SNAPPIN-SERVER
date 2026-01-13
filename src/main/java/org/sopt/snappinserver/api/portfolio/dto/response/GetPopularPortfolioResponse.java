@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioResult;
 
-@Schema(description = "포트폴리오 응답 DTO")
+@Schema(description = "인기 무드 기반 추천 포트폴리오 응답 DTO")
 public record GetPopularPortfolioResponse(
 
     @Schema(description = "포트폴리오 ID")
