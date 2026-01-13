@@ -30,7 +30,7 @@ public record GetPopularPortfolioResult(
                 .map(Mood::getName)
                 .toList(),
 
-            portfolio.getProduct().getPhotographer().getName()
+            portfolio.getProduct().getPhotographer().getNickname()
         );
     }
 }
