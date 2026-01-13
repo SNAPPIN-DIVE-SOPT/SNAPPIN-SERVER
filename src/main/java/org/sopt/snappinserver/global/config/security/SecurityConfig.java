@@ -56,7 +56,6 @@ public class SecurityConfig {
             )
             .formLogin(AbstractHttpConfigurer::disable)
             .httpBasic(AbstractHttpConfigurer::disable)
-            .anonymous(AbstractHttpConfigurer::disable)
             .exceptionHandling(e -> e
                 .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
@@ -77,4 +76,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
