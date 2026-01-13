@@ -25,7 +25,7 @@ public enum ReservationErrorCode implements ErrorCode {
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
-    RESERVATION_USER_NOT_MATCH(404, "RESERVATION_403_001", "사용자가 예약의 소유자가 아닙니다."),
+    RESERVATION_USER_NOT_MATCH(403, "RESERVATION_403_001", "사용자가 예약의 소유자가 아닙니다."),
 
     // 404 NOT FOUND
     RESERVATION_NOT_FOUND(404, "RESERVATION_404_001", "존재하지 않는 예약입니다."),
