@@ -15,11 +15,12 @@ public interface PortfolioPhotoRepository extends JpaRepository<PortfolioPhoto, 
     Optional<PortfolioPhoto> findFirstByPortfolioOrderByDisplayOrderAsc(Portfolio portfolio);
 
     @Query("""
-        SELECT pp
-        FROM PortfolioPhoto pp
-        JOIN FETCH pp.photo
-        WHERE pp.portfolio.id IN :portfolioIds
-    """)
+            SELECT pp
+            FROM PortfolioPhoto pp
+            JOIN FETCH pp.photo
+            WHERE pp.portfolio.id IN :portfolioIds
+            ORDER BY pp.portfolio.id, pp.displayOrder
+        """)
     List<PortfolioPhoto> findByPortfolioIds(@Param("portfolioIds") List<Long> portfolioIds);
 
 }
