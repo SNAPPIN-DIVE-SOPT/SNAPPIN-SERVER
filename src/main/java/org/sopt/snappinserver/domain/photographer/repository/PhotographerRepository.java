@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PhotographerRepository extends JpaRepository<Photographer, Long> {
 
     Optional<Photographer> findByUser(User user);
-
+    boolean existsByUser(User user);
 }
