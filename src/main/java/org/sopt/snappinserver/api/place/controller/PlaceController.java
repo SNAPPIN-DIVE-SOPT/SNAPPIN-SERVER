@@ -22,7 +22,7 @@ public class PlaceController implements PlaceApi {
     @Override
     @GetMapping()
     public ApiResponseBody<GetPlaceListResponse, Void> getPlaces(
-        @RequestParam String keyword
+        String keyword
     ) {
         GetPlaceListResult result = getPlaceListUseCase.getPlaceList(keyword);
         GetPlaceListResponse response = GetPlaceListResponse.from(result);
