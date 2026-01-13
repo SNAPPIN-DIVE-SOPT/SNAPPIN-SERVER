@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.reservation.dto.response;
 
 import java.time.format.DateTimeFormatter;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailInfoResult;
 
 public record ReservationDetailInfoResponse(
     String client,
@@ -12,9 +13,8 @@ public record ReservationDetailInfoResponse(
     int peopleCount,
     String requestNote
 ) {
-    public static ReservationDetailInfoResponse from(
-        org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailInfoResult result
-    ) {
+
+    public static ReservationDetailInfoResponse from(GetReservationDetailInfoResult result) {
         return new ReservationDetailInfoResponse(
             result.client(),
             result.createdAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),

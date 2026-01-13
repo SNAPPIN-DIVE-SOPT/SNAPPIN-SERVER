@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.reservation.dto.response;
 
 import java.util.List;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailProductResult;
 
 public record ReservationDetailProductResponse(
     Long id,
@@ -12,9 +13,8 @@ public record ReservationDetailProductResponse(
     int price,
     List<String> moods
 ) {
-    public static ReservationDetailProductResponse from(
-        org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailProductResult result
-    ) {
+
+    public static ReservationDetailProductResponse from(GetReservationDetailProductResult result) {
         return new ReservationDetailProductResponse(
             result.id(),
             result.imageUrl(),

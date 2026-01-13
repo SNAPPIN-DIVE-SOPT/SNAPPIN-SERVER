@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.reservation.dto.response;
 
 import java.util.List;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailReviewResult;
 
 public record ReservationDetailReviewResponse(
     Long id,
@@ -11,7 +12,7 @@ public record ReservationDetailReviewResponse(
     String content
 ) {
     public static ReservationDetailReviewResponse from(
-        org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailReviewResult result
+        GetReservationDetailReviewResult result
     ) {
         if (result == null) return null;
 
