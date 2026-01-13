@@ -1,27 +1,18 @@
 package org.sopt.snappinserver.global.security;
 
-import static org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode.EXPIRED_ACCESS_TOKEN;
-import static org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode.INVALID_ACCESS_TOKEN;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.auth.infra.jwt.JwtProvider;
-import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.sopt.snappinserver.global.response.dto.ErrorMeta;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,14 +25,14 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
+    public static final String AUTH_ERROR_ATTR = "org.sopt.snappinserver.security.AUTH_ERROR";
+
     private final JwtProvider jwtProvider;
-    private final ObjectMapper objectMapper;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-
-        return path.equals("/api/v1/auth/reissue") || path.equals("/api/v1/auth/login")
+        String path = request.getServletPath();
+        return path.equals("/api/v1/auth/reissue") || path.equals("/api/v1/auth/login/kakao")
             || path.equals("/api/v1/photos/process");
     }
 
@@ -82,35 +73,13 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
         } catch (ExpiredJwtException e) {
-            sendError(response, request, EXPIRED_ACCESS_TOKEN);
-            return;
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException e) {
-            sendError(response, request, INVALID_ACCESS_TOKEN);
-            return;
+            request.setAttribute(AUTH_ERROR_ATTR, "EXPIRED_ACCESS_TOKEN");
+            SecurityContextHolder.clearContext();
+        } catch (JwtException | IllegalArgumentException e) {
+            request.setAttribute(AUTH_ERROR_ATTR, "INVALID_ACCESS_TOKEN");
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
     }
-
-    private void sendError(
-        HttpServletResponse response,
-        HttpServletRequest request,
-        AuthErrorCode errorCode
-    ) throws IOException {
-
-        ErrorMeta meta = new ErrorMeta(
-            request.getRequestURI(),
-            Instant.now()
-        );
-
-        ApiResponseBody<Void, ErrorMeta> body =
-            ApiResponseBody.onFailure(errorCode, meta);
-
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(
-            objectMapper.writeValueAsString(body)
-        );
-    }
-
 }
