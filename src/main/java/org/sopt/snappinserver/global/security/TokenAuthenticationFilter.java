@@ -1,8 +1,5 @@
 package org.sopt.snappinserver.global.security;
 
-import static org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode.EXPIRED_ACCESS_TOKEN;
-import static org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode.INVALID_ACCESS_TOKEN;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -41,7 +38,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
 
-        return path.equals("/api/v1/auth/reissue") || path.equals("/api/v1/auth/login")
+        return path.startsWith("/api/v1/auth/")
             || path.equals("/api/v1/photos/process");
     }
 
@@ -81,11 +78,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
-        } catch (ExpiredJwtException e) {
-            sendError(response, request, EXPIRED_ACCESS_TOKEN);
-            return;
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException e) {
-            sendError(response, request, INVALID_ACCESS_TOKEN);
+        } catch (ExpiredJwtException | MalformedJwtException
+                 | IllegalArgumentException | UnsupportedJwtException e
+        ) {
+            filterChain.doFilter(request, response);
             return;
         }
 
