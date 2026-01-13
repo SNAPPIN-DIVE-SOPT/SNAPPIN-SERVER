@@ -3,6 +3,7 @@ package org.sopt.snappinserver.api.user.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.sopt.snappinserver.api.user.dto.response.GetSwitchedUserProfileResponse;
 import org.sopt.snappinserver.api.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -17,5 +18,14 @@ public interface UserApi {
     ApiResponseBody<GetUserInfoResponse, Void> getUserInfo(
         @Parameter(hidden = true)
         CustomUserInfo userInfo
+    );
+
+    @Operation(
+        summary = "유저 프로필 전환 API",
+        description = "현재 로그인한 사용자가 유저 프로필 전환이 가능한 경우, 사용자 역할을 전환하여 accessCode를 재발급합니다."
+    )
+    ApiResponseBody<GetSwitchedUserProfileResponse, Void> patchUserRole(
+      @Parameter(hidden = true)
+      CustomUserInfo userInfo
     );
 }

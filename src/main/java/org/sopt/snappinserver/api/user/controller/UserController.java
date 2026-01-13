@@ -1,7 +1,9 @@
 package org.sopt.snappinserver.api.user.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.user.code.UserSuccessCode;
+import org.sopt.snappinserver.api.user.dto.response.GetSwitchedUserProfileResponse;
 import org.sopt.snappinserver.api.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.user.service.dto.response.GetUserInfoResult;
@@ -9,6 +11,7 @@ import org.sopt.snappinserver.domain.user.service.usecase.GetUserInfoUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController implements UserApi {
 
     private final GetUserInfoUseCase getUserInfoUseCase;
+
     @Override
     @GetMapping("/me")
     public ApiResponseBody<GetUserInfoResponse, Void> getUserInfo(
@@ -27,5 +31,13 @@ public class UserController implements UserApi {
         GetUserInfoResponse response = GetUserInfoResponse.from(result);
 
         return ApiResponseBody.ok(UserSuccessCode.GET_USER_INFO_OK, response);
+    }
+
+    @Override
+    @PatchMapping("/role")
+    public ApiResponseBody<GetSwitchedUserProfileResponse, Void> patchUserRole(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+
     }
 }
