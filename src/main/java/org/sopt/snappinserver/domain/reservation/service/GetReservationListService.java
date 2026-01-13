@@ -54,7 +54,7 @@ public class GetReservationListService implements GetReservationListUseCase {
         List<Long> reservationIds = getReservationIds(filtered);
         List<Long> productIds = getProductIds(filtered);
 
-        Set<Long> reviewedReservationIds = getIsReviewed(reservationIds);
+        Set<Long> reviewedReservationIds = getReviewedReservationIds(reservationIds);
 
         Map<Long, ProductReviewStatsResult> reviewStatsMap = getReviewStats(productIds);
         Map<Long, List<String>> productMoodMap = getProductMoods(productIds);
@@ -121,18 +121,18 @@ public class GetReservationListService implements GetReservationListUseCase {
             .toList();
     }
 
-    private Set<Long> getIsReviewed(List<Long> reservationIds) {
+    private Set<Long> getReviewedReservationIds(List<Long> reservationIds) {
         return new HashSet<>(reviewRepository.findReviewedReservationIds(reservationIds));
     }
 
-    private Map<Long, ProductReviewStatsResult> getReviewStats(
-        List<Long> productIds) {
+    private Map<Long, ProductReviewStatsResult> getReviewStats(List<Long> productIds) {
         return reviewRepository
             .findReviewStatsByProductIds(productIds)
             .stream()
             .collect(Collectors.toMap(
                 row -> (Long) row[0],
-                row -> (ProductReviewStatsResult) row[1]
+                row -> (ProductReviewStatsResult) row[1],
+                (a, b) -> a // 중복 키 방어
             ));
     }
 
