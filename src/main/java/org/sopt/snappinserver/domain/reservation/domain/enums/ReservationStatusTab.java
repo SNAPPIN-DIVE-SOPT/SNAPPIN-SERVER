@@ -23,6 +23,7 @@ public enum ReservationStatusTab {
             PHOTOGRAPHER_CHECKING,
             PAYMENT_REQUESTED,
             PAYMENT_COMPLETED,
+            RESERVATION_CONFIRMED,
             RESERVATION_CANCELED,
             RESERVATION_REFUSED
         )
@@ -30,22 +31,33 @@ public enum ReservationStatusTab {
 
     CLIENT_DONE("촬영 완료", List.of(SHOOT_COMPLETED)),
 
-    PHOTOGRAPHER_REQUESTED("예약 요청", List.of(RESERVATION_REQUESTED)),
+    PHOTOGRAPHER_REQUESTED("예약 요청", List.of(RESERVATION_REQUESTED, RESERVATION_CANCELED)),
 
     PHOTOGRAPHER_ADJUSTING("조율 중",
         List.of(
             PHOTOGRAPHER_CHECKING,
             PAYMENT_REQUESTED,
-            PAYMENT_COMPLETED
+            PAYMENT_COMPLETED,
+            RESERVATION_CANCELED,
+            RESERVATION_REFUSED
         )
     ),
 
-    PHOTOGRAPHER_CONFIRMED("예약 확정", List.of(RESERVATION_CONFIRMED)),
+    PHOTOGRAPHER_CONFIRMED("예약 확정",
+        List.of(
+            RESERVATION_CONFIRMED,
+            RESERVATION_CANCELED,
+            RESERVATION_REFUSED)
+    ),
 
     PHOTOGRAPHER_DONE("촬영 완료", List.of(SHOOT_COMPLETED)),
     ;
 
     private final String tab;
     private final List<ReservationStatus> relatedStatus;
+
+    public boolean isClientTab() {
+        return this == CLIENT_OVERVIEW || this == CLIENT_DONE;
+    }
 
 }
