@@ -16,7 +16,9 @@ import org.sopt.snappinserver.domain.user.domain.exception.UserErrorCode;
 import org.sopt.snappinserver.domain.user.domain.exception.UserException;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class SwitchUserUserRoleService implements SwitchUserRoleUseCase {
