@@ -57,6 +57,35 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     ProductReviewStatsResult findReviewStatsByProductId(
         @Param("productId") Long productId
     );
+
+    // 상품 리뷰 통계 수치 여러 개 배치 조회
+    @Query("""
+        select
+            res.product.id,
+            new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
+                count(r),
+                avg(r.rating)
+            )
+        from Review r
+        join r.reservation res
+        where res.product.id in :productIds
+        group by res.product.id
+    """)
+    List<Object[]> findReviewStatsByProductIds(
+        @Param("productIds") List<Long> productIds
+    );
+
+    // 예약 기준 리뷰 존재 여부
+    @Query("""
+        select r.reservation.id
+        from Review r
+        where r.reservation.id in :reservationIds
+    """)
+    List<Long> findReviewedReservationIds(
+        @Param("reservationIds") List<Long> reservationIds
+    );
+
+
 }
 
 
