@@ -44,7 +44,7 @@ public class Product extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "photographer_id")
+    @JoinColumn(name = "photographer_id", nullable = false)
     private Photographer photographer;
 
     @Column(nullable = false, length = MAX_TITLE_LENGTH)
