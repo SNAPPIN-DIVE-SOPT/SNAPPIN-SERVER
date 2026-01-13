@@ -2,6 +2,7 @@ package org.sopt.snappinserver.global.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
@@ -76,8 +77,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
                 .setAuthentication(authentication);
         } catch (ExpiredJwtException e) {
             request.setAttribute(AUTH_ERROR_ATTR, "EXPIRED_ACCESS_TOKEN");
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException e) {
+            SecurityContextHolder.clearContext();
+        } catch (JwtException | IllegalArgumentException e) {
             request.setAttribute(AUTH_ERROR_ATTR, "INVALID_ACCESS_TOKEN");
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
