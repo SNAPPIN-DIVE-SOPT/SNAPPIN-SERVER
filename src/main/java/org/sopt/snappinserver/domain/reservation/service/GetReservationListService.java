@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.repository.ProductMoodRepository;
 import org.sopt.snappinserver.domain.product.repository.ProductPhotoRepository;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
@@ -39,85 +40,53 @@ public class GetReservationListService implements GetReservationListUseCase {
         Long userId,
         ReservationStatusTab tab
     ) {
-        // 1. status 기준 조회
-        List<Reservation> reservations =
-            tab.isClientTab()
-                ? reservationRepository.findClientReservations(
-                userId, tab.getRelatedStatus()
-            )
-                : reservationRepository.findPhotographerReservations(
-                    userId, tab.getRelatedStatus()
-                );
 
-        // 2. 취소/거절 이전 상태 필터
-        List<Reservation> filtered = reservations.stream()
-            .filter(r -> isAllowedCanceledReservation(r, tab))
-            .toList();
+        List<Reservation> reservations = getReservationsByTab(userId, tab);
+        List<Reservation> filtered = filterReservationsByTab(tab, reservations);
 
         if (filtered.isEmpty()) {
             return new GetReservationListResult(List.of());
         }
 
-        // 3. ID 수집
-        List<Long> reservationIds =
-            filtered.stream().map(Reservation::getId).toList();
+        List<Long> reservationIds = getReservationIds(filtered);
+        List<Long> productIds = getProductIds(filtered);
 
-        List<Long> productIds =
-            filtered.stream()
-                .map(r -> r.getProduct().getId())
-                .distinct()
-                .toList();
+        Set<Long> reviewedReservationIds = getIsReviewed(reservationIds);
 
-        // 4. 리뷰 작성 여부
-        Set<Long> reviewedReservationIds =
-            new HashSet<>(reviewRepository.findReviewedReservationIds(reservationIds));
+        Map<Long, ProductReviewStatsResult> reviewStatsMap = getReviewStats(productIds);
+        Map<Long, List<String>> productMoodMap = getProductMoods(productIds);
+        Map<Long, String> productThumbnailMap = getThumbnailImage(productIds);
 
-        // 5. 상품 리뷰 통계 (batch)
-        Map<Long, ProductReviewStatsResult> reviewStatsMap =
-            reviewRepository.findReviewStatsByProductIds(productIds).stream()
-                .collect(Collectors.toMap(
-                    row -> (Long) row[0],
-                    row -> (ProductReviewStatsResult) row[1]
-                ));
-
-        // 6. 상품 무드
-        Map<Long, List<String>> productMoodMap =
-            productMoodRepository.findAllByProductIdIn(productIds).stream()
-                .collect(Collectors.groupingBy(
-                    pm -> pm.getProduct().getId(),
-                    Collectors.mapping(
-                        pm -> pm.getMood().getName(),
-                        Collectors.toList()
-                    )
-                ));
-
-        // 7. 썸네일
-        Map<Long, String> productThumbnailMap =
-            productPhotoRepository.findThumbnailByProductIds(productIds);
-
-        // 8. DTO 변환
-        List<GetReservationListItemResult> results =
-            filtered.stream()
-                .map(r -> toItemResult(
-                    r,
-                    productThumbnailMap,
-                    productMoodMap,
-                    reviewedReservationIds,
-                    reviewStatsMap
-                ))
-                .toList();
+        List<GetReservationListItemResult> results = getGetReservationListItems(
+            filtered,
+            productThumbnailMap,
+            productMoodMap,
+            reviewedReservationIds,
+            reviewStatsMap
+        );
 
         return new GetReservationListResult(results);
     }
 
-    private boolean isAllowedCanceledReservation(
-        Reservation reservation,
-        ReservationStatusTab tab
+    private List<Reservation> getReservationsByTab(Long userId, ReservationStatusTab tab) {
+        return tab.isClientTab()
+            ? reservationRepository.findClientReservations(userId, tab.getRelatedStatus())
+            : reservationRepository.findPhotographerReservations(userId, tab.getRelatedStatus());
+    }
+
+    private List<Reservation> filterReservationsByTab(
+        ReservationStatusTab tab,
+        List<Reservation> reservations
     ) {
+        return reservations.stream().filter(r -> isBelongingToTab(r, tab)).toList();
+    }
+
+    private boolean isBelongingToTab(Reservation reservation, ReservationStatusTab tab) {
         ReservationStatus status = reservation.getReservationStatus();
 
         if (status != ReservationStatus.RESERVATION_CANCELED
-            && status != ReservationStatus.RESERVATION_REFUSED) {
+            && status != ReservationStatus.RESERVATION_REFUSED
+        ) {
             return true;
         }
 
@@ -138,14 +107,74 @@ public class GetReservationListService implements GetReservationListUseCase {
         };
     }
 
-    private GetReservationListItemResult toItemResult(
+    private static List<Long> getReservationIds(List<Reservation> filtered) {
+        return filtered.stream().map(Reservation::getId).toList();
+    }
+
+    private static List<Long> getProductIds(List<Reservation> filtered) {
+        return filtered.stream()
+            .map(r -> r.getProduct().getId())
+            .distinct()
+            .toList();
+    }
+
+    private Set<Long> getIsReviewed(List<Long> reservationIds) {
+        return new HashSet<>(reviewRepository.findReviewedReservationIds(reservationIds));
+    }
+
+    private Map<Long, ProductReviewStatsResult> getReviewStats(
+        List<Long> productIds) {
+        return reviewRepository
+            .findReviewStatsByProductIds(productIds)
+            .stream()
+            .collect(Collectors.toMap(
+                row -> (Long) row[0],
+                row -> (ProductReviewStatsResult) row[1]
+            ));
+    }
+
+    private Map<Long, List<String>> getProductMoods(List<Long> productIds) {
+        return productMoodRepository
+            .findAllByProductIdIn(productIds)
+            .stream()
+            .collect(Collectors.groupingBy(productMood ->
+                productMood.getProduct().getId(),
+                Collectors.mapping(productMood ->
+                    productMood.getMood().getName(), Collectors.toList()
+                )
+            ));
+    }
+
+    private Map<Long, String> getThumbnailImage(List<Long> productIds) {
+        return productPhotoRepository.findThumbnailByProductIds(productIds);
+    }
+
+    private List<GetReservationListItemResult> getGetReservationListItems(
+        List<Reservation> filtered,
+        Map<Long, String> productThumbnailMap,
+        Map<Long, List<String>> productMoodMap,
+        Set<Long> reviewedReservationIds,
+        Map<Long, ProductReviewStatsResult> reviewStatsMap
+    ) {
+        return filtered.stream()
+            .map(reservation -> mapToReservationListItem(
+                reservation,
+                productThumbnailMap,
+                productMoodMap,
+                reviewedReservationIds,
+                reviewStatsMap
+            ))
+            .toList();
+    }
+
+    private GetReservationListItemResult mapToReservationListItem(
         Reservation reservation,
         Map<Long, String> productThumbnailMap,
         Map<Long, List<String>> productMoodMap,
         Set<Long> reviewedReservationIds,
         Map<Long, ProductReviewStatsResult> reviewStatsMap
     ) {
-        var product = reservation.getProduct();
+        Product product = reservation.getProduct();
         Long productId = product.getId();
 
         ProductReviewStatsResult stats =
@@ -158,9 +187,7 @@ public class GetReservationListService implements GetReservationListUseCase {
             reservation.getId(),
             reservation.getReservationStatus().name(),
             reservation.getUser().getName(),
-            reservation.getCreatedAt()
-                .atZone(ZoneId.systemDefault())
-                .format(FORMATTER),
+            reservation.getCreatedAt().atZone(ZoneId.systemDefault()).format(FORMATTER),
             new GetReservationListProductResult(
                 productId,
                 productThumbnailMap.get(productId),
