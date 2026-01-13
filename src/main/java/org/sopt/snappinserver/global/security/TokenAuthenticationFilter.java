@@ -27,14 +27,13 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-    public static final String AUTH_ERROR_ATTR = "AUTH_ERROR";
+    public static final String AUTH_ERROR_ATTR = "org.sopt.snappinserver.security.AUTH_ERROR";
 
     private final JwtProvider jwtProvider;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-
+        String path = request.getServletPath();
         return path.startsWith("/api/v1/auth/")
             || path.equals("/api/v1/photos/process");
     }
