@@ -3,8 +3,6 @@ package org.sopt.snappinserver.global.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +32,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("/api/v1/auth/")
+        return path.equals("/api/v1/auth/reissue") || path.equals("/api/v1/auth/login/kakao")
             || path.equals("/api/v1/photos/process");
     }
 
