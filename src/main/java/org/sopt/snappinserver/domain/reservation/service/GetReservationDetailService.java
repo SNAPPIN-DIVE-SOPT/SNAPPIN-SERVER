@@ -42,7 +42,6 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
 
     @Override
     public GetReservationDetailResult getReservationDetail(Long userId, Long reservationId) {
-
         Reservation reservation = getReservation(reservationId, userId);
         Product product = reservation.getProduct();
 
