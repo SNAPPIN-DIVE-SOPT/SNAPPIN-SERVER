@@ -1,10 +1,13 @@
 package org.sopt.snappinserver.global.config.swagger;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.servers.Server;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -28,6 +31,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI()
+            .addSecurityItem(new SecurityRequirement().addList("JWT"))
+            .components(new Components().addSecuritySchemes("JWT", createAPIKeyScheme()))
             .info(apiInfo());
     }
 
@@ -47,6 +52,13 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi v2Api() {
         return groupedApi("v2", "/api/v2");
+    }
+
+    private Info apiInfo() {
+        return new Info()
+            .title("Snappin' Swagger")
+            .description("DIVE SOPT 37기 앱잼 | Snappin' Swagger")
+            .version("1.0.0");
     }
 
     private GroupedOpenApi groupedApi(String group, String fullPrefix) {
@@ -97,10 +109,9 @@ public class SwaggerConfig {
         };
     }
 
-    private Info apiInfo() {
-        return new Info()
-            .title("Snappin Swagger")
-            .description("DIVE SOPT 37기 앱잼 | Snappin Swagger")
-            .version("1.0.0");
+    private SecurityScheme createAPIKeyScheme() {
+        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+            .bearerFormat("JWT")
+            .scheme("bearer");
     }
 }
