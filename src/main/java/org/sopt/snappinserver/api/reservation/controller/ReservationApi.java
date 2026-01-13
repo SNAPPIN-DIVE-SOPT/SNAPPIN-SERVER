@@ -2,16 +2,21 @@ package org.sopt.snappinserver.api.reservation.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "010 - Reservation", description = "예약 관련 API")
 public interface ReservationApi {
@@ -25,9 +30,25 @@ public interface ReservationApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
+        @Schema(description = "예약 아이디", example = "1")
         @PathVariable @NotNull Long reservationId,
 
+        @Schema(description = "리뷰 정보", example = "1")
         @Valid @RequestBody CreateReservationReviewRequest request
+    );
+
+    @Operation(
+        summary = "예약 목록 조회",
+        description = "예약 탭에 해당하는 예약 목록을 조회합니다."
+    )
+    @GetMapping
+    ApiResponseBody<ReservationListResponse, Void> getReservations(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 조회 탭", example = "예약 현황")
+        @RequestParam ReservationStatusTab tab
     );
 
 }
