@@ -24,7 +24,9 @@ public class SwitchUserRoleService implements SwitchRoleUseCase {
             throw new UserException(UserErrorCode.SWITCH_PROFILE_FORBIDDEN);
         }
         // 유저 역할 바꿔서 저장
+        user.switchRole();
         // 토큰 재발급
+
         return null;
     }
 

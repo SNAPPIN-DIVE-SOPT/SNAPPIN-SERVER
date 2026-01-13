@@ -107,4 +107,12 @@ public class User extends BaseEntity {
     public boolean isLoginByClient() {
         return this.role == UserRole.CLIENT;
     }
+
+    public void switchRole() {
+        if (isLoginByClient()) {
+            this.role = UserRole.PHOTOGRAPHER;
+            return;
+        }
+        this.role = UserRole.CLIENT;
+    }
 }
