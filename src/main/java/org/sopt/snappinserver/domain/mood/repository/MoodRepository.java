@@ -15,14 +15,13 @@ public interface MoodRepository extends JpaRepository<Mood, Long> {
 
     @Query(
         value = """
-              SELECT *
-              FROM mood
-              WHERE id >= (
-                SELECT FLOOR(RANDOM() * (SELECT MAX(id) FROM mood))
-              )
-              LIMIT :limit
+                SELECT *
+                FROM mood
+                ORDER BY RANDOM()
+                LIMIT :limit
             """,
         nativeQuery = true
     )
     List<Mood> findRandom(@Param("limit") int limit);
+
 }
