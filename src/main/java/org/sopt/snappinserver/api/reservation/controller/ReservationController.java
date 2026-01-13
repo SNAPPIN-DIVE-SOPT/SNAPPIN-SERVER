@@ -4,9 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.reservation.code.ReservationSuccessCode;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
 import org.sopt.snappinserver.domain.reservation.service.dto.request.CreateReservationReviewCommand;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.CreateReservationReviewResult;
+import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PostReservationReviewUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReservationController implements ReservationApi {
 
     private final PostReservationReviewUseCase postReservationReviewUseCase;
+    private final GetReservationListUseCase getReservationListUseCase;
 
     @Override
     public ApiResponseBody<CreateReservationReviewResponse, Void> createReview(
@@ -42,5 +46,19 @@ public class ReservationController implements ReservationApi {
             CreateReservationReviewResponse.from(result)
         );
     }
+
+    @Override
+    public ApiResponseBody<ReservationListResponse, Void> getReservations(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        ReservationStatusTab tab
+    ) {
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.GET_RESERVATION_LIST_OK,
+            ReservationListResponse.from(
+                getReservationListUseCase.getReservationList(userInfo.userId(), tab)
+            )
+        );
+    }
+
 
 }

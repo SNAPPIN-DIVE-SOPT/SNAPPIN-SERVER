@@ -1,9 +1,9 @@
 package org.sopt.snappinserver.domain.review.repository;
 
-import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
-import org.springframework.data.domain.Pageable;
 import java.util.List;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
 import org.sopt.snappinserver.domain.review.domain.entity.Review;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,13 +16,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 리뷰 목록 첫 페이지 조회 (cursor 없음)
     @Query("""
-        select review
-        from Review review
-        join fetch review.reservation reservation
-        join fetch reservation.user user
-        where reservation.product.id = :productId
-        order by review.id desc
-    """)
+            select review
+            from Review review
+            join fetch review.reservation reservation
+            join fetch reservation.user user
+            where reservation.product.id = :productId
+            order by review.id desc
+        """)
     List<Review> findReviewsWithUserByProductId(
         @Param("productId") Long productId,
         Pageable pageable
@@ -30,14 +30,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 커서 이후 리뷰 목록 페이지 조회
     @Query("""
-        select review
-        from Review review
-        join fetch review.reservation reservation
-        join fetch reservation.user user
-        where reservation.product.id = :productId
-          and review.id < :cursor
-        order by review.id desc
-    """)
+            select review
+            from Review review
+            join fetch review.reservation reservation
+            join fetch reservation.user user
+            where reservation.product.id = :productId
+              and review.id < :cursor
+            order by review.id desc
+        """)
     List<Review> findReviewsWithUserByProductIdAndCursor(
         @Param("productId") Long productId,
         @Param("cursor") Long cursor,
@@ -56,6 +56,33 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         """)
     ProductReviewStatsResult findReviewStatsByProductId(
         @Param("productId") Long productId
+    );
+
+    // 상품 리뷰 통계 수치 여러 개 배치 조회
+    @Query("""
+            select
+                res.product.id,
+                new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
+                    count(r),
+                    avg(r.rating)
+                )
+            from Review r
+            join r.reservation res
+            where res.product.id in :productIds
+            group by res.product.id
+        """)
+    List<Object[]> findReviewStatsByProductIds(
+        @Param("productIds") List<Long> productIds
+    );
+
+    // 예약 기준 리뷰 존재 여부
+    @Query("""
+            select r.reservation.id
+            from Review r
+            where r.reservation.id in :reservationIds
+        """)
+    List<Long> findReviewedReservationIds(
+        @Param("reservationIds") List<Long> reservationIds
     );
 }
 
