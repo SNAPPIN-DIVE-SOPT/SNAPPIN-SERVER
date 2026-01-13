@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
@@ -49,6 +50,20 @@ public interface ReservationApi {
 
         @Schema(description = "예약 조회 탭", example = "CLIENT_OVERVIEW")
         @RequestParam @NotNull ReservationStatusTab tab
+    );
+
+    @Operation(
+        summary = "예약상세/촬영내역 조회",
+        description = "예약된 상품에 대하여 예약 상세 정보와 결제 정보를 조회합니다."
+    )
+    @GetMapping("/{reservationId}")
+    ApiResponseBody<ReservationDetailResponse, Void> getReservationDetail(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull Long reservationId
     );
 
 }
