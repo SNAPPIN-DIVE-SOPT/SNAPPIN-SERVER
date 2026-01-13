@@ -3,6 +3,7 @@ package org.sopt.snappinserver.domain.portfolio.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
@@ -45,6 +46,12 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
         }
 
         List<Portfolio> portfolios = portfolioRepository.findAllByIdIn(portfolioIds);
+        Map<Long, Portfolio> portfolioMap = portfolios.stream()
+            .collect(Collectors.toMap(Portfolio::getId, p -> p));
+        List<Portfolio> orderedPortfolios = portfolioIds.stream()
+            .map(portfolioMap::get)
+            .filter(Objects::nonNull)
+            .toList();
         List<PortfolioPhoto> portfolioPhotos = portfolioPhotoRepository.findByPortfolioIds(
             portfolioIds
         );
@@ -55,7 +62,7 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
         Map<Long, List<PortfolioPhoto>> photosByPortfolioId = getPortfolioPhotos(portfolioPhotos);
         Map<Long, List<Mood>> moodsByPortfolioId = getPortfolioMoods(portfolioMoods);
         List<GetPopularPortfolioResult> portfolioResults = getPortfolioResult(
-            portfolios,
+            orderedPortfolios,
             photosByPortfolioId,
             moodsByPortfolioId
         );
