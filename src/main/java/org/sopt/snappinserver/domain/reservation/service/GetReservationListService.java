@@ -22,11 +22,14 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReserva
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class GetReservationListService implements GetReservationListUseCase {
 
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
     private static final DateTimeFormatter FORMATTER =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -187,7 +190,7 @@ public class GetReservationListService implements GetReservationListUseCase {
             reservation.getId(),
             reservation.getReservationStatus().name(),
             reservation.getUser().getName(),
-            reservation.getCreatedAt().atZone(ZoneId.systemDefault()).format(FORMATTER),
+            reservation.getCreatedAt().atZone(KOREA_ZONE).format(FORMATTER),
             new GetReservationListProductResult(
                 productId,
                 productThumbnailMap.get(productId),
