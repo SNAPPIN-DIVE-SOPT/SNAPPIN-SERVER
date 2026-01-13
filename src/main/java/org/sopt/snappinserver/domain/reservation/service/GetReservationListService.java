@@ -132,7 +132,7 @@ public class GetReservationListService implements GetReservationListUseCase {
             .collect(Collectors.toMap(
                 row -> (Long) row[0],
                 row -> (ProductReviewStatsResult) row[1],
-                (a, b) -> a // 중복 키 방어
+                (a, b) -> a
             ));
     }
 
