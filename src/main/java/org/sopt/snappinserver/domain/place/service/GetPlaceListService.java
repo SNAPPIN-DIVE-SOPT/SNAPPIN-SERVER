@@ -9,7 +9,7 @@ import org.sopt.snappinserver.domain.place.service.usecase.GetPlaceListUseCase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class GetPlaceListService implements GetPlaceListUseCase {
