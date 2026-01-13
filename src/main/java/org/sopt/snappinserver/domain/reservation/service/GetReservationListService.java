@@ -57,7 +57,7 @@ public class GetReservationListService implements GetReservationListUseCase {
         Map<Long, List<String>> productMoodMap = getProductMoods(productIds);
         Map<Long, String> productThumbnailMap = getThumbnailImage(productIds);
 
-        List<GetReservationListItemResult> results = getGetReservationListItems(
+        List<GetReservationListItemResult> results = getReservationListItems(
             filtered,
             productThumbnailMap,
             productMoodMap,
@@ -149,7 +149,7 @@ public class GetReservationListService implements GetReservationListUseCase {
         return productPhotoRepository.findThumbnailByProductIds(productIds);
     }
 
-    private List<GetReservationListItemResult> getGetReservationListItems(
+    private List<GetReservationListItemResult> getReservationListItems(
         List<Reservation> filtered,
         Map<Long, String> productThumbnailMap,
         Map<Long, List<String>> productMoodMap,
