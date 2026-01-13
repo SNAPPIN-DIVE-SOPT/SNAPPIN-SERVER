@@ -6,8 +6,8 @@ import org.sopt.snappinserver.domain.user.service.dto.response.SwitchUserRoleRes
 @Schema(description = "유저 프로필 전환 API 응답 DTO")
 public record GetSwitchedUserProfileResponse(
 
-    @Schema(description = "새로 발급된 AccessCode")
-    String accessCode
+    @Schema(description = "새로 발급된 AccessToken")
+    String accessToken
 ) {
 
     public static GetSwitchedUserProfileResponse from(SwitchUserRoleResult result) {
