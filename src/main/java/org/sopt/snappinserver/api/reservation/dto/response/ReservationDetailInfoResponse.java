@@ -13,11 +13,13 @@ public record ReservationDetailInfoResponse(
     int peopleCount,
     String requestNote
 ) {
+    private static final DateTimeFormatter CREATED_AT_FORMATTER =
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static ReservationDetailInfoResponse from(GetReservationDetailInfoResult result) {
         return new ReservationDetailInfoResponse(
             result.client(),
-            result.createdAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+            result.createdAt().format(CREATED_AT_FORMATTER),
             result.date().toString(),
             result.startTime().toString(),
             result.durationMinutes() / 60.0,
