@@ -17,19 +17,23 @@ public interface ProductPhotoRepository extends JpaRepository<ProductPhoto, Long
     Optional<ProductPhoto> findFirstByProductOrderByDisplayOrderAsc(Product product);
 
     @Query("""
-        select pp
-        from ProductPhoto pp
-        join fetch pp.photo ph
-        where pp.product.id in :productIds
-          and pp.displayOrder = 0
-    """)
+            select pp
+            from ProductPhoto pp
+            join fetch pp.photo ph
+            where pp.product.id in :productIds
+              and pp.displayOrder = 0
+        """)
     List<ProductPhoto> findThumbnails(@Param("productIds") List<Long> productIds);
 
     default Map<Long, String> findThumbnailByProductIds(List<Long> productIds) {
+        if (productIds.isEmpty()) {
+            return Map.of();
+        }
         return findThumbnails(productIds).stream()
             .collect(Collectors.toMap(
                 pp -> pp.getProduct().getId(),
-                pp -> pp.getPhoto().getImageUrl()
+                pp -> pp.getPhoto().getImageUrl(),
+                (existing, replacement) -> existing
             ));
     }
 
