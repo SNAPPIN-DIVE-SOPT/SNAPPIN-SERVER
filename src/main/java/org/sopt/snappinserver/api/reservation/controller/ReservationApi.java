@@ -48,7 +48,7 @@ public interface ReservationApi {
         CustomUserInfo userInfo,
 
         @Schema(description = "예약 조회 탭", example = "CLIENT_OVERVIEW")
-        @RequestParam ReservationStatusTab tab
+        @RequestParam @NotNull ReservationStatusTab tab
     );
 
 }
