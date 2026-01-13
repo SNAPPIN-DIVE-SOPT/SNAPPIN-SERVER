@@ -33,7 +33,7 @@ public interface ReservationApi {
         @Schema(description = "예약 아이디", example = "1")
         @PathVariable @NotNull Long reservationId,
 
-        @Schema(description = "리뷰 정보", example = "1")
+        @Schema(description = "리뷰 정보")
         @Valid @RequestBody CreateReservationReviewRequest request
     );
 
@@ -47,7 +47,7 @@ public interface ReservationApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
-        @Schema(description = "예약 조회 탭", example = "예약 현황")
+        @Schema(description = "예약 조회 탭", example = "CLIENT_OVERVIEW")
         @RequestParam ReservationStatusTab tab
     );
 
