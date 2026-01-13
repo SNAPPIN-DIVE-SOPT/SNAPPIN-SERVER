@@ -28,10 +28,14 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     ) throws IOException {
         Object reason = request.getAttribute(TokenAuthenticationFilter.AUTH_ERROR_ATTR);
 
-        AuthErrorCode code =
-            "EXPIRED_ACCESS_TOKEN".equals(reason) ? AuthErrorCode.EXPIRED_ACCESS_TOKEN :
-                "INVALID_ACCESS_TOKEN".equals(reason) ? AuthErrorCode.INVALID_ACCESS_TOKEN :
-                    AuthErrorCode.LOGIN_REQUIRED;
+        AuthErrorCode code;
+        if ("EXPIRED_ACCESS_TOKEN".equals(reason)) {
+            code = AuthErrorCode.EXPIRED_ACCESS_TOKEN;
+        } else if ("INVALID_ACCESS_TOKEN".equals(reason)) {
+            code = AuthErrorCode.INVALID_ACCESS_TOKEN;
+        } else {
+            code = AuthErrorCode.LOGIN_REQUIRED;
+        }
 
         ApiResponseBody<Void, ErrorMeta> body =
             ApiResponseBody.onFailure(
