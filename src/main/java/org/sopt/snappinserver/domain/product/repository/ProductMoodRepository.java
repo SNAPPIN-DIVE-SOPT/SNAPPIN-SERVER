@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProductMoodRepository extends JpaRepository<ProductMood, Long> {
 
     List<ProductMood> findAllByProduct(Product product);
+
+    List<ProductMood> findAllByProductIdIn(List<Long> productIds);
 }
