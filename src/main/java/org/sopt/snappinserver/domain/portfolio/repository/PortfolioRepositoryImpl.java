@@ -35,6 +35,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    @Override
     public Optional<String> findBestPortfolioImageByPlaceId(Long placeId) {
         NumberExpression<Double> random = Expressions.numberTemplate(
             Double.class,
