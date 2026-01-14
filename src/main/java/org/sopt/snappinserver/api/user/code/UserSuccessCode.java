@@ -10,6 +10,7 @@ public enum UserSuccessCode implements SuccessCode {
 
     // 200 OK
     GET_USER_INFO_OK(200, "USER_200_001", "성공적으로 유저 정보를 조회했습니다."),
+    SWITCH_USER_ROLE_OK(200, "USER_200_002", "성공적으로 유저 역할을 전환했습니다."),
 
     // 201 CREATED
 

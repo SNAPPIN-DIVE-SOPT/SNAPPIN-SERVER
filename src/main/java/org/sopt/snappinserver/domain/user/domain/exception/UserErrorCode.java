@@ -18,9 +18,10 @@ public enum UserErrorCode implements ErrorCode {
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
+    SWITCH_PROFILE_FORBIDDEN(403, "USER_403_001", "프로필 전환이 불가능한 사용자입니다."),
 
     // 404 NOT FOUND
-    USER_NOT_FOUND(404, "USER_404_001","존재하지 않는 사용자입니다."),
+    USER_NOT_FOUND(404, "USER_404_001", "존재하지 않는 사용자입니다."),
     PHOTOGRAPHER_NOT_FOUND(404, "USER_404_002", "해당 사용자의 작가 프로필이 존재하지 않습니다."),
 
     ;
