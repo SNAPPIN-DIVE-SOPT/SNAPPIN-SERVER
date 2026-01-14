@@ -37,4 +37,6 @@ public interface ProductPhotoRepository extends JpaRepository<ProductPhoto, Long
             ));
     }
 
+    List<ProductPhoto> findByProduct(Product product);
+
 }
