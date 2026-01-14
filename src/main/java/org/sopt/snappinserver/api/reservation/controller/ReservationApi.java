@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
@@ -79,7 +80,7 @@ public interface ReservationApi {
         CustomUserInfo userInfo,
 
         @Schema(description = "예약 아이디", example = "1")
-        @PathVariable @NotNull Long reservationId
+        @PathVariable @NotNull @Positive Long reservationId
     );
 
 }
