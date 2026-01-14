@@ -1,7 +1,9 @@
 package org.sopt.snappinserver.domain.review.repository;
 
 import java.util.List;
+import java.util.Optional;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
+import org.sopt.snappinserver.domain.reservation.domain.entity.Reservation;
 import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -84,6 +86,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Long> findReviewedReservationIds(
         @Param("reservationIds") List<Long> reservationIds
     );
+
+    // 예약 기준 리뷰 단일 조회
+    Optional<Review> findByReservation(Reservation reservation);
+
 }
 
 
