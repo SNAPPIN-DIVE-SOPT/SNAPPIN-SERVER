@@ -6,6 +6,8 @@ import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioPh
 import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioPlace.portfolioPlace;
 import static org.sopt.snappinserver.domain.wish.domain.entity.QWishPortfolio.wishPortfolio;
 
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,11 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     private final JPAQueryFactory jpaQueryFactory;
 
     public Optional<String> findBestPortfolioImageByPlaceId(Long placeId) {
+        NumberExpression<Double> random = Expressions.numberTemplate(
+            Double.class,
+            "function('random')"
+        );
+
         String imageKey = jpaQueryFactory
             .select(photo.imageUrl)
             .from(portfolio)
@@ -32,7 +39,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .groupBy(portfolio.id, photo.imageUrl)
             .orderBy(
                 wishPortfolio.count().desc(),
-                portfolio.id.desc()
+                random.asc()
             )
             .limit(1)
             .fetchOne();
