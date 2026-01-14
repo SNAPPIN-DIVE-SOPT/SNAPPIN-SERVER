@@ -32,6 +32,7 @@ public class Photographer extends BaseEntity {
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MAX_NICKNAME_LENGTH = 20;
     private static final int MAX_BIO_LENGTH = 200;
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "photographer_seq_gen")
@@ -158,7 +159,7 @@ public class Photographer extends BaseEntity {
     }
 
     public boolean isNewPhotographer() {
-        Instant oneMonthAgo = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+        Instant oneMonthAgo = ZonedDateTime.now(KOREA_ZONE)
             .minusMonths(1)
             .toInstant();
 
