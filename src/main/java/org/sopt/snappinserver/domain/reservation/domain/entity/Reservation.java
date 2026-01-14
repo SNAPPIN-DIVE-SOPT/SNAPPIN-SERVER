@@ -190,7 +190,18 @@ public class Reservation extends BaseEntity {
         }
     }
 
-    public boolean validateReservationClient(Long userId) {
+    public boolean isReservationClient(Long userId) {
         return this.user.getId().equals(userId);
     }
+
+    public void completePayment() {
+        if (this.reservationStatus != ReservationStatus.PAYMENT_REQUESTED) {
+            throw new ReservationException(
+                ReservationErrorCode.RESERVATION_NOT_PAYMENT_REQUESTED
+            );
+        }
+
+        this.reservationStatus = ReservationStatus.PAYMENT_COMPLETED;
+    }
+
 }
