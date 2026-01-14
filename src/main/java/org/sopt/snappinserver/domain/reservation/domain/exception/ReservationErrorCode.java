@@ -32,8 +32,8 @@ public enum ReservationErrorCode implements ErrorCode {
 
     // 409 CONFLICT
     RESERVATION_TIME_CONFLICT(409, "RESERVATION_409_001", "해당 시간에 이미 예약이 존재합니다."),
-    RESERVATION_NOT_COMPLETED(409, "RESERVATION_409_002", "촬영이 완료된 예약만 리뷰를 작성할 수 있습니다.");
-
+    RESERVATION_NOT_COMPLETED(409, "RESERVATION_409_002", "촬영이 완료된 예약만 리뷰를 작성할 수 있습니다."),
+    RESERVATION_NOT_PAYMENT_REQUESTED(409, "RESERVATION_409_003", "결제 요청 상태의 예약만 결제를 진행할 수 있습니다." );
 
     private final int status;
     private final String code;
