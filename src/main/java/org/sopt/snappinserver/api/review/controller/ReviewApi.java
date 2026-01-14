@@ -1,8 +1,26 @@
 package org.sopt.snappinserver.api.review.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.sopt.snappinserver.api.review.dto.request.PostPresignedUrlRequest;
+import org.sopt.snappinserver.api.review.dto.response.PostPresignedUrlResponse;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "011 - Review", description = "리뷰 관련 API")
 public interface ReviewApi {
 
+    @Operation(
+        summary = "리뷰 사진 url 발급 API",
+        description = "리뷰에 업로드하는 사진을 저장할 S3 Presigned URL을 생성하여 반환합니다."
+    )
+    ApiResponseBody<PostPresignedUrlResponse, Void> postPresignedUrl(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Valid @RequestBody PostPresignedUrlRequest request
+    );
 }
