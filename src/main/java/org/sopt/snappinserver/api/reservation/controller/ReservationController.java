@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.reservation.code.ReservationSuccessCode;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
@@ -15,6 +16,7 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.CreateRese
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationDetailUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationCancelUseCase;
+import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationCompleteUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationPayUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PostReservationReviewUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -32,6 +34,7 @@ public class ReservationController implements ReservationApi {
     private final GetReservationDetailUseCase getReservationDetailUseCase;
     private final PatchReservationPayUseCase patchReservationPayUseCase;
     private final PatchReservationCancelUseCase patchReservationCancelUseCase;
+    private final PatchReservationCompleteUseCase patchReservationCompleteUseCase;
 
     @Override
     public ApiResponseBody<CreateReservationReviewResponse, Void> createReview(
@@ -110,6 +113,22 @@ public class ReservationController implements ReservationApi {
             ReservationSuccessCode.PATCH_RESERVATION_CANCEL_OK,
             CancelReservationResponse.from(
                 patchReservationCancelUseCase.cancelReservation(
+                    userInfo.userId(),
+                    reservationId
+                )
+            )
+        );
+    }
+
+    @Override
+    public ApiResponseBody<CompleteReservationResponse, Void> updateReservationComplete(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long reservationId
+    ) {
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.PATCH_RESERVATION_COMPLETE_OK,
+            CompleteReservationResponse.from(
+                patchReservationCompleteUseCase.completeReservation(
                     userInfo.userId(),
                     reservationId
                 )
