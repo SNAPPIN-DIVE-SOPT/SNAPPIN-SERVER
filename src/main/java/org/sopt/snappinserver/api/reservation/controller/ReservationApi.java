@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
+import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
@@ -83,4 +84,17 @@ public interface ReservationApi {
         @PathVariable @NotNull @Positive Long reservationId
     );
 
+    @Operation(
+        summary = "예약 취소",
+        description = "고객의 예약을 취소 상태로 변경합니다."
+    )
+    @PatchMapping("/{reservationId}/cancel")
+    ApiResponseBody<CancelReservationResponse, Void> updateReservationCancel(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull @Positive Long reservationId
+    );
 }
