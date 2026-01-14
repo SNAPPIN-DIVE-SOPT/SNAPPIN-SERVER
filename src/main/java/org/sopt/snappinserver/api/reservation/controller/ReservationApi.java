@@ -101,7 +101,7 @@ public interface ReservationApi {
 
     @Operation(
         summary = "촬영 완료 및 리뷰 요청하기 (작가)",
-        description = "예약 확정 상태인 작가의 예약을 찰영 완료 상태로 변경합니다."
+        description = "예약 확정 상태인 작가의 예약을 촬영 완료 상태로 변경합니다."
     )
     @PatchMapping("/{reservationId}/complete")
     ApiResponseBody<CompleteReservationResponse, Void> updateReservationComplete(
