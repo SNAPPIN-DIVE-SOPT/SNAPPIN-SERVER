@@ -6,14 +6,17 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +67,20 @@ public interface ReservationApi {
 
         @Schema(description = "예약 아이디", example = "1")
         @PathVariable @NotNull Long reservationId
+    );
+
+    @Operation(
+        summary = "결제하기",
+        description = "고객에게 결제 요청된 예약에 대해 결제 완료 상태로 변경합니다."
+    )
+    @PatchMapping("/{reservationId}/pay")
+    ApiResponseBody<PayReservationResponse, Void> updateReservationPayment(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull @Positive Long reservationId
     );
 
 }
