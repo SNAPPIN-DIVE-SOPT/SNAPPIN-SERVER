@@ -213,5 +213,11 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = ReservationStatus.RESERVATION_CANCELED;
     }
 
+    public void completeShooting() {
+        if (this.reservationStatus != ReservationStatus.RESERVATION_CONFIRMED) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_NOT_CONFIRMED);
+        }
+        this.reservationStatus = ReservationStatus.SHOOT_COMPLETED;
+    }
 
 }
