@@ -84,7 +84,7 @@ public class ReservationController implements ReservationApi {
     }
 
     @Override
-    public ApiResponseBody<PayReservationResponse, Void> patchReservationPay(
+    public ApiResponseBody<PayReservationResponse, Void> updateReservationPayment(
         @AuthenticationPrincipal CustomUserInfo userInfo,
         Long reservationId
     ) {

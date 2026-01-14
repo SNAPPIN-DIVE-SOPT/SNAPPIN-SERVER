@@ -73,7 +73,7 @@ public interface ReservationApi {
         description = "고객에게 결제 요청된 예약에 대해 결제 완료 상태로 변경합니다."
     )
     @PatchMapping("/{reservationId}/pay")
-    ApiResponseBody<PayReservationResponse, Void> patchReservationPay(
+    ApiResponseBody<PayReservationResponse, Void> updateReservationPayment(
 
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
