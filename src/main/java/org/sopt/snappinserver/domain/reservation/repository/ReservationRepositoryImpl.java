@@ -6,6 +6,7 @@ import static org.sopt.snappinserver.domain.reservation.domain.entity.QReservati
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.place.domain.entity.Place;
@@ -19,7 +20,11 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
 
     @Override
     public List<Place> findTop5MostReservedPlacesInLastMonth() {
-        LocalDateTime oneMonthAgo = LocalDateTime.now().minusMonths(1);
+        Instant oneMonthAgo =
+            LocalDateTime.now()
+                .minusMonths(1)
+                .atZone(ZoneId.systemDefault())
+                .toInstant();
 
         return jpaQueryFactory
             .select(reservation.place)
