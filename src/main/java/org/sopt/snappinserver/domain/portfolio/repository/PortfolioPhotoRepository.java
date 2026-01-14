@@ -22,5 +22,4 @@ public interface PortfolioPhotoRepository extends JpaRepository<PortfolioPhoto, 
             ORDER BY pp.portfolio.id, pp.displayOrder
         """)
     List<PortfolioPhoto> findByPortfolioIds(@Param("portfolioIds") List<Long> portfolioIds);
-
 }

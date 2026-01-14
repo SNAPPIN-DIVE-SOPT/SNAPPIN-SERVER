@@ -3,7 +3,9 @@ package org.sopt.snappinserver.api.reservation.controller;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.reservation.code.ReservationSuccessCode;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
+import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -12,10 +14,11 @@ import org.sopt.snappinserver.domain.reservation.service.dto.request.CreateReser
 import org.sopt.snappinserver.domain.reservation.service.dto.response.CreateReservationReviewResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationDetailUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
+import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationCancelUseCase;
+import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationPayUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PostReservationReviewUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +30,8 @@ public class ReservationController implements ReservationApi {
     private final PostReservationReviewUseCase postReservationReviewUseCase;
     private final GetReservationListUseCase getReservationListUseCase;
     private final GetReservationDetailUseCase getReservationDetailUseCase;
+    private final PatchReservationPayUseCase patchReservationPayUseCase;
+    private final PatchReservationCancelUseCase patchReservationCancelUseCase;
 
     @Override
     public ApiResponseBody<CreateReservationReviewResponse, Void> createReview(
@@ -79,4 +84,37 @@ public class ReservationController implements ReservationApi {
             )
         );
     }
+
+    @Override
+    public ApiResponseBody<PayReservationResponse, Void> updateReservationPayment(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long reservationId
+    ) {
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.PATCH_RESERVATION_PAY_OK,
+            PayReservationResponse.from(
+                patchReservationPayUseCase.payReservation(
+                    userInfo.userId(),
+                    reservationId
+                )
+            )
+        );
+    }
+
+    @Override
+    public ApiResponseBody<CancelReservationResponse, Void> updateReservationCancel(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long reservationId
+    ) {
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.PATCH_RESERVATION_CANCEL_OK,
+            CancelReservationResponse.from(
+                patchReservationCancelUseCase.cancelReservation(
+                    userInfo.userId(),
+                    reservationId
+                )
+            )
+        );
+    }
+
 }

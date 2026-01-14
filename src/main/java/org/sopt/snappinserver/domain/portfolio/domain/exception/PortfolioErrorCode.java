@@ -20,6 +20,10 @@ public enum PortfolioErrorCode implements ErrorCode {
     // 403 FORBIDDEN
 
     // 404 NOT FOUND
+    PORTFOLIO_NOT_FOUND(404, "PORTFOLIO_404_001", "해당 포트폴리오를 찾을 수 없습니다."),
+    PLACE_NOT_FOUND(404, "PORTFOLIO_404_002", "해당 장소를 찾을 수 없습니다."),
+    PRODUCT_PHOTO_NOT_FOUND(404, "PORTFOLIO_404_003", "해당 상품 이미지를 찾을 수 없습니다."),
+    PRODUCT_NOT_FOUND(404, "PRODUCT_404_004", "해당 상품을 찾을 수 없습니다."),
 
     ;
 
