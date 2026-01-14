@@ -11,6 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -152,5 +155,13 @@ public class Photographer extends BaseEntity {
         if (bio != null && bio.length() > MAX_BIO_LENGTH) {
             throw new PhotographerException(PhotographerErrorCode.BIO_TOO_LONG);
         }
+    }
+
+    public boolean isNewPhotographer() {
+        Instant oneMonthAgo = ZonedDateTime.now(ZoneId.of("Asia/Seoul"))
+            .minusMonths(1)
+            .toInstant();
+
+        return this.createdAt.isAfter(oneMonthAgo);
     }
 }
