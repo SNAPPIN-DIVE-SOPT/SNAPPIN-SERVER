@@ -22,7 +22,7 @@ public class PatchReservationCancelService implements PatchReservationCancelUseC
     public CancelReservationResult cancelReservation(Long userId, Long reservationId) {
         Reservation reservation = getReservation(reservationId);
 
-        validateReservationOwner(userId, reservation);
+        validateReservationClient(userId, reservation);
         ReservationStatus previousStatus = reservation.getReservationStatus();
 
         reservation.cancel();
@@ -40,8 +40,8 @@ public class PatchReservationCancelService implements PatchReservationCancelUseC
         );
     }
 
-    private static void validateReservationOwner(Long userId, Reservation reservation) {
-        if (!reservation.isReservationOwner(userId)) {
+    private void validateReservationClient(Long userId, Reservation reservation) {
+        if (!reservation.isReservationClient(userId)) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
     }

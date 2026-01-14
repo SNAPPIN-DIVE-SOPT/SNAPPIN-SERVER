@@ -24,7 +24,7 @@ public class PatchReservationCompleteService
         Long reservationId
     ) {
         Reservation reservation = getReservation(reservationId);
-        validateReservationOwner(photographerId, reservation);
+        validateReservationPhotographer(photographerId, reservation);
 
         reservation.completeShooting();
 
@@ -41,8 +41,8 @@ public class PatchReservationCompleteService
             ));
     }
 
-    private void validateReservationOwner(Long photographerId, Reservation reservation) {
-        if (!reservation.isReservationOwner(photographerId)) {
+    private void validateReservationPhotographer(Long photographerId, Reservation reservation) {
+        if (!reservation.isReservationClient(photographerId)) {
             throw new ReservationException(
                 ReservationErrorCode.RESERVATION_USER_NOT_MATCH
             );

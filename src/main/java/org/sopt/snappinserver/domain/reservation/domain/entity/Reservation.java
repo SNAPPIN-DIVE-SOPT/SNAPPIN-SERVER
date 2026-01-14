@@ -190,8 +190,12 @@ public class Reservation extends BaseEntity {
         }
     }
 
-    public boolean isReservationOwner(Long userId) {
+    public boolean isReservationClient(Long userId) {
         return this.user.getId().equals(userId);
+    }
+
+    public boolean isReservationPhotographer(Long userId) {
+        return this.product.getPhotographer().getUser().getId().equals(userId);
     }
 
     public void completePayment() {

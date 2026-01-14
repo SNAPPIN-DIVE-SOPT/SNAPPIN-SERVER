@@ -22,7 +22,7 @@ public class PatchReservationPayService implements PatchReservationPayUseCase {
     public PayReservationResult payReservation(Long userId, Long reservationId) {
         Reservation reservation = getReservation(reservationId);
 
-        validateReservationOwner(userId, reservation);
+        validateReservationClient(userId, reservation);
         validatePaymentRequested(reservation);
 
         reservation.completePayment();
@@ -35,8 +35,8 @@ public class PatchReservationPayService implements PatchReservationPayUseCase {
             .orElseThrow(() -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
     }
 
-    private void validateReservationOwner(Long userId, Reservation reservation) {
-        if (!reservation.isReservationOwner(userId)) {
+    private void validateReservationClient(Long userId, Reservation reservation) {
+        if (!reservation.isReservationClient(userId)) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
     }
