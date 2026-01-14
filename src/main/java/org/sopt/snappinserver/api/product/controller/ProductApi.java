@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import org.sopt.snappinserver.api.product.dto.request.ProductReservationRequest;
+import org.sopt.snappinserver.api.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
@@ -18,7 +19,6 @@ import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,7 +66,7 @@ public interface ProductApi {
         @Schema(description = "상품 아이디", example = "1")
         @PathVariable @NotNull Long productId,
 
-        @Schema(description = "조회할 연/월 (yyyy-MM)", example = "2026-03", required = true)
+        @Schema(description = "조회할 연/월 (yyyy-MM)", example = "2026-03")
         @RequestParam(value = "date") @NotBlank String date
     );
 
@@ -82,7 +82,7 @@ public interface ProductApi {
         @Schema(description = "상품 아이디", example = "1")
         @PathVariable @NotNull Long productId,
 
-        @Schema(description = "조회할 날짜 (yyyy-MM-dd)", example = "2026-03-15", required = true)
+        @Schema(description = "조회할 날짜 (yyyy-MM-dd)", example = "2026-03-15")
         @RequestParam(value = "date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
         @NotNull LocalDate date
     );
@@ -103,4 +103,16 @@ public interface ProductApi {
         @RequestBody @Valid @NotNull ProductReservationRequest request
     );
 
+    @Operation(
+        summary = "상품 상세 정보 및 상품 안내 조회 API",
+        description = "상품 상세 정보"
+    )
+    @GetMapping("/{productId}")
+    ApiResponseBody<GetProductDetailResponse, Void> getProductDetail(
+        CustomUserInfo userInfo,
+
+        @Schema(description = "상품 ID")
+        @NotNull(message = "상품은 비어있을 수 없습니다.")
+        @PathVariable Long productId
+    );
 }
