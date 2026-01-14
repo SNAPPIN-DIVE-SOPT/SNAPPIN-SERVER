@@ -1,9 +1,13 @@
 package org.sopt.snappinserver.api.portfolio.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioListResponse;
+import org.sopt.snappinserver.api.portfolio.dto.response.GetPortfolioDetailResponse;
+import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Tag(name = "08 - Portfolio", description = "포트폴리오 관련 API")
 public interface PortfolioApi {
@@ -14,4 +18,14 @@ public interface PortfolioApi {
     )
     ApiResponseBody<GetPopularPortfolioListResponse, Void> getPopularPortfolios();
 
+    @Operation(
+        summary = "포트폴리오 상세 조회 API",
+        description = "포트폴리오 ID를 받아서 포트폴리오 상세 정보를 조회합니다."
+    )
+    ApiResponseBody<GetPortfolioDetailResponse, Void> getPortfolioDetail(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @PathVariable Long portfolioId
+    );
 }
