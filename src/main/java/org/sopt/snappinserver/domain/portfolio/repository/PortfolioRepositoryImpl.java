@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.domain.portfolio.repository;
 
 import static org.sopt.snappinserver.domain.mood.domain.entity.QMood.mood;
+import static org.sopt.snappinserver.domain.photo.domain.entity.QPhoto.photo;
 import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographer.photographer;
 import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographerAvailableLocation.photographerAvailableLocation;
 import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographerSpecialty.photographerSpecialty;
@@ -22,6 +23,7 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
@@ -31,11 +33,40 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
-    private final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
+
+    @Override
+    public Optional<String> findBestPortfolioImageByPlaceId(Long placeId) {
+        NumberExpression<Double> random = Expressions.numberTemplate(
+            Double.class,
+            "function('random')"
+        );
+
+        String imageKey = jpaQueryFactory
+            .select(photo.imageUrl)
+            .from(portfolio)
+            .join(portfolioPlace).on(portfolioPlace.portfolio.eq(portfolio))
+            .leftJoin(wishPortfolio).on(wishPortfolio.portfolio.eq(portfolio))
+            .join(portfolioPhoto).on(portfolioPhoto.portfolio.eq(portfolio))
+            .join(portfolioPhoto.photo, photo)
+            .where(
+                portfolioPlace.place.id.eq(placeId),
+                portfolioPhoto.displayOrder.eq(1)
+            )
+            .groupBy(portfolio.id, photo.imageUrl)
+            .orderBy(
+                wishPortfolio.count().desc(),
+                random.asc()
+            )
+            .limit(1)
+            .fetchOne();
+
+        return Optional.ofNullable(imageKey);
+    }
 
     @Override
     public PortfolioDetailProjection findDetail(Long portfolioId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(
                 Projections.constructor(
                     PortfolioDetailProjection.class,
@@ -65,7 +96,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         NumberExpression<Integer> likeCount = wishPortfolio.count().intValue();
 
         if (userId == null) {
-            return queryFactory
+            return jpaQueryFactory
                 .select(
                     Projections.constructor(
                         LikeStatusProjection.class,
@@ -88,7 +119,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 )
                 .exists();
 
-        return queryFactory
+        return jpaQueryFactory
             .select(
                 Projections.constructor(
                     LikeStatusProjection.class,
@@ -103,7 +134,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     @Override
     public List<String> findPortfolioImageUrls(Long portfolioId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(portfolioPhoto.photo.imageUrl)
             .from(portfolioPhoto)
             .join(portfolioPhoto.photo)
@@ -114,7 +145,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     @Override
     public List<String> findPortfolioMoods(Long portfolioId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(mood.name)
             .from(portfolioMood)
             .join(portfolioMood.mood, mood)
@@ -124,7 +155,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     @Override
     public List<String> findProductMoods(Long productId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(mood.name)
             .from(productMood)
             .join(productMood.mood, mood)
@@ -134,7 +165,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     @Override
     public String findProductThumbnailUrl(Long productId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(productPhoto.photo.imageUrl)
             .from(productPhoto)
             .join(productPhoto.photo)
@@ -147,7 +178,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     @Override
     public List<String> findPhotographerSpecialties(Long photographerId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(photographerSpecialty.specialty.stringValue())
             .from(photographerSpecialty)
             .where(photographerSpecialty.photographer.id.eq(photographerId))
@@ -156,7 +187,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
     @Override
     public List<String> findPhotographerAvailableLocations(Long photographerId) {
-        return queryFactory
+        return jpaQueryFactory
             .select(
                 Expressions.stringTemplate(
                     "case " +
@@ -177,5 +208,4 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             )
             .fetch();
     }
-
 }

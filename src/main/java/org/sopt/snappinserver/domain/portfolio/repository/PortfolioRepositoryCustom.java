@@ -1,10 +1,13 @@
 package org.sopt.snappinserver.domain.portfolio.repository;
 
+import java.util.Optional;
 import java.util.List;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
 
 public interface PortfolioRepositoryCustom {
+
+    Optional<String> findBestPortfolioImageByPlaceId(Long placeId);
 
     PortfolioDetailProjection findDetail(Long portfolioId);
 

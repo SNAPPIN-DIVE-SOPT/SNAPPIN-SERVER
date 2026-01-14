@@ -11,6 +11,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +32,7 @@ public class Photographer extends BaseEntity {
     private static final int MAX_NAME_LENGTH = 10;
     private static final int MAX_NICKNAME_LENGTH = 20;
     private static final int MAX_BIO_LENGTH = 200;
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "photographer_seq_gen")
@@ -152,5 +156,13 @@ public class Photographer extends BaseEntity {
         if (bio != null && bio.length() > MAX_BIO_LENGTH) {
             throw new PhotographerException(PhotographerErrorCode.BIO_TOO_LONG);
         }
+    }
+
+    public boolean isNewPhotographer() {
+        Instant oneMonthAgo = ZonedDateTime.now(KOREA_ZONE)
+            .minusMonths(1)
+            .toInstant();
+
+        return this.createdAt.isAfter(oneMonthAgo);
     }
 }
