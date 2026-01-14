@@ -54,12 +54,11 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .from(portfolio)
             .join(portfolio.product, product)
             .join(product.photographer, photographer)
-            .join(portfolioPlace).on(portfolioPlace.portfolio.eq(portfolio))
-            .join(portfolioPlace.place, place)
+            .leftJoin(portfolioPlace).on(portfolioPlace.portfolio.eq(portfolio))
+            .leftJoin(portfolioPlace.place, place)
             .where(portfolio.id.eq(portfolioId))
             .fetchOne();
     }
-
 
     @Override
     public LikeStatusProjection findLikeStatus(Long portfolioId, Long userId) {

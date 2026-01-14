@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 import org.sopt.snappinserver.domain.portfolio.domain.exception.PortfolioErrorCode;
 import org.sopt.snappinserver.domain.portfolio.domain.exception.PortfolioException;
+import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepository;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryCustom;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioDetailResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
@@ -27,9 +28,11 @@ public class GetPortfolioDetailService implements GetPortfolioDetailUseCase {
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final PortfolioDetailMapper mapper;
+    private final PortfolioRepository portfolioRepository;
 
     @Override
     public GetPortfolioDetailResult findPortfolioDetail(Long userId, Long portfolioId) {
+        validateExistsPortfolio(portfolioId);
         PortfolioDetailProjection portfolioProjection = queryRepository.findDetail(portfolioId);
         LikeStatusProjection likeStatus = queryRepository.findLikeStatus(portfolioId, userId);
 
@@ -63,6 +66,12 @@ public class GetPortfolioDetailService implements GetPortfolioDetailUseCase {
             reviewStats,
             productMoods
         );
+    }
+
+    private void validateExistsPortfolio(Long portfolioId) {
+        if (!portfolioRepository.existsById(portfolioId)) {
+            throw new PortfolioException(PortfolioErrorCode.PORTFOLIO_NOT_FOUND);
+        }
     }
 
     private Product getProduct(PortfolioDetailProjection detail) {
