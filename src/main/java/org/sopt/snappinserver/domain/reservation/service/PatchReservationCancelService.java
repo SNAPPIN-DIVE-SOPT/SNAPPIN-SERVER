@@ -40,7 +40,7 @@ public class PatchReservationCancelService implements PatchReservationCancelUseC
         );
     }
 
-    private static void validateReservationClient(Long userId, Reservation reservation) {
+    private void validateReservationClient(Long userId, Reservation reservation) {
         if (!reservation.isReservationClient(userId)) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }

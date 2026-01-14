@@ -194,6 +194,10 @@ public class Reservation extends BaseEntity {
         return this.user.getId().equals(userId);
     }
 
+    public boolean isReservationPhotographer(Long userId) {
+        return this.product.getPhotographer().getUser().getId().equals(userId);
+    }
+
     public void completePayment() {
         if (this.reservationStatus != ReservationStatus.PAYMENT_REQUESTED) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_NOT_PAYMENT_REQUESTED);
@@ -213,5 +217,11 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = ReservationStatus.RESERVATION_CANCELED;
     }
 
+    public void completeShooting() {
+        if (this.reservationStatus != ReservationStatus.RESERVATION_CONFIRMED) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_NOT_CONFIRMED);
+        }
+        this.reservationStatus = ReservationStatus.SHOOT_COMPLETED;
+    }
 
 }

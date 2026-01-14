@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
@@ -71,7 +72,7 @@ public interface ReservationApi {
     );
 
     @Operation(
-        summary = "결제하기",
+        summary = "결제하기 (고객)",
         description = "고객에게 결제 요청된 예약에 대해 결제 완료 상태로 변경합니다."
     )
     @PatchMapping("/{reservationId}/pay")
@@ -85,11 +86,25 @@ public interface ReservationApi {
     );
 
     @Operation(
-        summary = "예약 취소",
+        summary = "예약 취소 (고객)",
         description = "고객의 예약을 취소 상태로 변경합니다."
     )
     @PatchMapping("/{reservationId}/cancel")
     ApiResponseBody<CancelReservationResponse, Void> updateReservationCancel(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull @Positive Long reservationId
+    );
+
+    @Operation(
+        summary = "촬영 완료 및 리뷰 요청하기 (작가)",
+        description = "예약 확정 상태인 작가의 예약을 촬영 완료 상태로 변경합니다."
+    )
+    @PatchMapping("/{reservationId}/complete")
+    ApiResponseBody<CompleteReservationResponse, Void> updateReservationComplete(
 
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
