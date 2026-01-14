@@ -31,7 +31,7 @@ public class ReservationRepositoryImpl implements ReservationRepositoryCustom {
             .from(reservation)
             .join(reservation.place, place)
             .where(
-                reservation.createdAt.goe(Instant.from(oneMonthAgo))
+                reservation.createdAt.goe(oneMonthAgo)
             )
             .groupBy(reservation.place)
             .orderBy(reservation.count().desc())
