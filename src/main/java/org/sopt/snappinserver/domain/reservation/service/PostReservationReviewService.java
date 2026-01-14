@@ -61,7 +61,7 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
     }
 
     private void validateReservationClient(Reservation reservation, Long userId) {
-        if (!reservation.validateReservationClient(userId)) {
+        if (!reservation.isReservationClient(userId)) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
     }
