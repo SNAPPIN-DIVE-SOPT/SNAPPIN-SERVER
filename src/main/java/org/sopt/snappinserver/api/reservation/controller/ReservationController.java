@@ -91,7 +91,7 @@ public class ReservationController implements ReservationApi {
         return ApiResponseBody.ok(
             ReservationSuccessCode.PATCH_RESERVATION_PAY_OK,
             PayReservationResponse.from(
-                patchReservationPayUseCase.patchReservationPay(
+                patchReservationPayUseCase.payReservation(
                     userInfo.userId(),
                     reservationId
                 )

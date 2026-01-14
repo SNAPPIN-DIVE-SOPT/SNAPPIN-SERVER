@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.PayReserva
 
 public interface PatchReservationPayUseCase {
 
-    PayReservationResult patchReservationPay(Long userId, Long reservationId);
+    PayReservationResult payReservation(Long userId, Long reservationId);
 }

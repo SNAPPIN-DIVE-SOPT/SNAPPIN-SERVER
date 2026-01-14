@@ -19,7 +19,7 @@ public class PatchReservationPayService implements PatchReservationPayUseCase {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public PayReservationResult patchReservationPay(Long userId, Long reservationId) {
+    public PayReservationResult payReservation(Long userId, Long reservationId) {
         Reservation reservation = getReservation(reservationId);
 
         validateReservationClient(userId, reservation);
