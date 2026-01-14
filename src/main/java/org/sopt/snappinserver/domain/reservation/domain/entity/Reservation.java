@@ -206,7 +206,9 @@ public class Reservation extends BaseEntity {
         if (this.reservationStatus == ReservationStatus.SHOOT_COMPLETED) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_ALREADY_COMPLETED);
         }
-
+        if (this.reservationStatus == ReservationStatus.RESERVATION_CANCELED) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_ALREADY_CANCELED);
+        }
         this.previousCancelStatus = this.reservationStatus;
         this.reservationStatus = ReservationStatus.RESERVATION_CANCELED;
     }
