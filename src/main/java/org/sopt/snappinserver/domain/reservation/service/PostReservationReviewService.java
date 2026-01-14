@@ -42,7 +42,7 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
 
         Reservation reservation = getReservation(reservationId);
 
-        validateReservationClient(reservation, userId);
+        validateReservationOwner(reservation, userId);
         validateShootCompleted(reservation);
         validateReviewDuplicated(reservationId);
 
@@ -60,8 +60,8 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
         );
     }
 
-    private void validateReservationClient(Reservation reservation, Long userId) {
-        if (!reservation.isReservationClient(userId)) {
+    private void validateReservationOwner(Reservation reservation, Long userId) {
+        if (!reservation.isReservationOwner(userId)) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
     }

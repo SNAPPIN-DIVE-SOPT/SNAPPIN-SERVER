@@ -63,7 +63,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
         Reservation reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
 
-        if (!reservation.isReservationClient(userId)) {
+        if (!reservation.isReservationOwner(userId)) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
 
