@@ -36,17 +36,17 @@ public enum ReservationSuccessCode implements SuccessCode {
     ),
     PATCH_RESERVATION_CONFIRM_OK(
         200,
-        "RESERVATION_200_005",
+        "RESERVATION_200_006",
         "예약 확정 처리에 성공했습니다."
     ),
     PATCH_RESERVATION_REFUSE_OK(
         200,
-        "RESERVATION_200_006",
+        "RESERVATION_200_007",
         "예약 거절 처리에 성공했습니다."
     ),
     PATCH_RESERVATION_REQUEST_PAYMENT_OK(
         200,
-        "RESERVATION_200_006",
+        "RESERVATION_200_008",
         "결제 요청 처리에 성공했습니다."
     ),
 
