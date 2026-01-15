@@ -224,9 +224,6 @@ public class Reservation extends BaseEntity {
         ) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_CANNOT_REFUSE);
         }
-        if (this.reservationStatus == ReservationStatus.RESERVATION_REFUSED) {
-            throw new ReservationException(ReservationErrorCode.RESERVATION_ALREADY_REFUSED);
-        }
 
         this.previousCancelStatus = this.reservationStatus;
         this.reservationStatus = ReservationStatus.RESERVATION_REFUSED;
