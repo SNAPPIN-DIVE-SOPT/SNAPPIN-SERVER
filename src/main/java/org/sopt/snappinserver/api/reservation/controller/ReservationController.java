@@ -8,6 +8,7 @@ import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationRe
 import org.sopt.snappinserver.api.reservation.dto.response.ConfirmReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.RefuseReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -20,6 +21,7 @@ import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservatio
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationCompleteUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationConfirmUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationPayUseCase;
+import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationRefuseUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PostReservationReviewUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +40,7 @@ public class ReservationController implements ReservationApi {
     private final PatchReservationCancelUseCase patchReservationCancelUseCase;
     private final PatchReservationCompleteUseCase patchReservationCompleteUseCase;
     private final PatchReservationConfirmUseCase patchReservationConfirmUseCase;
+    private final PatchReservationRefuseUseCase patchReservationRefuseUseCase;
 
     @Override
     public ApiResponseBody<CreateReservationReviewResponse, Void> createReview(
@@ -148,6 +151,22 @@ public class ReservationController implements ReservationApi {
             ReservationSuccessCode.PATCH_RESERVATION_CONFIRM_OK,
             ConfirmReservationResponse.from(
                 patchReservationConfirmUseCase.confirmReservation(
+                    userInfo.userId(),
+                    reservationId
+                )
+            )
+        );
+    }
+
+    @Override
+    public ApiResponseBody<RefuseReservationResponse, Void> updateReservationRefuse(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long reservationId
+    ) {
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.PATCH_RESERVATION_REFUSE_OK,
+            RefuseReservationResponse.from(
+                patchReservationRefuseUseCase.refuseReservation(
                     userInfo.userId(),
                     reservationId
                 )
