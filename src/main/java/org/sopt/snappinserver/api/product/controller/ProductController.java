@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.product.code.ProductSuccessCode;
 import org.sopt.snappinserver.api.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.product.dto.response.GetProductDetailResponse;
+import org.sopt.snappinserver.api.product.dto.response.GetProductListMeta;
+import org.sopt.snappinserver.api.product.dto.response.GetProductListResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
@@ -13,7 +15,9 @@ import org.sopt.snappinserver.api.product.dto.response.ProductReservationRespons
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
 import org.sopt.snappinserver.domain.product.service.dto.request.ProductReservationCommand;
+import org.sopt.snappinserver.domain.product.service.dto.response.GetProductListResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductAvailableTimesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
@@ -23,12 +27,14 @@ import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewP
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductAvailableTimesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDatesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductDetailUseCase;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductListUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,6 +50,7 @@ public class ProductController implements ProductApi {
     private final GetProductAvailableTimesUseCase getProductAvailableTimesUseCase;
     private final PostProductReservationUseCase postProductReservationUseCase;
     private final GetProductDetailUseCase getProductDetailUseCase;
+    private final GetProductListUseCase getProductListUseCase;
 
     @Override
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
@@ -138,5 +145,16 @@ public class ProductController implements ProductApi {
         GetProductDetailResponse response = GetProductDetailResponse.from(result);
 
         return ApiResponseBody.ok(ProductSuccessCode.GET_PRODUCT_DETAIL_OK, response);
+    }
+
+    @Override
+    public ApiResponseBody<GetProductListResponse, GetProductListMeta> getProductList(
+        @ModelAttribute GetProductListQuery query
+    ) {
+        GetProductListResult result = getProductListUseCase.getProductList(query);
+        GetProductListResponse response = GetProductListResponse.from(result);
+        GetProductListMeta meta = GetProductListMeta.from(result.cursorMeta());
+
+        return ApiResponseBody.ok(ProductSuccessCode.GET_PRODUCT_LIST_OK, response, meta);
     }
 }

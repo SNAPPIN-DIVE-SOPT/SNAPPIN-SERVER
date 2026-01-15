@@ -10,6 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import org.sopt.snappinserver.api.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.product.dto.response.GetProductDetailResponse;
+import org.sopt.snappinserver.api.product.dto.response.GetProductListMeta;
+import org.sopt.snappinserver.api.product.dto.response.GetProductListResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
@@ -17,9 +19,11 @@ import org.sopt.snappinserver.api.product.dto.response.ProductReservationRespons
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -115,5 +119,14 @@ public interface ProductApi {
         @Schema(description = "상품 ID")
         @NotNull(message = "상품은 비어있을 수 없습니다.")
         @PathVariable Long productId
+    );
+
+    @Operation(
+        summary = "상품 목록 조회 API",
+        description = "요청받은 조건에 맞게 상품 목록을 필터링하여 반환합니다."
+    )
+    @GetMapping
+    ApiResponseBody<GetProductListResponse, GetProductListMeta> getProductList(
+        @ModelAttribute GetProductListQuery query
     );
 }
