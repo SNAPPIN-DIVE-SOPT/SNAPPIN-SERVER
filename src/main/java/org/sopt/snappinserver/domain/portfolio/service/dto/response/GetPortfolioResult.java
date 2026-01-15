@@ -1,10 +1,8 @@
 package org.sopt.snappinserver.domain.portfolio.service.dto.response;
 
 import java.util.List;
-import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioMood;
-import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioPhoto;
 
 public record GetPortfolioResult(
     Long id,
@@ -24,17 +22,14 @@ public record GetPortfolioResult(
 
     public static GetPortfolioResult of(
         Portfolio portfolio,
-        List<PortfolioPhoto> portfolioPhotos,
-        List<PortfolioMood> portfolioMoods
+        List<GetImageResult> images,
+        List<PortfolioMood> moods
     ) {
         return new GetPortfolioResult(
             portfolio.getId(),
-            portfolioPhotos.stream()
-                .map(GetImageResult::from)
-                .toList(),
-            portfolioMoods.stream()
-                .map(PortfolioMood::getMood)
-                .map(Mood::getName)
+            images,
+            moods.stream()
+                .map(pm -> pm.getMood().getName())
                 .toList(),
             portfolio.getProduct().getPhotographer().getNickname()
         );

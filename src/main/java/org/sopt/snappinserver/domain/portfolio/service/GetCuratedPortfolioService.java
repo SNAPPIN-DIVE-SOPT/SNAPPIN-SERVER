@@ -18,10 +18,13 @@ import org.sopt.snappinserver.domain.portfolio.repository.PortfolioMoodRepositor
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioPhotoRepository;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryCustom;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetCuratedPortfolioResult;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetImageResult;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetCuratedPortfolioUseCase;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -36,6 +39,7 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
     private final PortfolioPhotoRepository portfolioPhotoRepository;
     private final PortfolioMoodRepository portfolioMoodRepository;
     private final GetPopularPortfolioListUseCase getPopularPortfolioListUseCase;
+    private final S3Service s3Service;
 
     @Override
     public GetCuratedPortfolioResult getCuratedPortfolio(Long userId) {
@@ -59,7 +63,9 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
         Set<Long> excludedIds = new HashSet<>();
 
         for (int matchCount = 3; matchCount >= 1; matchCount--) {
-            if (portfolios.size() == PAGE_SIZE) break;
+            if (portfolios.size() == PAGE_SIZE) {
+                break;
+            }
 
             List<Portfolio> found =
                 portfolioRepositoryCustom.findByMatchCountExcludeIds(
@@ -89,13 +95,30 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
             portfolioMoodRepository.findByPortfolioIds(portfolioIds).stream()
                 .collect(Collectors.groupingBy(pm -> pm.getPortfolio().getId()));
 
+        List<GetPortfolioResult> portfolioResults = portfolios.stream()
+            .map(portfolio -> {
+                List<PortfolioPhoto> photos = photosByPortfolioId.getOrDefault(
+                    portfolio.getId(),
+                    List.of()
+                );
+
+                List<GetImageResult> imageResults = photos.stream()
+                    .map(portfolioPhoto -> GetImageResult.of(
+                        s3Service.getPresignedUrl(portfolioPhoto.getPhoto().getImageUrl()),
+                        portfolioPhoto.getDisplayOrder()
+                    ))
+                    .toList();
+
+                List<PortfolioMood> moods = moodsByPortfolioId.getOrDefault(portfolio.getId(),
+                    List.of());
+
+                return GetPortfolioResult.of(portfolio, imageResults, moods);
+            })
+            .toList();
+
         return GetCuratedPortfolioResult.of(
             curations,
-            portfolios,
-            photosByPortfolioId,
-            moodsByPortfolioId
+            portfolioResults
         );
     }
 }
-
-
