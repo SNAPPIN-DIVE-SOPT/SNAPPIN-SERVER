@@ -2,6 +2,7 @@ package org.sopt.snappinserver.api.product.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
+import java.util.Optional;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductInfoResult;
 
 @Schema(description = "상품 안내 정보 응답 DTO")
@@ -69,9 +70,13 @@ public record GetProductInfoResponse(
             getProductInfoResult.snapCategory(),
             getProductInfoResult.regions(),
             getProductInfoResult.moods(),
-            getProductInfoResult.maxPeople().concat("명"),
+            Optional.ofNullable(getProductInfoResult.maxPeople())
+                .map(m -> m.concat("명"))
+                .orElse(null),
             getProductInfoResult.photographerCount(),
-            getProductInfoResult.durationTime().concat("시간"),
+            Optional.ofNullable(getProductInfoResult.durationTime())
+                .map(d -> d.concat("시간"))
+                .orElse(null),
             getProductInfoResult.provideRaw(),
             getProductInfoResult.provideOriginalJpg(),
             getProductInfoResult.originalJpgCount(),
