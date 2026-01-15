@@ -9,6 +9,7 @@ import org.sopt.snappinserver.api.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductPeopleRangeResponse;
+import org.sopt.snappinserver.api.product.dto.response.ProductPriceResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReservationResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.product.dto.response.ProductReviewsResponse;
@@ -18,12 +19,14 @@ import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResu
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductAvailableTimesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleRangeResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductPriceResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReservationResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductAvailableTimesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDatesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductDetailUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductPriceUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -44,6 +47,7 @@ public class ProductController implements ProductApi {
     private final GetProductAvailableTimesUseCase getProductAvailableTimesUseCase;
     private final PostProductReservationUseCase postProductReservationUseCase;
     private final GetProductDetailUseCase getProductDetailUseCase;
+    private final GetProductPriceUseCase getProductPriceUseCase;
 
     @Override
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
@@ -138,5 +142,18 @@ public class ProductController implements ProductApi {
         GetProductDetailResponse response = GetProductDetailResponse.from(result);
 
         return ApiResponseBody.ok(ProductSuccessCode.GET_PRODUCT_DETAIL_OK, response);
+    }
+
+    @Override
+    public ApiResponseBody<ProductPriceResponse, Void> getProductPrice(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long productId
+    ) {
+        ProductPriceResult result = getProductPriceUseCase.getProductPrice(productId);
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_PRICE_OK,
+            ProductPriceResponse.from(result)
+        );
     }
 }
