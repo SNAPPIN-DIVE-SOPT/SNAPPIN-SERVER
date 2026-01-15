@@ -34,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
 
     private static final int PAGE_SIZE = 3;
+    private static final int MAX_MATCH_COUNT = 3;
+    private static final int LEAST_MATCH_COUNT = 1;
 
     private final UserRepository userRepository;
     private final CurationRepository curationRepository;
@@ -64,7 +66,7 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
         List<Portfolio> portfolios = new ArrayList<>();
         Set<Long> excludedIds = new HashSet<>();
 
-        for (int matchCount = 3; matchCount >= 1; matchCount--) {
+        for (int matchCount = MAX_MATCH_COUNT; matchCount >= LEAST_MATCH_COUNT; matchCount--) {
             if (portfolios.size() == PAGE_SIZE) {
                 break;
             }
