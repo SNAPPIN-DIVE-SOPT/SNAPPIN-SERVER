@@ -32,8 +32,9 @@ public class PatchReservationRequestPaymentService implements
 
         validateReservationPhotographer(command, reservation);
         validateBasePrice(command, reservation);
-        int extraTotal = saveExtraPrice(command, reservation);
+        int extraTotal = calculateExtraTotal(command);
         validateTotalPrice(command, extraTotal);
+        saveExtraPrices(command, reservation);
 
         reservation.requestPayment();
 
@@ -48,7 +49,8 @@ public class PatchReservationRequestPaymentService implements
 
     private Reservation getReservation(RequestPaymentReservationCommand command) {
         return reservationRepository.findById(command.reservationId())
-            .orElseThrow(() -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
+            .orElseThrow(
+                () -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
     }
 
     private void validateReservationPhotographer(
@@ -70,21 +72,22 @@ public class PatchReservationRequestPaymentService implements
         }
     }
 
-    private int saveExtraPrice(RequestPaymentReservationCommand command, Reservation reservation) {
-        int extraTotal = 0;
-        for (ExtraPriceCommand extra
-            : command.extraPrices()) {
+    private int calculateExtraTotal(RequestPaymentReservationCommand command) {
+        return command.extraPrices().stream().mapToInt(ExtraPriceCommand::amount).sum();
+    }
 
+    private void saveExtraPrices(
+        RequestPaymentReservationCommand command,
+        Reservation reservation
+    ) {
+        for (ExtraPriceCommand extra : command.extraPrices()) {
             ReservationAdditionalPayment payment = ReservationAdditionalPayment.create(
                 reservation,
                 extra.name(),
                 extra.amount()
             );
-
             additionalPaymentRepository.save(payment);
-            extraTotal += extra.amount();
         }
-        return extraTotal;
     }
 
     private void validateTotalPrice(
