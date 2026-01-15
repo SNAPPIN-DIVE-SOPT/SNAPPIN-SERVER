@@ -34,7 +34,8 @@ public class SecurityConfig {
         "/api/v1/photographers/**",
         "/api/v1/places/**",
         "/api/v1/portfolios/*",
-        "/api/v1/products/**"
+        "/api/v1/products/**",
+        "/api/v1/reviews/*"
     };
 
     private static final String[] AUTHENTICATED_URLS = {
@@ -64,6 +65,8 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers(SWAGGER_URLS).permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .requestMatchers("/api/v1/reviews/images").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/v1/reviews/*").permitAll()
                 .requestMatchers(AUTHENTICATED_URLS).authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login/kakao").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/reissue").permitAll()
