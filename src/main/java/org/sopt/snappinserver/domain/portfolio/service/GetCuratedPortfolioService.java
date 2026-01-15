@@ -26,7 +26,9 @@ import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
@@ -86,9 +88,7 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
             .toList();
 
         Map<Long, List<PortfolioPhoto>> photosByPortfolioId =
-            portfolioPhotoRepository.findByPortfolioIds(
-                    portfolios.stream().map(Portfolio::getId).toList()
-                ).stream()
+            portfolioPhotoRepository.findByPortfolioIds(portfolioIds).stream()
                 .collect(Collectors.groupingBy(pp -> pp.getPortfolio().getId()));
 
         Map<Long, List<PortfolioMood>> moodsByPortfolioId =
