@@ -18,4 +18,6 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
         Product product,
         ProductOptionCategory productOptionCategory
     );
+
+    List<ProductOption> findByProduct(Product product);
 }
