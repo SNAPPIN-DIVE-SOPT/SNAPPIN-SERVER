@@ -8,10 +8,10 @@ import org.sopt.snappinserver.api.portfolio.dto.response.GetCurationResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioListResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPortfolioDetailResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
-import org.sopt.snappinserver.domain.portfolio.service.GetCuratedPortfolioService;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetCuratedPortfolioResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioDetailResult;
+import org.sopt.snappinserver.domain.portfolio.service.usecase.GetCuratedPortfolioUseCase;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioDetailUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -28,7 +28,7 @@ public class PortfolioController implements PortfolioApi {
 
     private final GetPopularPortfolioListUseCase getPopularPortfolioListUseCase;
     private final GetPortfolioDetailUseCase getPortfolioDetailUseCase;
-    private final GetCuratedPortfolioService getCuratedPortfolioService;
+    private final GetCuratedPortfolioUseCase getCuratedPortfolioUseCase;
 
     @Override
     @GetMapping("/popular")
@@ -61,7 +61,7 @@ public class PortfolioController implements PortfolioApi {
     public ApiResponseBody<GetCurationResponse, Void> getCuratedPortfolios(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
-        GetCuratedPortfolioResult result = getCuratedPortfolioService.getCuratedPortfolio(
+        GetCuratedPortfolioResult result = getCuratedPortfolioUseCase.getCuratedPortfolio(
             userInfo.userId()
         );
         GetCurationResponse response = GetCurationResponse.from(result);
