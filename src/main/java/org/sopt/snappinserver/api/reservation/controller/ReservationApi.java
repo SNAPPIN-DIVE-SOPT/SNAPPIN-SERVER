@@ -13,6 +13,7 @@ import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationRe
 import org.sopt.snappinserver.api.reservation.dto.response.ConfirmReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.RefuseReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -120,6 +121,20 @@ public interface ReservationApi {
     )
     @PatchMapping("/{reservationId}/confirm")
     ApiResponseBody<ConfirmReservationResponse, Void> updateReservationConfirm(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull @Positive Long reservationId
+    );
+
+    @Operation(
+        summary = "예약 거절 (작가)",
+        description = "작가에게 들어온 예약에 대해 예약 거절 상태로 변경합니다."
+    )
+    @PatchMapping("/{reservationId}/refuse")
+    ApiResponseBody<RefuseReservationResponse, Void> updateReservationRefuse(
 
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
