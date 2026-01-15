@@ -232,7 +232,6 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = ReservationStatus.RESERVATION_REFUSED;
     }
 
-
     public void confirm() {
         if (this.reservationStatus != ReservationStatus.PAYMENT_COMPLETED) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_NOT_PAYMENT_COMPLETED);
