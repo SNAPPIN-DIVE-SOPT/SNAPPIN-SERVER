@@ -92,7 +92,6 @@ public interface ProductApi {
         @NotNull LocalDate date
     );
 
-
     @Operation(
         summary = "예약하기",
         description = "고객이 선택한 정보를 바탕으로 예약을 요청합니다."
@@ -141,6 +140,6 @@ public interface ProductApi {
         CustomUserInfo userInfo,
 
         @Schema(description = "상품 ID")
-        @PathVariable Long productId
+        @PathVariable @NotNull Long productId
     );
 }
