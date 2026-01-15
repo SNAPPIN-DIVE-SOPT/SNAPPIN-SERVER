@@ -36,7 +36,8 @@ public enum ReservationErrorCode implements ErrorCode {
     RESERVATION_NOT_PAYMENT_REQUESTED(409, "RESERVATION_409_003", "결제 요청 상태의 예약만 결제를 진행할 수 있습니다."),
     RESERVATION_ALREADY_COMPLETED(409, "RESERVATION_409_004", "촬영 완료된 예약은 취소할 수 없습니다."),
     RESERVATION_ALREADY_CANCELED(409, "RESERVATION_409_005", "이미 취소된 예약입니다."),
-    RESERVATION_NOT_CONFIRMED(409, "RESERVATION_409_006", "예약 확정 상태의 예약만 촬영 완료 처리할 수 있습니다.");
+    RESERVATION_NOT_CONFIRMED(409, "RESERVATION_409_006", "예약 확정 상태의 예약만 촬영 완료 처리할 수 있습니다."),
+    RESERVATION_NOT_PAYMENT_COMPLETED(409, "RESERVATION_409_007", "결제된 예약만 예약 확정 처리할 수 있습니다.");
 
     private final int status;
     private final String code;
