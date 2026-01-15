@@ -11,7 +11,6 @@ import org.sopt.snappinserver.domain.photographer.domain.entity.PhotographerSpec
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerAvailableLocationRepository;
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerSpecialtyRepository;
 import org.sopt.snappinserver.domain.place.domain.entity.AvailableLocation;
-import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryCustom;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.domain.entity.ProductAvailableLocation;
@@ -26,6 +25,7 @@ import org.sopt.snappinserver.domain.product.repository.ProductMoodRepository;
 import org.sopt.snappinserver.domain.product.repository.ProductOptionRepository;
 import org.sopt.snappinserver.domain.product.repository.ProductPhotoRepository;
 import org.sopt.snappinserver.domain.product.repository.ProductRepository;
+import org.sopt.snappinserver.domain.product.repository.ProductRepositoryCustom;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetPhotographerInfoResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductInfoResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResult;
@@ -45,7 +45,7 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     private final ProductRepository productRepository;
     private final ProductPhotoRepository productPhotoRepository;
     private final ProductOptionRepository productOptionRepository;
-    private final PortfolioRepositoryCustom portfolioRepositoryCustom;
+    private final ProductRepositoryCustom productRepositoryCustom;
     private final ReviewRepository reviewRepository;
     private final S3Service s3Service;
     private final ProductMoodRepository productMoodRepository;
@@ -107,7 +107,7 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     }
 
     private LikeStatusProjection getLikeStatus(Long userId, Long productId) {
-        return portfolioRepositoryCustom.findLikeStatus(productId,
+        return productRepositoryCustom.findLikeStatus(productId,
             userId);
     }
 
