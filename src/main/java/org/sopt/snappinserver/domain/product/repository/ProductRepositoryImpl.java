@@ -184,15 +184,43 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         if (peopleCount == null) {
             return null;
         }
-        return product.id.in(
+
+        BooleanExpression minOk =
             JPAExpressions
-                .select(productOption.product.id)
+                .selectOne()
                 .from(productOption)
                 .where(
-                    productOption.productOptionCategory.in(ProductOptionCategory.MIN_PEOPLE,
-                        ProductOptionCategory.MAX_PEOPLE)
+                    productOption.product.id.eq(product.id),
+                    productOption.productOptionCategory.eq(ProductOptionCategory.MIN_PEOPLE),
+                    productOption.answer.castToNum(Integer.class).loe(peopleCount)
                 )
-        );
+                .exists();
+
+        BooleanExpression maxOk =
+            JPAExpressions
+                .selectOne()
+                .from(productOption)
+                .where(
+                    productOption.product.id.eq(product.id),
+                    productOption.productOptionCategory.eq(ProductOptionCategory.MAX_PEOPLE),
+                    productOption.answer.castToNum(Integer.class).goe(peopleCount)
+                )
+                .exists();
+
+        BooleanExpression noLimit =
+            JPAExpressions
+                .selectOne()
+                .from(productOption)
+                .where(
+                    productOption.product.id.eq(product.id),
+                    productOption.productOptionCategory.in(
+                        ProductOptionCategory.MIN_PEOPLE,
+                        ProductOptionCategory.MAX_PEOPLE
+                    )
+                )
+                .notExists();
+
+        return minOk.or(maxOk).or(noLimit);
     }
 
     private Predicate moodCategoryGroupedCondition(
