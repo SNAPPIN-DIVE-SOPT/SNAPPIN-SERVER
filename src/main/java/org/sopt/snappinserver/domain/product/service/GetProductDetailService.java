@@ -117,7 +117,8 @@ public class GetProductDetailService implements GetProductDetailUseCase {
             .collect(
                 Collectors.toMap(
                     ProductOption::getProductOptionCategory,
-                    ProductOption::getAnswer
+                    ProductOption::getAnswer,
+                    (existing, replacement) -> existing
                 )
             );
     }
