@@ -27,8 +27,6 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
-import org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolio;
-import org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioMood;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
 import org.springframework.stereotype.Repository;
@@ -220,9 +218,6 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         int matchCount,
         int limit
     ) {
-        QPortfolio portfolio = QPortfolio.portfolio;
-        QPortfolioMood portfolioMood = QPortfolioMood.portfolioMood;
-
         return jpaQueryFactory
             .select(portfolio)
             .from(portfolioMood)
