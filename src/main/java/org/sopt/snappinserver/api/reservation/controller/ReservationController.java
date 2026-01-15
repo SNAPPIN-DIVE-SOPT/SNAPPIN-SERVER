@@ -3,17 +3,20 @@ package org.sopt.snappinserver.api.reservation.controller;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.reservation.code.ReservationSuccessCode;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
+import org.sopt.snappinserver.api.reservation.dto.request.RequestPaymentReservationRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ConfirmReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.RefuseReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.RequestPaymentReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
 import org.sopt.snappinserver.domain.reservation.service.dto.request.CreateReservationReviewCommand;
+import org.sopt.snappinserver.domain.reservation.service.dto.request.RequestPaymentReservationCommand;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.CreateReservationReviewResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationDetailUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
@@ -22,6 +25,7 @@ import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservatio
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationConfirmUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationPayUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationRefuseUseCase;
+import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationRequestPaymentUseCase;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PostReservationReviewUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,6 +45,7 @@ public class ReservationController implements ReservationApi {
     private final PatchReservationCompleteUseCase patchReservationCompleteUseCase;
     private final PatchReservationConfirmUseCase patchReservationConfirmUseCase;
     private final PatchReservationRefuseUseCase patchReservationRefuseUseCase;
+    private final PatchReservationRequestPaymentUseCase patchReservationRequestPaymentUseCase;
 
     @Override
     public ApiResponseBody<CreateReservationReviewResponse, Void> createReview(
@@ -173,5 +178,26 @@ public class ReservationController implements ReservationApi {
             )
         );
     }
+
+    @Override
+    public ApiResponseBody<RequestPaymentReservationResponse, Void> updateReservationRequestPayment(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long reservationId,
+        RequestPaymentReservationRequest request
+    ) {
+        RequestPaymentReservationCommand command = RequestPaymentReservationCommand.from(
+            userInfo.userId(),
+            reservationId,
+            request
+        );
+
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.PATCH_RESERVATION_REQUEST_PAYMENT_OK,
+            RequestPaymentReservationResponse.from(
+                patchReservationRequestPaymentUseCase.requestPaymentReservation(command)
+            )
+        );
+    }
+
 
 }

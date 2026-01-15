@@ -206,6 +206,13 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = ReservationStatus.PAYMENT_COMPLETED;
     }
 
+    public void requestPayment() {
+        if (this.reservationStatus != ReservationStatus.PHOTOGRAPHER_CHECKING) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_CANNOT_REQUEST_PAYMENT);
+        }
+        this.reservationStatus = ReservationStatus.PAYMENT_REQUESTED;
+    }
+
     public void cancel() {
         if (this.reservationStatus == ReservationStatus.SHOOT_COMPLETED) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_ALREADY_COMPLETED);
