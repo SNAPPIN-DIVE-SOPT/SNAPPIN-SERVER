@@ -29,10 +29,10 @@ public record GetProductDetailResponse(
     int price,
 
     @Schema(description = "스냅 작가 응답 DTO")
-    GetPhotographerInfoResponse getPhotographerInfoResponse,
+    GetPhotographerInfoResponse photographerInfo,
 
     @Schema(description = "상품 상세 조회 응답 DTO")
-    GetProductInfoResponse getProductInfoResponse
+    GetProductInfoResponse productInfo
 ) {
 
     public static GetProductDetailResponse from(
