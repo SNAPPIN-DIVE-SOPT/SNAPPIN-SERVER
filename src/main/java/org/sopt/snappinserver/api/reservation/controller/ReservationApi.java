@@ -8,12 +8,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
+import org.sopt.snappinserver.api.reservation.dto.request.RequestPaymentReservationRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ConfirmReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.RefuseReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.RequestPaymentReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -141,5 +143,23 @@ public interface ReservationApi {
 
         @Schema(description = "예약 아이디", example = "1")
         @PathVariable @NotNull @Positive Long reservationId
+    );
+
+    @Operation(
+        summary = "결제 요청 (작가)",
+        description = "작가에게 요청된 예약에 대해 결제 금액을 확정하고 고객에게 결제를 요청합니다."
+    )
+    @PatchMapping("/{reservationId}/request-payment")
+    ApiResponseBody<RequestPaymentReservationResponse, Void> updateReservationRequestPayment(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull @Positive Long reservationId,
+
+        @Schema(description = "결제 정보")
+        @Valid @RequestBody RequestPaymentReservationRequest request
+
     );
 }
