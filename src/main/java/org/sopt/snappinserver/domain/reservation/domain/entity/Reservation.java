@@ -217,6 +217,22 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = ReservationStatus.RESERVATION_CANCELED;
     }
 
+    public void refuse() {
+        if (this.reservationStatus != ReservationStatus.PHOTOGRAPHER_CHECKING
+            && this.reservationStatus != ReservationStatus.PAYMENT_REQUESTED
+            && this.reservationStatus != ReservationStatus.PAYMENT_COMPLETED
+        ) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_CANNOT_REFUSE);
+        }
+        if (this.reservationStatus == ReservationStatus.RESERVATION_REFUSED) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_ALREADY_REFUSED);
+        }
+
+        this.previousCancelStatus = this.reservationStatus;
+        this.reservationStatus = ReservationStatus.RESERVATION_REFUSED;
+    }
+
+
     public void confirm() {
         if (this.reservationStatus != ReservationStatus.PAYMENT_COMPLETED) {
             throw new ReservationException(ReservationErrorCode.RESERVATION_NOT_PAYMENT_COMPLETED);
