@@ -105,7 +105,7 @@ public interface ProductApi {
 
     @Operation(
         summary = "상품 상세 정보 및 상품 안내 조회 API",
-        description = "상품 상세 정보"
+        description = "상품 상세 정보, 상품 안내, 관련 작가, 관련 상품을 함께 조회합니다."
     )
     @GetMapping("/{productId}")
     ApiResponseBody<GetProductDetailResponse, Void> getProductDetail(
