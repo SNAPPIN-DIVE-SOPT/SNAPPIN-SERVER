@@ -26,6 +26,7 @@ public enum ReviewErrorCode implements ErrorCode {
 
     // 404 NOT FOUND
     USER_NOT_FOUND(404, "REVIEW_404_001", "해당 유저를 찾을 수 없습니다."),
+    REVIEW_NOT_FOUND(404, "REVIEW_404_002", "해당 리뷰를 찾을 수 없습니다."),
 
     ;
 
