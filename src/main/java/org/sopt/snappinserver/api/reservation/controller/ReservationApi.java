@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.reservation.dto.response.CancelReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CompleteReservationResponse;
+import org.sopt.snappinserver.api.reservation.dto.response.ConfirmReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.reservation.dto.response.ReservationDetailResponse;
@@ -105,6 +106,20 @@ public interface ReservationApi {
     )
     @PatchMapping("/{reservationId}/complete")
     ApiResponseBody<CompleteReservationResponse, Void> updateReservationComplete(
+
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 아이디", example = "1")
+        @PathVariable @NotNull @Positive Long reservationId
+    );
+
+    @Operation(
+        summary = "예약 확정 (작가)",
+        description = "결제 완료된 작가의 예약을 예약 확정 상태로 변경합니다."
+    )
+    @PatchMapping("/{reservationId}/confirm")
+    ApiResponseBody<ConfirmReservationResponse, Void> updateReservationConfirm(
 
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
