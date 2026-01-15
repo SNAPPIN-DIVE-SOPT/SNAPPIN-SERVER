@@ -109,6 +109,7 @@ public interface ProductApi {
     )
     @GetMapping("/{productId}")
     ApiResponseBody<GetProductDetailResponse, Void> getProductDetail(
+        @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
         @Schema(description = "상품 ID")
