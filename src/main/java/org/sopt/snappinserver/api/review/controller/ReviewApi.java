@@ -2,12 +2,18 @@ package org.sopt.snappinserver.api.review.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import org.sopt.snappinserver.api.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.review.dto.request.PostPresignedUrlRequest;
+import org.sopt.snappinserver.api.review.dto.response.GetReviewDetailResponse;
 import org.sopt.snappinserver.api.review.dto.response.PostPresignedUrlResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "011 - Review", description = "리뷰 관련 API")
@@ -22,5 +28,18 @@ public interface ReviewApi {
         CustomUserInfo userInfo,
 
         @Valid @RequestBody PostPresignedUrlRequest request
+    );
+
+    @Operation(
+        summary = "리뷰 상세 조회",
+        description = "상품 상세 조회와 고객/작가 예약에서 리뷰 상세 정보를 조회합니다."
+    )
+    @GetMapping("/{reviewId}")
+    ApiResponseBody<GetReviewDetailResponse, Void> getReviewDetail(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "리뷰 ID")
+        @PathVariable @NotNull Long reviewId
     );
 }
