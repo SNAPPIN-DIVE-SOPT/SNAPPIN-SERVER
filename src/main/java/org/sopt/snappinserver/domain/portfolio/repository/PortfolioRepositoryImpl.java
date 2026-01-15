@@ -24,7 +24,9 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
 import org.springframework.stereotype.Repository;
@@ -206,6 +208,30 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .where(
                 photographerAvailableLocation.photographer.id.eq(photographerId)
             )
+            .fetch();
+    }
+
+    @Override
+    public List<Portfolio> findByMatchCountExcludeIds(
+        List<Long> curatedMoodIds,
+        Set<Long> excludedPortfolioIds,
+        int matchCount,
+        int limit
+    ) {
+        return jpaQueryFactory
+            .select(portfolio)
+            .from(portfolioMood)
+            .join(portfolioMood.portfolio, portfolio)
+            .where(
+                portfolioMood.mood.id.in(curatedMoodIds),
+                excludedPortfolioIds.isEmpty()
+                    ? null
+                    : portfolio.id.notIn(excludedPortfolioIds)
+            )
+            .groupBy(portfolio.id)
+            .having(portfolioMood.mood.id.countDistinct().eq((long) matchCount))
+            .orderBy(Expressions.numberTemplate(Double.class, "function('random')").asc())
+            .limit(limit)
             .fetch();
     }
 }
