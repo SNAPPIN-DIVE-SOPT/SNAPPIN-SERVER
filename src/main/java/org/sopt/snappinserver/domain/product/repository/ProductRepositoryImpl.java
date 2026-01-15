@@ -23,7 +23,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         NumberExpression<Integer> likeCount = wishProduct.count().intValue();
 
         if (userId == null) {
-            return jpaQueryFactory
+            LikeStatusProjection result = jpaQueryFactory
                 .select(
                     Projections.constructor(
                         LikeStatusProjection.class,
@@ -34,6 +34,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 .from(wishProduct)
                 .where(wishProduct.product.id.eq(productId))
                 .fetchOne();
+            return result != null ? result : new LikeStatusProjection(0, false);
         }
 
         BooleanExpression liked =
@@ -46,7 +47,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 )
                 .exists();
 
-        return jpaQueryFactory
+        LikeStatusProjection result = jpaQueryFactory
             .select(
                 Projections.constructor(
                     LikeStatusProjection.class,
@@ -57,5 +58,6 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             .from(wishProduct)
             .where(wishProduct.product.id.eq(productId))
             .fetchOne();
+        return result != null ? result : new LikeStatusProjection(0, false);
     }
 }
