@@ -32,7 +32,7 @@ public interface PortfolioApi {
 
     @Operation(
         summary = "로그인 시 큐레이션 기반 포폴 추천 목록 조회",
-        description = "큐레이션 기반 포트폴리오 추천 목록을 조회했습니다."
+        description = "큐레이션 기반 포트폴리오 추천 목록을 조회합니다."
     )
     ApiResponseBody<GetCurationResponse, Void> getCuratedPortfolios(
         @Parameter(hidden = true)
