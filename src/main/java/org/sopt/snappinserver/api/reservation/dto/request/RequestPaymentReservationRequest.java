@@ -9,15 +9,8 @@ public record RequestPaymentReservationRequest(
 
     @NotNull @Positive Integer basePrice,
 
-    @Valid List<ExtraPrice> extraPrices,
+    @Valid List<ExtraPriceResult> extraPrices,
 
     @NotNull @Positive Integer totalPrice
 ) {
-
-    public record ExtraPrice(
-        @NotNull String name,
-        @NotNull @Positive Integer amount
-    ) {
-
-    }
 }
