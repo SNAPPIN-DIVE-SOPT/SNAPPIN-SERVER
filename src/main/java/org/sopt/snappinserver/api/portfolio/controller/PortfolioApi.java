@@ -3,6 +3,7 @@ package org.sopt.snappinserver.api.portfolio.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.sopt.snappinserver.api.portfolio.dto.response.GetCurationResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioListResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPortfolioDetailResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -27,5 +28,14 @@ public interface PortfolioApi {
         CustomUserInfo userInfo,
 
         @PathVariable Long portfolioId
+    );
+
+    @Operation(
+        summary = "로그인 시 큐레이션 기반 포폴 추천 목록 조회",
+        description = "큐레이션 기반 포트폴리오 추천 목록을 조회했습니다."
+    )
+    ApiResponseBody<GetCurationResponse, Void> getCuratedPortfolios(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo
     );
 }

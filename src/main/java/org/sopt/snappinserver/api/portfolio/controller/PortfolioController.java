@@ -4,9 +4,12 @@ import static org.sopt.snappinserver.api.portfolio.code.PortfolioSuccessCode.GET
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.portfolio.code.PortfolioSuccessCode;
+import org.sopt.snappinserver.api.portfolio.dto.response.GetCurationResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioListResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPortfolioDetailResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
+import org.sopt.snappinserver.domain.portfolio.service.GetCuratedPortfolioService;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetCuratedPortfolioResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioDetailResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
@@ -25,6 +28,7 @@ public class PortfolioController implements PortfolioApi {
 
     private final GetPopularPortfolioListUseCase getPopularPortfolioListUseCase;
     private final GetPortfolioDetailUseCase getPortfolioDetailUseCase;
+    private final GetCuratedPortfolioService getCuratedPortfolioService;
 
     @Override
     @GetMapping("/popular")
@@ -50,5 +54,18 @@ public class PortfolioController implements PortfolioApi {
         GetPortfolioDetailResponse response = GetPortfolioDetailResponse.from(result);
 
         return ApiResponseBody.ok(PortfolioSuccessCode.GET_PORTFOLIO_DETAIL_OK, response);
+    }
+
+    @Override
+    @GetMapping("/recommendation")
+    public ApiResponseBody<GetCurationResponse, Void> getCuratedPortfolios(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+        GetCuratedPortfolioResult result = getCuratedPortfolioService.getCuratedPortfolio(
+            userInfo.userId()
+        );
+        GetCurationResponse response = GetCurationResponse.from(result);
+
+        return ApiResponseBody.ok(PortfolioSuccessCode.GET_CURATED_PORTFOLIO_OK, response);
     }
 }
