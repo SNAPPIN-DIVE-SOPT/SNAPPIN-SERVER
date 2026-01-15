@@ -2,6 +2,8 @@ package org.sopt.snappinserver.domain.portfolio.repository;
 
 import java.util.Optional;
 import java.util.List;
+import java.util.Set;
+import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
 
@@ -24,4 +26,11 @@ public interface PortfolioRepositoryCustom {
     List<String> findPhotographerSpecialties(Long photographerId);
 
     List<String> findPhotographerAvailableLocations(Long photographerId);
+
+    List<Portfolio> findByMatchCountExcludeIds(
+        List<Long> curatedMoodIds,
+        Set<Long> excludedPortfolioIds,
+        int matchCount,
+        int limit
+    );
 }
