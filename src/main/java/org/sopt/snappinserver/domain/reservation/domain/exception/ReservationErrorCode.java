@@ -22,6 +22,9 @@ public enum ReservationErrorCode implements ErrorCode {
     ADDITIONAL_PAYMENT_NAME_TOO_LONG(400, "RESERVATION_400_011", "추가 요청 금액명 길이는 100자 이하입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_REQUIRED(400, "RESERVATION_400_012", "추가 요청 금액은 필수입니다."),
     ADDITIONAL_PAYMENT_AMOUNT_TOO_SMALL(400, "RESERVATION_400_013", "추가 요청 금액은 10원 이상이어야 합니다."),
+    INVALID_BASE_PRICE(400, "RESERVATION_400_014", "기본 촬영 금액이 상품 가격과 일치하지 않습니다."),
+    INVALID_TOTAL_PRICE(400, "RESERVATION_400_015", "기본 금액과 추가 금액의 합이 최종 결제 금액과 일치하지 않습니다."),
+
     // 401 UNAUTHORIZED
 
     // 403 FORBIDDEN
@@ -39,7 +42,8 @@ public enum ReservationErrorCode implements ErrorCode {
     RESERVATION_NOT_CONFIRMED(409, "RESERVATION_409_006", "예약 확정 상태의 예약만 촬영 완료 처리할 수 있습니다."),
     RESERVATION_NOT_PAYMENT_COMPLETED(409, "RESERVATION_409_007", "결제된 예약만 예약 확정 처리할 수 있습니다."),
     RESERVATION_CANNOT_REFUSE(409, "RESERVATION_409_008", "현재 예약 상태에서는 예약 거절이 불가합니다."),
-    RESERVATION_ALREADY_REFUSED(409, "RESERVATION_409_009", "이미 거절된 예약입니다.");
+    RESERVATION_ALREADY_REFUSED(409, "RESERVATION_409_009", "이미 거절된 예약입니다."),
+    RESERVATION_CANNOT_REQUEST_PAYMENT(409, "RESERVATION_409_010", "작가 확인 중 상태의 예약에만 결제를 요청할 수 있습니다.");
 
     private final int status;
     private final String code;
