@@ -4,11 +4,15 @@ import static org.sopt.snappinserver.api.review.code.ReviewSuccessCode.POST_PRES
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.api.review.code.ReviewSuccessCode;
 import org.sopt.snappinserver.api.review.dto.request.PostPresignedUrlRequest;
+import org.sopt.snappinserver.api.review.dto.response.GetReviewDetailResponse;
 import org.sopt.snappinserver.api.review.dto.response.PostPresignedUrlResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.review.service.dto.request.PostPresignedUrlCommand;
+import org.sopt.snappinserver.domain.review.service.dto.response.GetReviewDetailResult;
 import org.sopt.snappinserver.domain.review.service.dto.response.PostPresignedUrlResult;
+import org.sopt.snappinserver.domain.review.service.usecase.GetReviewDetailUseCase;
 import org.sopt.snappinserver.domain.review.service.usecase.PostPresignedUrlUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewController implements ReviewApi {
 
     private final PostPresignedUrlUseCase postPresignedUrlUseCase;
+    private final GetReviewDetailUseCase getReviewDetailUseCase;
 
     @Override
     @PostMapping("/image")
@@ -36,6 +41,18 @@ public class ReviewController implements ReviewApi {
 
         return ApiResponseBody.ok(POST_PRESIGNED_URL_OK, response);
     }
+
+    @Override
+    public ApiResponseBody<GetReviewDetailResponse, Void> getReviewDetail(
+        Long reviewId
+    ) {
+        GetReviewDetailResult result =
+            getReviewDetailUseCase.getReviewDetail(reviewId);
+        GetReviewDetailResponse response = GetReviewDetailResponse.from(result);
+
+        return ApiResponseBody.ok(ReviewSuccessCode.GET_REVIEW_DETAIL_OK, response);
+    }
+
 
     private PostPresignedUrlCommand getPostPresignedUrlCommand(
         CustomUserInfo userInfo,
