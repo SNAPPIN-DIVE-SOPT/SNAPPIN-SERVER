@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.review.service.dto.response.GetReviewDetail
 
 public interface GetReviewDetailUseCase {
 
-    GetReviewDetailResult getReviewDetail(Long userId, Long reviewId);
+    GetReviewDetailResult getReviewDetail(Long reviewId);
 }

@@ -44,11 +44,10 @@ public class ReviewController implements ReviewApi {
 
     @Override
     public ApiResponseBody<GetReviewDetailResponse, Void> getReviewDetail(
-        @AuthenticationPrincipal CustomUserInfo userInfo,
         Long reviewId
     ) {
         GetReviewDetailResult result =
-            getReviewDetailUseCase.getReviewDetail(userInfo.userId(), reviewId);
+            getReviewDetailUseCase.getReviewDetail(reviewId);
         GetReviewDetailResponse response = GetReviewDetailResponse.from(result);
 
         return ApiResponseBody.ok(ReviewSuccessCode.GET_REVIEW_DETAIL_OK, response);

@@ -35,9 +35,6 @@ public interface ReviewApi {
     )
     @GetMapping("/{reviewId}")
     ApiResponseBody<GetReviewDetailResponse, Void> getReviewDetail(
-        @Parameter(hidden = true)
-        CustomUserInfo userInfo,
-
         @Schema(description = "리뷰 ID")
         @PathVariable @NotNull Long reviewId
     );

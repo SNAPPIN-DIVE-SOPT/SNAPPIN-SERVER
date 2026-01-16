@@ -24,7 +24,7 @@ public class GetReviewDetailService implements GetReviewDetailUseCase {
     private final ReviewPhotoRepository reviewPhotoRepository;
 
     @Override
-    public GetReviewDetailResult getReviewDetail(Long userId, Long reviewId) {
+    public GetReviewDetailResult getReviewDetail(Long reviewId) {
 
         Review review = reviewRepository.findById(reviewId)
             .orElseThrow(() -> new ReviewException(ReviewErrorCode.REVIEW_NOT_FOUND));
