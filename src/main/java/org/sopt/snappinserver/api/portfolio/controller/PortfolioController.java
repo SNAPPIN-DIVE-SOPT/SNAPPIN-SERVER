@@ -86,7 +86,7 @@ public class PortfolioController implements PortfolioApi {
         GetPortfolioListResult result = getPortfolioListUseCase.getPortfolioList(query);
         GetPortfolioListResponse response = GetPortfolioListResponse.from(result);
         GetPortfolioMetaResponse meta = GetPortfolioMetaResponse.from(
-            result.getPortfolioListMeta()
+            result.meta()
         );
 
         return ApiResponseBody.ok(PortfolioSuccessCode.GET_PORTFOLIO_LIST_OK, response, meta);

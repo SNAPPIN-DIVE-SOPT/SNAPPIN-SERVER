@@ -4,7 +4,7 @@ import java.util.List;
 
 public record GetPortfolioListResult(
     List<GetPortfolioCardResult> portfolios,
-    GetPortfolioListMeta getPortfolioListMeta
+    GetPortfolioListMeta meta
 ) {
 
 }
