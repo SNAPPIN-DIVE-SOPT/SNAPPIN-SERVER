@@ -262,9 +262,11 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .leftJoin(portfolioMood).on(portfolioMood.portfolio.id.eq(portfolio.id))
             .where(
                 cursorLt(cursor),
+                moodIn(query.moodIds()),
+                productIdEq(query.productId()),
+                photographerIdEq(query.photographerId()),
                 snapCategoryEq(query.snapCategory()),
-                placeEq(query.placeId()),
-                moodIn(query.moodIds())
+                placeEq(query.placeId())
             )
             .distinct()
             .orderBy(portfolio.id.desc())
@@ -276,17 +278,25 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         return cursor == null ? null : portfolio.id.lt(cursor);
     }
 
+    private BooleanExpression moodIn(List<Long> moodIds) {
+        if (moodIds == null || moodIds.isEmpty()) return null;
+        return portfolioMood.mood.id.in(moodIds);
+    }
+
+    private BooleanExpression productIdEq(Long productId) {
+        return productId == null ? null : product.id.eq(productId);
+    }
+
+    private BooleanExpression photographerIdEq(Long photographerId) {
+        return photographerId == null ? null : photographer.id.eq(photographerId);
+    }
+
     private BooleanExpression snapCategoryEq(SnapCategory category) {
         return category == null ? null : portfolio.snapCategory.eq(category);
     }
 
     private BooleanExpression placeEq(Long placeId) {
         return placeId == null ? null : portfolioPlace.place.id.eq(placeId);
-    }
-
-    private BooleanExpression moodIn(List<Long> moodIds) {
-        if (moodIds == null || moodIds.isEmpty()) return null;
-        return portfolioMood.mood.id.in(moodIds);
     }
 
 }

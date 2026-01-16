@@ -97,8 +97,6 @@ public class PortfolioController implements PortfolioApi {
             request.photographerId(),
             request.snapCategory(),
             request.placeId(),
-            request.date(),
-            request.peopleCount(),
             request.cursor()
         );
     }
