@@ -18,9 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class GetReviewDetailService implements GetReviewDetailUseCase {
 
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
+
     private final ReviewRepository reviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
-    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
 
     @Override
     public GetReviewDetailResult getReviewDetail(Long userId, Long reviewId) {

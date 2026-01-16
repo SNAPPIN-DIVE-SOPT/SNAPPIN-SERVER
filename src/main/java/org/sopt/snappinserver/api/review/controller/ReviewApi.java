@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.sopt.snappinserver.api.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.review.dto.request.PostPresignedUrlRequest;
 import org.sopt.snappinserver.api.review.dto.response.GetReviewDetailResponse;
 import org.sopt.snappinserver.api.review.dto.response.PostPresignedUrlResponse;
