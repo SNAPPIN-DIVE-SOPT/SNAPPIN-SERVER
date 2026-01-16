@@ -27,8 +27,11 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
+import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
+import org.sopt.snappinserver.global.enums.SnapCategory;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -234,4 +237,68 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .limit(limit)
             .fetch();
     }
+
+    @Override
+    public List<GetPortfolioCardResult> findPortfolioCards(
+        Long cursor,
+        GetPortfolioListQuery query,
+        int size
+    ) {
+        return jpaQueryFactory
+            .select(
+                Projections.constructor(
+                    GetPortfolioCardResult.class,
+                    portfolio.id,
+                    portfolioPhoto.photo.imageUrl
+                )
+            )
+            .from(portfolio)
+            .join(portfolio.product, product)
+            .join(product.photographer, photographer)
+            .join(portfolioPhoto).on(
+                portfolioPhoto.portfolio.id.eq(portfolio.id)
+                    .and(portfolioPhoto.displayOrder.eq(1))
+            )
+            .join(portfolioPhoto.photo, photo)
+            .leftJoin(portfolioPlace).on(portfolioPlace.portfolio.id.eq(portfolio.id))
+            .leftJoin(portfolioMood).on(portfolioMood.portfolio.id.eq(portfolio.id))
+            .where(
+                cursorLt(cursor),
+                moodIn(query.moodIds()),
+                productIdEq(query.productId()),
+                photographerIdEq(query.photographerId()),
+                snapCategoryEq(query.snapCategory()),
+                placeEq(query.placeId())
+            )
+            .distinct()
+            .orderBy(portfolio.id.desc())
+            .limit(size + 1)
+            .fetch();
+    }
+
+    private BooleanExpression cursorLt(Long cursor) {
+        return cursor == null ? null : portfolio.id.lt(cursor);
+    }
+
+    private BooleanExpression moodIn(List<Long> moodIds) {
+        if (moodIds == null || moodIds.isEmpty()) return null;
+        return portfolioMood.mood.id.in(moodIds);
+    }
+
+    private BooleanExpression productIdEq(Long productId) {
+        return productId == null ? null : product.id.eq(productId);
+    }
+
+    private BooleanExpression photographerIdEq(Long photographerId) {
+        return photographerId == null ? null : photographer.id.eq(photographerId);
+    }
+
+    private BooleanExpression snapCategoryEq(SnapCategory category) {
+        return category == null ? null : portfolio.snapCategory.eq(category);
+    }
+
+    private BooleanExpression placeEq(Long placeId) {
+        return placeId == null ? null : portfolioPlace.place.id.eq(placeId);
+    }
+
 }

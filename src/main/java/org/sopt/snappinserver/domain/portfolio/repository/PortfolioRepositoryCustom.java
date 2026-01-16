@@ -1,9 +1,11 @@
 package org.sopt.snappinserver.domain.portfolio.repository;
 
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
+import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
 
@@ -32,5 +34,11 @@ public interface PortfolioRepositoryCustom {
         Set<Long> excludedPortfolioIds,
         int matchCount,
         int limit
+    );
+
+    List<GetPortfolioCardResult> findPortfolioCards(
+        Long cursor,
+        GetPortfolioListQuery query,
+        int size
     );
 }
