@@ -2,13 +2,13 @@ package org.sopt.snappinserver.api.portfolio.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 
 @Schema(description = "포폴 목록 조회 요청 DTO - 쿼리 파라미터용")
-@Valid
 public record GetPortfolioListRequest(
 
     @Schema(description = "무드 아이디 목록(,로 구분, 개수 제한 없음)")
@@ -33,6 +33,8 @@ public record GetPortfolioListRequest(
     LocalDate date,
 
     @Schema(description = "촬영 인원")
+    @Positive(message = "촬영 인원은 양수여야 합니다.")
+    @Min(value = 1, message = "촬영 인원은 최소 1명부터 입력할 수 있습니다.")
     Integer peopleCount,
 
     @Schema(description = "커서 값")

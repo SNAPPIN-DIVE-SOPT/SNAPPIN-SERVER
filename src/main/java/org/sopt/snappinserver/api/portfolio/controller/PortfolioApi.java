@@ -3,6 +3,7 @@ package org.sopt.snappinserver.api.portfolio.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.sopt.snappinserver.api.portfolio.dto.request.GetPortfolioListRequest;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetCurationResponse;
 import org.sopt.snappinserver.api.portfolio.dto.response.GetPopularPortfolioListResponse;
@@ -48,6 +49,6 @@ public interface PortfolioApi {
         description = "포트폴리오 전체 조회, 필터링, 검색 시 사용되는 API 입니다."
     )
     ApiResponseBody<GetPortfolioListResponse, GetPortfolioMetaResponse> getPortfolioList(
-        @ModelAttribute GetPortfolioListRequest request
+        @Valid @ModelAttribute GetPortfolioListRequest request
     );
 }
