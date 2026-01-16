@@ -10,6 +10,7 @@ import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.sopt.snappinserver.domain.review.service.dto.response.GetReviewDetailResult;
 import org.sopt.snappinserver.domain.review.service.usecase.GetReviewDetailUseCase;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ public class GetReviewDetailService implements GetReviewDetailUseCase {
 
     private final ReviewRepository reviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
+    private final S3Service s3Service;
 
     @Override
     public GetReviewDetailResult getReviewDetail(Long reviewId) {
@@ -33,6 +35,7 @@ public class GetReviewDetailService implements GetReviewDetailUseCase {
             .findAllByReviewIds(List.of(reviewId))
             .stream()
             .map(rp -> rp.getPhoto().getImageUrl())
+            .map(s3Service::getPresignedUrl)
             .toList();
 
         return new GetReviewDetailResult(
