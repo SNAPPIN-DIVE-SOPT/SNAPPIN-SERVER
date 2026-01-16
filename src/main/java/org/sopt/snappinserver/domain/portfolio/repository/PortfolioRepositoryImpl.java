@@ -253,6 +253,8 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 )
             )
             .from(portfolio)
+            .join(portfolio.product, product)
+            .join(product.photographer, photographer)
             .join(portfolioPhoto).on(
                 portfolioPhoto.portfolio.id.eq(portfolio.id)
                     .and(portfolioPhoto.displayOrder.eq(1))
