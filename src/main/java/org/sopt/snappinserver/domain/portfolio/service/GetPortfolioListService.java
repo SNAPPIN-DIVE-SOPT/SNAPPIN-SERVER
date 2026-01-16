@@ -14,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class GetPortfolioService implements GetPortfolioListUseCase {
+public class GetPortfolioListService implements GetPortfolioListUseCase {
 
     private static final int PAGE_SIZE = 30;
 
     private final PortfolioRepositoryCustom portfolioRepositoryCustom;
 
+    @Override
     public GetPortfolioListResult getPortfolioList(GetPortfolioListQuery query) {
 
         List<GetPortfolioCardResult> rows =
