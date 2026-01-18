@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.category.code;
+package org.sopt.snappinserver.global.response.code.category;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
