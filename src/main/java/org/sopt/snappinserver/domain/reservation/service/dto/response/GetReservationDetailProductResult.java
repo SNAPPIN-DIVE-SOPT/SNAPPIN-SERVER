@@ -6,7 +6,7 @@ public record GetReservationDetailProductResult(
     Long id,
     String imageUrl,
     String title,
-    double rate,
+    Double rate,
     int reviewCount,
     String photographer,
     int price,
