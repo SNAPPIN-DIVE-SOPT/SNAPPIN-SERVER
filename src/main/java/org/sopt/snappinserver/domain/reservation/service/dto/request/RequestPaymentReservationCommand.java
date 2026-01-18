@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.domain.reservation.service.dto.request;
 
 import java.util.List;
-import org.sopt.snappinserver.api.reservation.dto.request.RequestPaymentReservationRequest;
+import org.sopt.snappinserver.api.v1.reservation.dto.request.RequestPaymentReservationRequest;
 
 public record RequestPaymentReservationCommand(
     Long photographerUserId,

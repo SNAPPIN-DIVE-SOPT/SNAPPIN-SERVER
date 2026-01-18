@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.domain.product.service.dto.request;
 
 import java.time.LocalDateTime;
-import org.sopt.snappinserver.api.product.dto.request.ProductReservationRequest;
+import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.domain.product.domain.exception.ProductErrorCode;
 import org.sopt.snappinserver.domain.product.domain.exception.ProductException;
 

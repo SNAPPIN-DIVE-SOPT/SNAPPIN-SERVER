@@ -1,0 +1,40 @@
+package org.sopt.snappinserver.api.v1.product.dto.response;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDate;
+import java.util.List;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewResult;
+
+@Schema(description = "상품 리뷰 응답 DTO")
+public record ProductReviewResponse(
+
+    @Schema(description = "리뷰 ID", example = "1")
+    Long id,
+
+    @Schema(description = "리뷰 작성자", example = "작성자")
+    String reviewer,
+
+    @Schema(description = "평점", example = "5")
+    int rating,
+
+    @Schema(description = "작성 일자", example = "2026-03-01")
+    LocalDate createdAt,
+
+    @Schema(description = "리뷰 이미지 URL 목록")
+    List<String> images,
+
+    @Schema(description = "리뷰 내용", example = "리뷰 내용")
+    String content
+
+) {
+    public static ProductReviewResponse from(ProductReviewResult result) {
+        return new ProductReviewResponse(
+            result.id(),
+            result.reviewer(),
+            result.rating(),
+            result.createdAt(),
+            result.images(),
+            result.content()
+        );
+    }
+}

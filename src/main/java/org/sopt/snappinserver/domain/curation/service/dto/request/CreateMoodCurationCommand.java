@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.domain.curation.service.dto.request;
 
 import java.util.List;
-import org.sopt.snappinserver.api.curation.dto.request.CreateMoodCurationRequest;
+import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 
 public record CreateMoodCurationCommand(Long userId, List<Long> photoIds) {
 

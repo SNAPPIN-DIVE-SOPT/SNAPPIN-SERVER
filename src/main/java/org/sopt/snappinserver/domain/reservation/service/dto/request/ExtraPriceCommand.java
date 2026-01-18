@@ -1,6 +1,6 @@
 package org.sopt.snappinserver.domain.reservation.service.dto.request;
 
-import org.sopt.snappinserver.api.reservation.dto.request.ExtraPriceResult;
+import org.sopt.snappinserver.api.v1.reservation.dto.request.ExtraPriceResult;
 
 public record ExtraPriceCommand(String name, int amount) {
 
