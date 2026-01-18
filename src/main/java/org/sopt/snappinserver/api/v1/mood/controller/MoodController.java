@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.api.v1.mood.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.mood.code.MoodSuccessCode;
+import org.sopt.snappinserver.global.response.code.mood.MoodSuccessCode;
 import org.sopt.snappinserver.api.v1.mood.dto.response.GetMoodFilterListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.mood.service.dto.response.GetMoodFilterListResult;

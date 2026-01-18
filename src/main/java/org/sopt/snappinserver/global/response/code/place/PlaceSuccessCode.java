@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.mood.code;
+package org.sopt.snappinserver.global.response.code.place;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,10 +6,10 @@ import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum MoodSuccessCode implements SuccessCode {
+public enum PlaceSuccessCode implements SuccessCode {
 
     // 200 OK
-    GET_ALL_MOOD_OK(200, "MOOD_200_001", "성공적으로 전체 무드 필터값을 조회했습니다."),
+    GET_PLACE_LIST_OK(200, "PLACE_200_001", "성공적으로 촬영 가능 장소 목록을 조회했습니다."),
 
     // 201 CREATED
 

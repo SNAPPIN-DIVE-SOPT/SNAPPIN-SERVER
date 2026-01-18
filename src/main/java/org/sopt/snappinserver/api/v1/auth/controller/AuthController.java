@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sopt.snappinserver.api.v1.auth.code.AuthSuccessCode;
+import org.sopt.snappinserver.global.response.code.auth.AuthSuccessCode;
 import org.sopt.snappinserver.api.v1.auth.dto.request.CreateKakaoLoginRequest;
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateKakaoLoginResponse;
@@ -57,7 +57,6 @@ public class AuthController implements AuthApi {
             (clientRedirectUri == null)
                 ? ("http://localhost:8080/api/v1/auth/login/kakao")
                 : clientRedirectUri;
-        log.info("redirectUri: {}", redirectUri);
         LoginResult loginResult = loginUseCase.kakaoLogin(
             redirectUri,
             createKakaoLoginRequest.code(),
@@ -68,7 +67,7 @@ public class AuthController implements AuthApi {
 
         return ApiResponseBody.ok(
             AuthSuccessCode.LOGIN_SUCCESS,
-            new CreateKakaoLoginResponse(loginResult.accessToken())
+            CreateKakaoLoginResponse.from(loginResult)
         );
     }
 

@@ -1,10 +1,10 @@
 package org.sopt.snappinserver.api.v1.user.controller;
 
-import static org.sopt.snappinserver.api.v1.user.code.UserSuccessCode.SWITCH_USER_ROLE_OK;
+import static org.sopt.snappinserver.global.response.code.user.UserSuccessCode.SWITCH_USER_ROLE_OK;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.user.code.UserSuccessCode;
+import org.sopt.snappinserver.global.response.code.user.UserSuccessCode;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetSwitchedUserProfileResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.domain.exception.AuthErrorCode;

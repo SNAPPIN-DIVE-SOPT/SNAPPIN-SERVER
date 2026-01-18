@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.portfolio.code;
+package org.sopt.snappinserver.global.response.code.portfolio;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

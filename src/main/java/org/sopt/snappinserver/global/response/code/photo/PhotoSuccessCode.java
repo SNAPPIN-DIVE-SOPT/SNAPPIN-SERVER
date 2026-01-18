@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.home.code;
+package org.sopt.snappinserver.global.response.code.photo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,12 +6,13 @@ import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum HomeSuccessCode implements SuccessCode {
+public enum PhotoSuccessCode implements SuccessCode {
 
     // 200 OK
-    GET_PLACE_PHOTOGRAPHER_RECOMMENDATION_OK(200, "HOME_200_001", "성공적으로 장소, 작가 추천 목록을 조회했습니다."),
+
 
     // 201 CREATED
+    PHOTO_MOOD_CREATED(201, "PHOTO_201_001", "성공적으로 사진과 무드 태그를 연결했습니다."),
 
     ;
 

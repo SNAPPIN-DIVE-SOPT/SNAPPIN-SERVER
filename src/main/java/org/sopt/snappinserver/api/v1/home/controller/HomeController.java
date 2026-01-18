@@ -2,7 +2,7 @@ package org.sopt.snappinserver.api.v1.home.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.home.code.HomeSuccessCode;
+import org.sopt.snappinserver.global.response.code.home.HomeSuccessCode;
 import org.sopt.snappinserver.api.v1.home.dto.response.GetPlacePhotographerRecommendationResponse;
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetRandomPhotographersResult;
 import org.sopt.snappinserver.domain.photographer.service.usecase.GetRandomPhotographersUseCase;

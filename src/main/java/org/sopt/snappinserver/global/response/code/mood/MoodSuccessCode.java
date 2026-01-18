@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.photo.code;
+package org.sopt.snappinserver.global.response.code.mood;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -6,13 +6,12 @@ import org.sopt.snappinserver.global.response.code.common.SuccessCode;
 
 @Getter
 @RequiredArgsConstructor
-public enum PhotoSuccessCode implements SuccessCode {
+public enum MoodSuccessCode implements SuccessCode {
 
     // 200 OK
-
+    GET_ALL_MOOD_OK(200, "MOOD_200_001", "성공적으로 전체 무드 필터값을 조회했습니다."),
 
     // 201 CREATED
-    PHOTO_MOOD_CREATED(201, "PHOTO_201_001", "성공적으로 사진과 무드 태그를 연결했습니다."),
 
     ;
 
