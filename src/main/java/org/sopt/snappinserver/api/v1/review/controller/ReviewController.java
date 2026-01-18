@@ -1,10 +1,10 @@
 package org.sopt.snappinserver.api.v1.review.controller;
 
-import static org.sopt.snappinserver.api.v1.review.code.ReviewSuccessCode.POST_PRESIGNED_URL_OK;
+import static org.sopt.snappinserver.global.response.code.review.ReviewSuccessCode.POST_PRESIGNED_URL_OK;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.review.code.ReviewSuccessCode;
+import org.sopt.snappinserver.global.response.code.review.ReviewSuccessCode;
 import org.sopt.snappinserver.api.v1.review.dto.request.PostPresignedUrlRequest;
 import org.sopt.snappinserver.api.v1.review.dto.response.GetReviewDetailResponse;
 import org.sopt.snappinserver.api.v1.review.dto.response.PostPresignedUrlResponse;

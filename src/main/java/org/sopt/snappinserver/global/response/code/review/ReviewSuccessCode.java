@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.review.code;
+package org.sopt.snappinserver.global.response.code.review;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
