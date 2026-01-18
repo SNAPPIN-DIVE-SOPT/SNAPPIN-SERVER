@@ -8,6 +8,7 @@ import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioL
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
+import org.sopt.snappinserver.global.enums.SnapCategory;
 
 public interface PortfolioRepositoryCustom {
 
@@ -25,7 +26,7 @@ public interface PortfolioRepositoryCustom {
 
     String findProductThumbnailUrl(Long productId);
 
-    List<String> findPhotographerSpecialties(Long photographerId);
+    List<SnapCategory> findPhotographerSpecialties(Long photographerId);
 
     List<String> findPhotographerAvailableLocations(Long photographerId);
 
