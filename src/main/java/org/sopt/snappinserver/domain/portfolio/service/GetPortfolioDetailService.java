@@ -16,6 +16,7 @@ import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.repository.ProductRepository;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
+import org.sopt.snappinserver.global.enums.SnapCategory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +39,11 @@ public class GetPortfolioDetailService implements GetPortfolioDetailUseCase {
 
         List<String> portfolioImages = queryRepository.findPortfolioImageUrls(portfolioId);
         List<String> portfolioMoods = queryRepository.findPortfolioMoods(portfolioId);
-        List<String> photographerSpecialties = queryRepository.findPhotographerSpecialties(
-            portfolioProjection.photographerId()
-        );
+        List<String> photographerSpecialties = queryRepository
+            .findPhotographerSpecialties(portfolioProjection.photographerId())
+            .stream()
+            .map(SnapCategory::getCategory)
+            .toList();
         List<String> photographerLocations = queryRepository.findPhotographerAvailableLocations(
             portfolioProjection.photographerId()
         );

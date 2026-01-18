@@ -182,9 +182,9 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     }
 
     @Override
-    public List<String> findPhotographerSpecialties(Long photographerId) {
+    public List<SnapCategory> findPhotographerSpecialties(Long photographerId) {
         return jpaQueryFactory
-            .select(photographerSpecialty.specialty.stringValue())
+            .select(photographerSpecialty.specialty)
             .from(photographerSpecialty)
             .where(photographerSpecialty.photographer.id.eq(photographerId))
             .fetch();
@@ -281,7 +281,9 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     }
 
     private BooleanExpression moodIn(List<Long> moodIds) {
-        if (moodIds == null || moodIds.isEmpty()) return null;
+        if (moodIds == null || moodIds.isEmpty()) {
+            return null;
+        }
         return portfolioMood.mood.id.in(moodIds);
     }
 
