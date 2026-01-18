@@ -95,6 +95,17 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
         );
     }
 
+    private Double resolveAverageRating(ProductReviewStatsResult stats) {
+        if (stats == null || stats.reviewCount() == 0) {
+            return null;
+        }
+        return stats.averageRating();
+    }
+
+    private int resolveReviewCount(ProductReviewStatsResult stats) {
+        return stats == null ? 0 : Math.toIntExact(stats.reviewCount());
+    }
+
     private List<String> getMoodNames(Product product) {
         return productMoodRepository.findAllByProduct(product).stream()
             .map(pm -> pm.getMood().getName())

@@ -20,7 +20,7 @@ public record ReservationDetailInfoResponse(
     String startTime,
 
     @Schema(description = "촬영 시간", example = "1.5")
-    double durationTime,
+    Double durationTime,
 
     @Schema(description = "촬영 장소", example = "건국대")
     String place,
