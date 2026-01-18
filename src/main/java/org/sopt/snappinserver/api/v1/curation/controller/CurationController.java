@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.api.v1.curation.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.curation.code.CurationSuccessCode;
+import org.sopt.snappinserver.global.response.code.curation.CurationSuccessCode;
 import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 import org.sopt.snappinserver.api.v1.curation.dto.response.CreateMoodCurationResponse;
 import org.sopt.snappinserver.api.v1.curation.dto.response.GetCurationQuestionPhotosResponse;
