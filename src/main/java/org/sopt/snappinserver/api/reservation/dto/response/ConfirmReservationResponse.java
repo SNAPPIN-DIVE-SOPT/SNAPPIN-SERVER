@@ -9,7 +9,7 @@ public record ConfirmReservationResponse(
     @Schema(description = "확정된 예약 ID", example = "501")
     Long reservationId,
 
-    @Schema(description = "변경된 예약 상태 ", example = "RESERVATION_CONFIRMED")
+    @Schema(description = "변경된 예약 상태", example = "RESERVATION_CONFIRMED")
     String status
 ) {
 

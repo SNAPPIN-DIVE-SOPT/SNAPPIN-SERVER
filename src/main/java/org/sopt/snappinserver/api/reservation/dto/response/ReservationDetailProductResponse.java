@@ -10,7 +10,7 @@ public record ReservationDetailProductResponse(
     @Schema(description = "상품 ID", example = "51")
     Long id,
 
-    @Schema(description = "상품 대표 이미지", example = "\"https://example.com/product301_thumb.jpg\",")
+    @Schema(description = "상품 대표 이미지", example = "https://example.com/product301_thumb.jpg")
     String imageUrl,
 
     @Schema(description = "상품명", example = "한여름밤의 스냅")
