@@ -3,7 +3,7 @@ package org.sopt.snappinserver.api.v1.product.controller;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.product.code.ProductSuccessCode;
+import org.sopt.snappinserver.global.response.code.product.ProductSuccessCode;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListMeta;
