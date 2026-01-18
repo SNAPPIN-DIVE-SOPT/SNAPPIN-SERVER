@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.photo.code;
+package org.sopt.snappinserver.global.response.code.photo;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

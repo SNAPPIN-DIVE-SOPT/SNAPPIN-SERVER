@@ -2,7 +2,7 @@ package org.sopt.snappinserver.api.v1.photo.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.photo.code.PhotoSuccessCode;
+import org.sopt.snappinserver.global.response.code.photo.PhotoSuccessCode;
 import org.sopt.snappinserver.api.v1.photo.dto.request.CreatePhotoMoodRequest;
 import org.sopt.snappinserver.domain.photo.service.dto.request.PhotoProcessCommand;
 import org.sopt.snappinserver.domain.photo.service.usecase.ProcessPhotoUseCase;
