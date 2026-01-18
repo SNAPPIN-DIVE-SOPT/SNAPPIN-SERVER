@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.api.v1.photographer.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.photographer.code.PhotographerSuccessCode;
+import org.sopt.snappinserver.global.response.code.photographer.PhotographerSuccessCode;
 import org.sopt.snappinserver.api.v1.photographer.dto.response.GetPhotographerProfileResponse;
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotographerProfileResult;
 import org.sopt.snappinserver.domain.photographer.service.usecase.GetPhotographerProfileUseCase;
