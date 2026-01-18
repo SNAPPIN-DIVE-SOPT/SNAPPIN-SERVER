@@ -9,7 +9,7 @@ public record ReservationListItemResponse(
     @Schema(description = "예약 ID", example = "51")
     Long reservationId,
 
-    @Schema(description = "예약 상태(진행 단게)", example = "RESERVATION_REQUESTED")
+    @Schema(description = "예약 상태(진행 단계)", example = "RESERVATION_REQUESTED")
     String status,
 
     @Schema(description = "예약자명", example = "홍길동")
