@@ -3,7 +3,7 @@ package org.sopt.snappinserver.api.v1.category.controller;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.category.code.CategorySuccessCode;
+import org.sopt.snappinserver.global.response.code.category.CategorySuccessCode;
 import org.sopt.snappinserver.api.v1.category.dto.response.CategoriesResponse;
 import org.sopt.snappinserver.api.v1.category.dto.response.CategoryResponse;
 import org.sopt.snappinserver.global.enums.SnapCategory;
