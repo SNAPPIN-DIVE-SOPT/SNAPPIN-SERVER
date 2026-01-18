@@ -250,7 +250,7 @@ public class Reservation extends BaseEntity {
         this.reservationStatus = ReservationStatus.SHOOT_COMPLETED;
     }
 
-    public void PhotographerCheck() {
+    public void photographerCheck() {
         if (this.reservationStatus != ReservationStatus.RESERVATION_REQUESTED) {
             return;
         }

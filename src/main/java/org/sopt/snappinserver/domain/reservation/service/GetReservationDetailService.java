@@ -90,7 +90,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
             return;
         }
 
-        reservation.PhotographerCheck();
+        reservation.photographerCheck();
     }
 
 
