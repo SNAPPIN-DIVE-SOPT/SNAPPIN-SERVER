@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.api.v1.wish.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.wish.code.WishSuccessCode;
+import org.sopt.snappinserver.global.response.code.wish.WishSuccessCode;
 import org.sopt.snappinserver.api.v1.wish.dto.request.WishPortfolioRequest;
 import org.sopt.snappinserver.api.v1.wish.dto.request.WishProductRequest;
 import org.sopt.snappinserver.api.v1.wish.dto.response.WishPortfolioResponse;
