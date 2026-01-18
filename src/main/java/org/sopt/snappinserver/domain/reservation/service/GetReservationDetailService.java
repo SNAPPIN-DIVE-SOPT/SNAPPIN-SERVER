@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class GetReservationDetailService implements GetReservationDetailUseCase {
 
     private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
@@ -65,12 +65,34 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
         Reservation reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
 
-        if (!reservation.isReservationClient(userId)) {
-            throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
-        }
+        validateAccessPermission(reservation, userId);
+        updateStatus(reservation, userId);
 
         return reservation;
     }
+
+    private void validateAccessPermission(Reservation reservation, Long loginUserId) {
+        if (reservation.isReservationClient(loginUserId)) {
+            return;
+        }
+
+        if (reservation.isReservationPhotographer(loginUserId)) {
+            return;
+        }
+
+        throw new ReservationException(
+            ReservationErrorCode.RESERVATION_USER_NOT_MATCH
+        );
+    }
+
+    private void updateStatus(Reservation reservation, Long loginUserId) {
+        if (!reservation.isReservationPhotographer(loginUserId)) {
+            return;
+        }
+
+        reservation.photographerCheck();
+    }
+
 
     private String getThumbnail(Product product) {
         return productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product)
