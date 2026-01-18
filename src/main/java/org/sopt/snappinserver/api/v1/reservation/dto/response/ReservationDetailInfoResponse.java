@@ -10,7 +10,7 @@ public record ReservationDetailInfoResponse(
     @Schema(description = "예약자명", example = "홍길동")
     String client,
 
-    @Schema(description = "예약 생성 일시", example = "2026-02-18 10:05:44")
+    @Schema(description = "예약 생성 일시", example = "2026-02-18 10:05")
     String createdAt,
 
     @Schema(description = "촬영 희망 날짜", example = "2026-03-15")
@@ -32,7 +32,7 @@ public record ReservationDetailInfoResponse(
     String requestNote
 ) {
     private static final DateTimeFormatter CREATED_AT_FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static ReservationDetailInfoResponse from(GetReservationDetailInfoResult result) {
         return new ReservationDetailInfoResponse(
