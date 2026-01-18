@@ -19,16 +19,21 @@ public record GetRecommendationPhotographerInfoResponse(
     @Schema(description = "신규 작가 여부")
     boolean isNew,
 
+    @Schema(description = "작가 한 줄 소개")
+    String bio,
+
     @Schema(description = "작가 촬영 상품 목록")
     List<String> specialties
 ) {
 
-    public static GetRecommendationPhotographerInfoResponse from(GetRandomPhotographersResult result) {
+    public static GetRecommendationPhotographerInfoResponse from(
+        GetRandomPhotographersResult result) {
         return new GetRecommendationPhotographerInfoResponse(
             result.id(),
             result.name(),
             result.profileImageUrl(),
             result.isNew(),
+            result.bio(),
             result.specialties()
         );
     }
