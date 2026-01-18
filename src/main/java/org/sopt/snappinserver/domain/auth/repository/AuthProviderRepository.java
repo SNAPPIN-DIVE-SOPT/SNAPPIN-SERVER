@@ -11,4 +11,9 @@ public interface AuthProviderRepository extends JpaRepository<AuthProvider, Long
         SocialProvider socialProvider,
         String providerId
     );
+
+    boolean existsBySocialProviderAndProviderId(
+        SocialProvider socialProvider,
+        String providerId
+    );
 }
