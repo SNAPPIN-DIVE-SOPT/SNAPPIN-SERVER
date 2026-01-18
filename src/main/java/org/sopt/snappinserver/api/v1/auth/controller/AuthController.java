@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sopt.snappinserver.api.v1.auth.code.AuthSuccessCode;
+import org.sopt.snappinserver.global.response.code.auth.AuthSuccessCode;
 import org.sopt.snappinserver.api.v1.auth.dto.request.CreateKakaoLoginRequest;
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateKakaoLoginResponse;
