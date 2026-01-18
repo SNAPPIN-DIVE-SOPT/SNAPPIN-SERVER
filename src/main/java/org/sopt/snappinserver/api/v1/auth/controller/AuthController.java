@@ -57,7 +57,6 @@ public class AuthController implements AuthApi {
             (clientRedirectUri == null)
                 ? ("http://localhost:8080/api/v1/auth/login/kakao")
                 : clientRedirectUri;
-        log.info("redirectUri: {}", redirectUri);
         LoginResult loginResult = loginUseCase.kakaoLogin(
             redirectUri,
             createKakaoLoginRequest.code(),
@@ -68,7 +67,7 @@ public class AuthController implements AuthApi {
 
         return ApiResponseBody.ok(
             AuthSuccessCode.LOGIN_SUCCESS,
-            new CreateKakaoLoginResponse(loginResult.accessToken())
+            CreateKakaoLoginResponse.from(loginResult)
         );
     }
 
