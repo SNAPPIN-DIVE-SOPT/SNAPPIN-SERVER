@@ -3,7 +3,6 @@ package org.sopt.snappinserver.domain.product.service.dto.response;
 import java.util.List;
 import java.util.Map;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
-import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.place.domain.entity.AvailableLocation;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.domain.entity.ProductAvailableLocation;
@@ -45,8 +44,7 @@ public record GetProductInfoResult(
                 .toList(),
             productMoods.stream()
                 .map(ProductMood::getMood)
-                .map(Mood::getCategory)
-                .map(MoodCategory::getCategory)
+                .map(Mood::getName)
                 .toList(),
             options.get(ProductOptionCategory.MAX_PEOPLE),
             options.get(ProductOptionCategory.PHOTOGRAPHER_COUNT),
