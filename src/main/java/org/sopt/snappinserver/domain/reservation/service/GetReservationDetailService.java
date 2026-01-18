@@ -24,6 +24,7 @@ import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationD
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
     private final ReviewRepository reviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
     private final ReservationAdditionalPaymentRepository reservationAdditionalPaymentRepository;
+    private final S3Service s3Service;
 
     @Override
     public GetReservationDetailResult getReservationDetail(Long userId, Long reservationId) {
@@ -72,7 +74,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
 
     private String getThumbnail(Product product) {
         return productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product)
-            .map(pp -> pp.getPhoto().getImageUrl())
+            .map(pp -> pp.getPhoto().getImageUrl()).map(s3Service::getPresignedUrl)
             .orElse(null);
     }
 
@@ -87,12 +89,23 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
             product.getId(),
             getThumbnail(product),
             product.getTitle(),
-            stats != null ? stats.averageRating() : 0.0,
-            stats != null ? Math.toIntExact(stats.reviewCount()) : 0,
+            resolveAverageRating(stats),
+            resolveReviewCount(stats),
             product.getPhotographer().getName(),
             product.getPrice(),
             getMoodNames(product)
         );
+    }
+
+    private Double resolveAverageRating(ProductReviewStatsResult stats) {
+        if (stats == null || stats.reviewCount() == 0) {
+            return null;
+        }
+        return stats.averageRating();
+    }
+
+    private int resolveReviewCount(ProductReviewStatsResult stats) {
+        return stats == null ? 0 : Math.toIntExact(stats.reviewCount());
     }
 
     private List<String> getMoodNames(Product product) {
@@ -145,7 +158,9 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
                     reservation.getUser().getName(),
                     review.getRating(),
                     LocalDate.ofInstant(review.getCreatedAt(), KOREA_ZONE),
-                    photos.stream().map(rp -> rp.getPhoto().getImageUrl()).toList(),
+                    photos.stream().map(rp -> rp.getPhoto().getImageUrl())
+                        .map(s3Service::getPresignedUrl)
+                        .toList(),
                     review.getContent()
                 );
             })

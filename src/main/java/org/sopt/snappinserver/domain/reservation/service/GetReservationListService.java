@@ -31,7 +31,7 @@ public class GetReservationListService implements GetReservationListUseCase {
 
     private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
     private static final DateTimeFormatter FORMATTER =
-        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private final ReservationRepository reservationRepository;
     private final ReviewRepository reviewRepository;

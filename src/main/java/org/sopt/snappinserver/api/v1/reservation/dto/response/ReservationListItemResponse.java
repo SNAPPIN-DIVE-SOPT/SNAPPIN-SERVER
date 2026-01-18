@@ -15,7 +15,7 @@ public record ReservationListItemResponse(
     @Schema(description = "예약자명", example = "홍길동")
     String client,
 
-    @Schema(description = "예약 생성 일시", example = "2026-01-12 15:00:02")
+    @Schema(description = "예약 생성 일시", example = "2026-01-12 15:00")
     String createdAt,
 
     @Schema(description = "예약 상품 정보")

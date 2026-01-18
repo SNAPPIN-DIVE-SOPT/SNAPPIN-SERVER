@@ -17,7 +17,7 @@ public record ReservationListProductResponse(
     String title,
 
     @Schema(description = "평균 별점", example = "4.7")
-    double rate,
+    Double rate,
 
     @Schema(description = "리뷰 개수", example = "20")
     int reviewCount,
