@@ -1,6 +1,6 @@
 package org.sopt.snappinserver.api.v1.place.controller;
 
-import static org.sopt.snappinserver.api.v1.place.code.PlaceSuccessCode.GET_PLACE_LIST_OK;
+import static org.sopt.snappinserver.global.response.code.place.PlaceSuccessCode.GET_PLACE_LIST_OK;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.v1.place.dto.response.GetPlaceListResponse;
