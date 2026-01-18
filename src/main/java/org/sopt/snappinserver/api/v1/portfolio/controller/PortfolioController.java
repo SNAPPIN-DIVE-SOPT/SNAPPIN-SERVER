@@ -1,9 +1,9 @@
 package org.sopt.snappinserver.api.v1.portfolio.controller;
 
-import static org.sopt.snappinserver.api.v1.portfolio.code.PortfolioSuccessCode.GET_POPULAR_PORTFOLIOS_OK;
+import static org.sopt.snappinserver.global.response.code.portfolio.PortfolioSuccessCode.GET_POPULAR_PORTFOLIOS_OK;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.api.v1.portfolio.code.PortfolioSuccessCode;
+import org.sopt.snappinserver.global.response.code.portfolio.PortfolioSuccessCode;
 import org.sopt.snappinserver.api.v1.portfolio.dto.request.GetPortfolioListRequest;
 import org.sopt.snappinserver.api.v1.portfolio.dto.response.GetCurationResponse;
 import org.sopt.snappinserver.api.v1.portfolio.dto.response.GetPopularPortfolioListResponse;
