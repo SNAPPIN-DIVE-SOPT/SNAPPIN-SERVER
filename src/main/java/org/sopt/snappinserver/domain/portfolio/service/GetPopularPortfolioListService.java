@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.domain.portfolio.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,9 +15,11 @@ import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioPhoto;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioMoodRepository;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioPhotoRepository;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepository;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetImageResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,7 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
     private final PortfolioRepository portfolioRepository;
     private final PortfolioPhotoRepository portfolioPhotoRepository;
     private final PortfolioMoodRepository portfolioMoodRepository;
+    private final S3Service s3Service;
 
     @Override
     public GetPopularPortfolioListResult getPopularPortfolioList() {
@@ -90,7 +94,7 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
         return portfolioIds;
     }
 
-    private static Map<Long, List<PortfolioPhoto>> getPortfolioPhotos(
+    private Map<Long, List<PortfolioPhoto>> getPortfolioPhotos(
         List<PortfolioPhoto> portfolioPhotos) {
         return portfolioPhotos.stream()
             .collect(Collectors.groupingBy(
@@ -98,7 +102,7 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
             ));
     }
 
-    private static Map<Long, List<Mood>> getPortfolioMoods(
+    private Map<Long, List<Mood>> getPortfolioMoods(
         List<PortfolioMood> portfolioMoods) {
         return portfolioMoods.stream()
             .collect(Collectors.groupingBy(
@@ -107,14 +111,23 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
             ));
     }
 
-    private static List<GetPopularPortfolioResult> getPortfolioResult(List<Portfolio> portfolios,
+    private List<GetPopularPortfolioResult> getPortfolioResult(
+        List<Portfolio> portfolios,
         Map<Long, List<PortfolioPhoto>> photosByPortfolioId,
         Map<Long, List<Mood>> moodsByPortfolioId
     ) {
         return portfolios.stream()
             .map(p -> GetPopularPortfolioResult.of(
                 p,
-                photosByPortfolioId.getOrDefault(p.getId(), List.of()),
+                photosByPortfolioId.getOrDefault(p.getId(), List.of()).stream()
+                    .sorted(Comparator.comparingInt(PortfolioPhoto::getDisplayOrder))
+                    .map(portfolioPhoto -> GetImageResult.of(
+                        s3Service.getPresignedUrl(
+                            portfolioPhoto.getPhoto().getImageUrl()
+                        ),
+                        portfolioPhoto.getDisplayOrder()
+                    ))
+                    .toList(),
                 moodsByPortfolioId.getOrDefault(p.getId(), List.of())
             ))
             .toList();
