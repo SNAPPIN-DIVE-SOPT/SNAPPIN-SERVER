@@ -12,7 +12,7 @@ public record GetPlacePhotographerRecommendationResponse(
     List<GetPlaceInfoResponse> places,
 
     @Schema(description = "추천 작가 목록")
-    List<GetPhotographerInfoResponse> photographers
+    List<GetRecommendationPhotographerInfoResponse> photographers
 ) {
 
     public static GetPlacePhotographerRecommendationResponse of(
@@ -25,7 +25,7 @@ public record GetPlacePhotographerRecommendationResponse(
                 .toList(),
 
             photographersResults.stream()
-                .map(GetPhotographerInfoResponse::from)
+                .map(GetRecommendationPhotographerInfoResponse::from)
                 .toList()
         );
     }
