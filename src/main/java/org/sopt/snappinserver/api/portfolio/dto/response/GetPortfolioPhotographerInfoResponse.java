@@ -5,7 +5,7 @@ import java.util.List;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPhotographerInfoResult;
 
 @Schema(description = "포트폴리오 작가 응답 DTO")
-public record GetPhotographerInfoResponse(
+public record GetPortfolioPhotographerInfoResponse(
 
     @Schema(description = "작가 ID")
     Long id,
@@ -23,10 +23,10 @@ public record GetPhotographerInfoResponse(
     List<String> locations
 ) {
 
-    public static GetPhotographerInfoResponse from(
+    public static GetPortfolioPhotographerInfoResponse from(
         GetPhotographerInfoResult result
     ) {
-        return new GetPhotographerInfoResponse(
+        return new GetPortfolioPhotographerInfoResponse(
             result.id(),
             result.name(),
             result.bio(),

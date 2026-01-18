@@ -35,7 +35,7 @@ public record GetPortfolioDetailResponse(
     List<String> moods,
 
     @Schema(description = "작가 프로필")
-    GetPhotographerInfoResponse photographerInfo,
+    GetPortfolioPhotographerInfoResponse photographerInfo,
 
     @Schema(description = "관련 상품 정보")
     GetProductInfoResponse productInfo
@@ -52,7 +52,7 @@ public record GetPortfolioDetailResponse(
             result.place(),
             result.startsAt(),
             result.moods(),
-            GetPhotographerInfoResponse.from(result.photographerInfo()),
+            GetPortfolioPhotographerInfoResponse.from(result.photographerInfo()),
             GetProductInfoResponse.from(result.productInfo())
         );
     }
