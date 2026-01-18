@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.user.code;
+package org.sopt.snappinserver.global.response.code.user;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
