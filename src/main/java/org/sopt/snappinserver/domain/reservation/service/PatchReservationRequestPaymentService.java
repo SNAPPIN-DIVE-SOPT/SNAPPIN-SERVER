@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.reservation.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.reservation.domain.entity.Reservation;
 import org.sopt.snappinserver.domain.reservation.domain.entity.ReservationAdditionalPayment;
@@ -9,6 +10,7 @@ import org.sopt.snappinserver.domain.reservation.repository.ReservationAdditiona
 import org.sopt.snappinserver.domain.reservation.repository.ReservationRepository;
 import org.sopt.snappinserver.domain.reservation.service.dto.request.ExtraPriceCommand;
 import org.sopt.snappinserver.domain.reservation.service.dto.request.RequestPaymentReservationCommand;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.ExtraPriceResult;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.RequestPaymentReservationResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.PatchReservationRequestPaymentUseCase;
 import org.springframework.stereotype.Service;
@@ -42,7 +44,7 @@ public class PatchReservationRequestPaymentService implements
             reservation.getId(),
             reservation.getReservationStatus(),
             command.basePrice(),
-            extraTotal,
+            mapToExtraPriceResults(command.extraPrices()),
             command.totalPrice()
         );
     }
@@ -97,5 +99,13 @@ public class PatchReservationRequestPaymentService implements
         if (command.basePrice() + extraTotal != command.totalPrice()) {
             throw new ReservationException(ReservationErrorCode.INVALID_TOTAL_PRICE);
         }
+    }
+
+    private List<ExtraPriceResult> mapToExtraPriceResults(
+        List<ExtraPriceCommand> commands
+    ) {
+        return commands.stream()
+            .map(cmd -> new ExtraPriceResult(cmd.name(), cmd.amount()))
+            .toList();
     }
 }

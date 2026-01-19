@@ -10,26 +10,29 @@ public record RequestPaymentReservationResponse(
     @Schema(description = "결제 요청 처리된 예약 ID", example = "501")
     Long reservationId,
 
-    @Schema(description = "변경된 예약 상태 ", example = "PAYMENT_REQUESTED")
+    @Schema(description = "변경된 예약 상태", example = "PAYMENT_REQUESTED")
     ReservationStatus status,
 
     @Schema(description = "결제 요청 정보")
-    Payment payment
+    PaymentResponse payment
 ) {
 
-    public static RequestPaymentReservationResponse from(RequestPaymentReservationResult result) {
+    public static RequestPaymentReservationResponse from(
+        RequestPaymentReservationResult result
+    ) {
         return new RequestPaymentReservationResponse(
             result.reservationId(),
             result.status(),
-            new Payment(
+            new PaymentResponse(
                 result.basePrice(),
-                result.extraPrice(),
+                result.extraPrices().stream()
+                    .map(extra -> new ExtraPriceResponse(
+                        extra.name(),
+                        extra.amount()
+                    ))
+                    .toList(),
                 result.totalPrice()
             )
         );
-    }
-
-    public record Payment(int basePrice, int extraPrice, int totalPrice) {
-
     }
 }

@@ -1,6 +1,9 @@
 package org.sopt.snappinserver.api.v1.reservation.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationPriceResponse;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.ReservationPriceResult;
+import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationPriceUseCase;
 import org.sopt.snappinserver.global.response.code.reservation.ReservationSuccessCode;
 import org.sopt.snappinserver.api.v1.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.v1.reservation.dto.request.RequestPaymentReservationRequest;
@@ -46,6 +49,7 @@ public class ReservationController implements ReservationApi {
     private final PatchReservationConfirmUseCase patchReservationConfirmUseCase;
     private final PatchReservationRefuseUseCase patchReservationRefuseUseCase;
     private final PatchReservationRequestPaymentUseCase patchReservationRequestPaymentUseCase;
+    private final GetReservationPriceUseCase getReservationPriceUseCase;
 
     @Override
     public ApiResponseBody<CreateReservationReviewResponse, Void> createReview(
@@ -196,6 +200,19 @@ public class ReservationController implements ReservationApi {
             RequestPaymentReservationResponse.from(
                 patchReservationRequestPaymentUseCase.requestPaymentReservation(command)
             )
+        );
+    }
+
+    @Override
+    public ApiResponseBody<ReservationPriceResponse, Void> getReservationPrice(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long reservationId
+    ) {
+        ReservationPriceResult result = getReservationPriceUseCase.getReservationPrice(reservationId);
+
+        return ApiResponseBody.ok(
+            ReservationSuccessCode.GET_RESERVATION_PRICE_OK,
+            ReservationPriceResponse.from(result)
         );
     }
 

@@ -8,6 +8,4 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("select p.price from Product p where p.id = :productId")
-    Optional<Integer> findProductPriceById(@Param("productId") Long productId);
 }

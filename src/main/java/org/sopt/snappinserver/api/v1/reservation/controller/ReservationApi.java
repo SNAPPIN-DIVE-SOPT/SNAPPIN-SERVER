@@ -2,6 +2,7 @@ package org.sopt.snappinserver.api.v1.reservation.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.sopt.snappinserver.api.v1.reservation.dto.response.RefuseReservationR
 import org.sopt.snappinserver.api.v1.reservation.dto.response.RequestPaymentReservationResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationListResponse;
+import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationPriceResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -158,8 +160,27 @@ public interface ReservationApi {
         @Schema(description = "예약 아이디", example = "1")
         @PathVariable @NotNull @Positive Long reservationId,
 
-        @Schema(description = "결제 정보")
-        @Valid @RequestBody RequestPaymentReservationRequest request
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "결제 요청 목록",
+            required = true,
+            content = @Content(schema = @Schema(implementation = RequestPaymentReservationRequest.class))
+        )
+        @Valid
+        @org.springframework.web.bind.annotation.RequestBody
+        RequestPaymentReservationRequest request
 
+    );
+
+    @Operation(
+        summary = "기본 촬영 비용 조회 API",
+        description = "작가의 결제 요청 과정에서 상품의 기본 촬영 비용을 조회합니다."
+    )
+    @GetMapping("/{reservationId}/price")
+    ApiResponseBody<ReservationPriceResponse, Void> getReservationPrice(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 ID")
+        @PathVariable @NotNull Long reservationId
     );
 }
