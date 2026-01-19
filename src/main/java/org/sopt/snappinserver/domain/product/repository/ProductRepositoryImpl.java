@@ -3,8 +3,10 @@ package org.sopt.snappinserver.domain.product.repository;
 import static org.sopt.snappinserver.domain.mood.domain.entity.QMood.mood;
 import static org.sopt.snappinserver.domain.photo.domain.entity.QPhoto.photo;
 import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographer.photographer;
+import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographerSchedule.photographerSchedule;
+import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolio.portfolio;
+import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioPlace.portfolioPlace;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProduct.product;
-import static org.sopt.snappinserver.domain.product.domain.entity.QProductAvailableLocation.productAvailableLocation;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductMood.productMood;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductOption.productOption;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductPhoto.productPhoto;
@@ -21,6 +23,8 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +37,7 @@ import org.sopt.snappinserver.domain.product.domain.enums.ProductOptionCategory;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResult;
 import org.sopt.snappinserver.global.enums.SnapCategory;
+import org.sopt.snappinserver.global.enums.WeekDay;
 import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
@@ -118,6 +123,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     snapCategoryEq(query.snapCategory()),
                     placeCondition(query.placeId()),
                     peopleCountCondition(query.peopleCount()),
+                    availableOnDate(query.date()),
                     moodCategoryGroupedCondition(moodGroupMap)
                 )
                 .groupBy(
@@ -174,11 +180,33 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
 
         return product.id.in(
             JPAExpressions
-                .select(productAvailableLocation.product.id)
-                .from(productAvailableLocation)
-                .where(productAvailableLocation.availableLocation.id.eq(placeId))
+                .select(portfolio.product.id)
+                .from(portfolio)
+                .join(portfolioPlace)
+                .on(portfolioPlace.portfolio.id.eq(portfolio.id))
+                .where(portfolioPlace.place.id.eq(placeId))
         );
     }
+
+    private BooleanExpression availableOnDate(LocalDate date) {
+        if (date == null) {
+            return null;
+        }
+
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+        return JPAExpressions
+            .selectOne()
+            .from(photographerSchedule)
+            .where(
+                photographerSchedule.photographer.id.eq(product.photographer.id),
+                photographerSchedule.weekDay.eq(WeekDay.from(dayOfWeek)),
+                photographerSchedule.dayOff.isTrue()
+            )
+            .notExists();
+    }
+
+
 
     private BooleanExpression peopleCountCondition(Integer peopleCount) {
         if (peopleCount == null) {
@@ -233,6 +261,10 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         BooleanBuilder builder = new BooleanBuilder();
 
         for (Entry<MoodCategory, List<Long>> entry : moodGroupMap.entrySet()) {
+            if (entry.getValue() == null || entry.getValue().isEmpty()) {
+                continue;
+            }
+
             builder.and(
                 product.id.in(
                     JPAExpressions
