@@ -29,7 +29,6 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDat
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductDetailUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductListUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
-import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationPriceUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -52,7 +51,6 @@ public class ProductController implements ProductApi {
     private final PostProductReservationUseCase postProductReservationUseCase;
     private final GetProductDetailUseCase getProductDetailUseCase;
     private final GetProductListUseCase getProductListUseCase;
-    private final GetReservationPriceUseCase getProductPriceUseCase;
 
     @Override
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
