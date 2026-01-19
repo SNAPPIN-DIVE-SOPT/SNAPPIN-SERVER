@@ -1,6 +1,10 @@
 package org.sopt.snappinserver.api.v1.curation.controller;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.api.v1.curation.dto.response.GetAllCurationQuestionsResponse;
+import org.sopt.snappinserver.domain.curation.service.dto.response.GetAllCurationQuestionResult;
+import org.sopt.snappinserver.domain.curation.service.usecase.GetAllCurationQuestionUseCase;
 import org.sopt.snappinserver.global.response.code.curation.CurationSuccessCode;
 import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 import org.sopt.snappinserver.api.v1.curation.dto.response.CreateMoodCurationResponse;
@@ -25,6 +29,7 @@ public class CurationController implements CurationApi {
 
     private final GetCurationQuestionUseCase getCurationQuestionUseCase;
     private final CreateMoodCurationUseCase createMoodCurationUseCase;
+    private final GetAllCurationQuestionUseCase getAllCurationQuestionUseCase;
 
     @Override
     @GetMapping
@@ -55,5 +60,17 @@ public class CurationController implements CurationApi {
         CreateMoodCurationResponse response = CreateMoodCurationResponse.from(result);
 
         return ApiResponseBody.ok(CurationSuccessCode.CREATE_MOOD_CURATION_SUCCESS, response);
+    }
+
+    @Override
+    public ApiResponseBody<GetAllCurationQuestionsResponse, Void> getAllCurationQuestions(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo
+    ) {
+        GetAllCurationQuestionResult result = getAllCurationQuestionUseCase
+            .getAllCurationQuestions(userInfo.userId());
+        GetAllCurationQuestionsResponse response = GetAllCurationQuestionsResponse.from(result);
+
+        return ApiResponseBody.ok(CurationSuccessCode.GET_CURATION_QUESTION_SUCCESS, response);
     }
 }
