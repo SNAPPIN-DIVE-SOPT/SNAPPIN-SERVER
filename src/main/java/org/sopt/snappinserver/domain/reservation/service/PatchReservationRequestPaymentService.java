@@ -42,7 +42,7 @@ public class PatchReservationRequestPaymentService implements
             reservation.getId(),
             reservation.getReservationStatus(),
             command.basePrice(),
-            extraTotal,
+            command.extraPrices(),
             command.totalPrice()
         );
     }
