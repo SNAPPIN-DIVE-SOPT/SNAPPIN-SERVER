@@ -10,7 +10,7 @@ public record ReservationDetailPaymentResponse(
     @Schema(description = "기본 촬영 비용", example = "80000")
     int basePrice,
 
-    @Schema(description = "추가 비용", example = "10000")
+    @Schema(description = "추가 비용")
     List<ExtraPriceResponse> extraPrices,
 
     @Schema(description = "최종 결제 금액", example = "90000")
