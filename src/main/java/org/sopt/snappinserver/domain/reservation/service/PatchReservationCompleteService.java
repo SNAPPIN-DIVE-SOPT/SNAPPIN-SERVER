@@ -13,18 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PatchReservationCompleteService
-    implements PatchReservationCompleteUseCase {
+public class PatchReservationCompleteService implements PatchReservationCompleteUseCase {
 
     private final ReservationRepository reservationRepository;
 
     @Override
     public CompleteReservationResult completeReservation(
-        Long photographerId,
+        Long userId,
         Long reservationId
     ) {
         Reservation reservation = getReservation(reservationId);
-        validateReservationPhotographer(photographerId, reservation);
+        validateReservationPhotographer(userId, reservation);
 
         reservation.completeShooting();
 
@@ -36,16 +35,14 @@ public class PatchReservationCompleteService
 
     private Reservation getReservation(Long reservationId) {
         return reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new ReservationException(
-                ReservationErrorCode.RESERVATION_NOT_FOUND
-            ));
+            .orElseThrow(
+                () -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND)
+            );
     }
 
-    private void validateReservationPhotographer(Long photographerId, Reservation reservation) {
-        if (!reservation.isReservationClient(photographerId)) {
-            throw new ReservationException(
-                ReservationErrorCode.RESERVATION_USER_NOT_MATCH
-            );
+    private void validateReservationPhotographer(Long userId, Reservation reservation) {
+        if (!reservation.isReservationPhotographer(userId)) {
+            throw new ReservationException(ReservationErrorCode.RESERVATION_USER_NOT_MATCH);
         }
     }
 }
