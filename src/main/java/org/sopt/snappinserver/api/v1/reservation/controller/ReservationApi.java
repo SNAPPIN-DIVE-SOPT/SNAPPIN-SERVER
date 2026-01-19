@@ -2,6 +2,7 @@ package org.sopt.snappinserver.api.v1.reservation.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -158,8 +159,14 @@ public interface ReservationApi {
         @Schema(description = "예약 아이디", example = "1")
         @PathVariable @NotNull @Positive Long reservationId,
 
-        @Schema(description = "결제 정보")
-        @Valid @RequestBody RequestPaymentReservationRequest request
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "결제 요청 목록",
+            required = true,
+            content = @Content(schema = @Schema(implementation = RequestPaymentReservationRequest.class))
+        )
+        @Valid
+        @org.springframework.web.bind.annotation.RequestBody
+        RequestPaymentReservationRequest request
 
     );
 }
