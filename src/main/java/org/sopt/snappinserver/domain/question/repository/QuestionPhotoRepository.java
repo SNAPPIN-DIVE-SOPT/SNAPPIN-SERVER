@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface QuestionPhotoRepository extends JpaRepository<QuestionPhoto, Long> {
 
     List<QuestionPhoto> findAllByQuestion(Question question);
+    List<QuestionPhoto> findAllByQuestionIn(List<Question> questions);
 }
