@@ -15,6 +15,7 @@ import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationErr
 import org.sopt.snappinserver.domain.reservation.domain.exception.ReservationException;
 import org.sopt.snappinserver.domain.reservation.repository.ReservationAdditionalPaymentRepository;
 import org.sopt.snappinserver.domain.reservation.repository.ReservationRepository;
+import org.sopt.snappinserver.domain.reservation.service.dto.response.ExtraPriceResult;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailInfoResult;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailPaymentResult;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailProductResult;
@@ -156,7 +157,14 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
         List<ReservationAdditionalPayment> additionalPayments =
             reservationAdditionalPaymentRepository.findAllByReservation(reservation);
 
-        int extraPrice = additionalPayments.stream()
+        List<ExtraPriceResult> extraPriceList = additionalPayments.stream()
+            .map(payment -> new ExtraPriceResult(
+                payment.getName(),
+                payment.getAmount()
+            ))
+            .toList();
+
+        int extraPriceTotal = additionalPayments.stream()
             .mapToInt(ReservationAdditionalPayment::getAmount)
             .sum();
 
@@ -164,8 +172,8 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
 
         return new GetReservationDetailPaymentResult(
             basePrice,
-            extraPrice,
-            basePrice + extraPrice
+            extraPriceList,
+            basePrice + extraPriceTotal
         );
     }
 
