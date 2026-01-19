@@ -8,10 +8,10 @@ import jakarta.validation.constraints.Positive;
 public record ExtraPriceResponse(
 
     @Schema(description = "비용명", example = "원본 JPG 추가")
-    @NotNull String name,
+    String name,
 
     @Schema(description = "금액", example = "10000")
-    @NotNull @Positive Integer amount
+    Integer amount
 ) {
 
 }
