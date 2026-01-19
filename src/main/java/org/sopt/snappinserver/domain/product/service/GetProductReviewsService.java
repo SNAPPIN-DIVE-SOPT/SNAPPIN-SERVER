@@ -14,6 +14,7 @@ import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
+    private final S3Service s3Service;
 
     @Override
     public ProductReviewPageResult getProductReviews(Long productId, Long cursor) {
