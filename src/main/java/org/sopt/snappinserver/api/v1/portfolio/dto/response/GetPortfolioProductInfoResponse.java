@@ -5,7 +5,7 @@ import java.util.List;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetProductInfoResult;
 
 @Schema(description = "상품 응답 DTO")
-public record GetProductInfoResponse(
+public record GetPortfolioProductInfoResponse(
 
     @Schema(description = "상품 ID")
     Long id,
@@ -32,8 +32,8 @@ public record GetProductInfoResponse(
     List<String> moods
 ) {
 
-    public static GetProductInfoResponse from(GetProductInfoResult result) {
-        return new GetProductInfoResponse(
+    public static GetPortfolioProductInfoResponse from(GetProductInfoResult result) {
+        return new GetPortfolioProductInfoResponse(
             result.id(),
             result.imageUrl(),
             result.title(),
