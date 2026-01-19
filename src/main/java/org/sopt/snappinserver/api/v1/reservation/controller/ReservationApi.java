@@ -19,6 +19,7 @@ import org.sopt.snappinserver.api.v1.reservation.dto.response.RefuseReservationR
 import org.sopt.snappinserver.api.v1.reservation.dto.response.RequestPaymentReservationResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationDetailResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationListResponse;
+import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationPriceResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatusTab;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -168,5 +169,18 @@ public interface ReservationApi {
         @org.springframework.web.bind.annotation.RequestBody
         RequestPaymentReservationRequest request
 
+    );
+
+    @Operation(
+        summary = "기본 촬영 비용 조회 API",
+        description = "작가의 결제 요청 과정에서 상품의 기본 촬영 비용을 조회합니다."
+    )
+    @GetMapping("/{reservationId}/price")
+    ApiResponseBody<ReservationPriceResponse, Void> getReservationPrice(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "예약 ID")
+        @PathVariable @NotNull Long reservationId
     );
 }
