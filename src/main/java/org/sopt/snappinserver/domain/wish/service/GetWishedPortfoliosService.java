@@ -15,6 +15,7 @@ import org.sopt.snappinserver.domain.wish.repository.WishPortfolioRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfolioResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedPortfoliosUseCase;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,8 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
     private final WishPortfolioRepository wishPortfolioRepository;
     private final PortfolioPhotoRepository portfolioPhotoRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
+
 
     @Override
     public WishedPortfoliosResult getWishedPortfolios(Long userId) {
@@ -54,6 +57,7 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
             .findFirstByPortfolioOrderByDisplayOrderAsc(portfolio)
             .map(PortfolioPhoto::getPhoto)
             .map(Photo::getImageUrl)
+            .map(s3Service::getPresignedUrl)
             .orElse(null);
 
         return WishedPortfolioResult.of(portfolio.getId(), imageUrl);

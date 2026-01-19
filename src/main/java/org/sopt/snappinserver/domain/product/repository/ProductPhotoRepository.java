@@ -1,9 +1,7 @@
 package org.sopt.snappinserver.domain.product.repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.domain.entity.ProductPhoto;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,17 +23,6 @@ public interface ProductPhotoRepository extends JpaRepository<ProductPhoto, Long
         """)
     List<ProductPhoto> findThumbnails(@Param("productIds") List<Long> productIds);
 
-    default Map<Long, String> findThumbnailByProductIds(List<Long> productIds) {
-        if (productIds.isEmpty()) {
-            return Map.of();
-        }
-        return findThumbnails(productIds).stream()
-            .collect(Collectors.toMap(
-                pp -> pp.getProduct().getId(),
-                pp -> pp.getPhoto().getImageUrl(),
-                (existing, replacement) -> existing
-            ));
-    }
 
     List<ProductPhoto> findByProduct(Product product);
 
