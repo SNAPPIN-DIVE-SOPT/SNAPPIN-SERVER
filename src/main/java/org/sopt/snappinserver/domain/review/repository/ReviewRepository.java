@@ -50,7 +50,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("""
             select new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
                 count(review),
-                avg(review.rating)
+                function('round', avg(review.rating), 1)
             )
             from Review review
             join review.reservation reservation
@@ -66,16 +66,14 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
                 res.product.id,
                 new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
                     count(r),
-                    avg(r.rating)
+                    function('round', avg(r.rating), 1)
                 )
             from Review r
             join r.reservation res
             where res.product.id in :productIds
             group by res.product.id
         """)
-    List<Object[]> findReviewStatsByProductIds(
-        @Param("productIds") List<Long> productIds
-    );
+    List<Object[]> findReviewStatsByProductIds(@Param("productIds") List<Long> productIds);
 
     // 예약 기준 리뷰 존재 여부
     @Query("""
