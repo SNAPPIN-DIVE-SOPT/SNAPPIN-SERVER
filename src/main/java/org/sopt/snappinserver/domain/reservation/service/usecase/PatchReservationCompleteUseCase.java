@@ -5,7 +5,7 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.CompleteRe
 public interface PatchReservationCompleteUseCase {
 
     CompleteReservationResult completeReservation(
-        Long photographerId,
+        Long userId,
         Long reservationId
     );
 }
