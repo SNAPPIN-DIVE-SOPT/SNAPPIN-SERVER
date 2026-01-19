@@ -48,13 +48,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 상품 기반 리뷰 수치(개수, 평균 별점) 조회
     @Query("""
-            select new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
-                count(review),
-                function('round', avg(review.rating), 1)
-            )
-            from Review review
-            join review.reservation reservation
-            where reservation.product.id = :productId
+        select new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
+            count(r),
+            cast(round(avg(r.rating), 1) as double)
+        )
+        from Review r
+        join r.reservation res
+        where res.product.id = :productId
         """)
     ProductReviewStatsResult findReviewStatsByProductId(
         @Param("productId") Long productId
@@ -62,16 +62,16 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 상품 리뷰 통계 수치 여러 개 배치 조회
     @Query("""
-            select
-                res.product.id,
-                new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
-                    count(r),
-                    function('round', avg(r.rating), 1)
-                )
-            from Review r
-            join r.reservation res
-            where res.product.id in :productIds
-            group by res.product.id
+        select
+            res.product.id,
+            new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
+                count(r),
+                cast(round(avg(r.rating), 1) as double)
+            )
+        from Review r
+        join r.reservation res
+        where res.product.id in :productIds
+        group by res.product.id
         """)
     List<Object[]> findReviewStatsByProductIds(@Param("productIds") List<Long> productIds);
 
