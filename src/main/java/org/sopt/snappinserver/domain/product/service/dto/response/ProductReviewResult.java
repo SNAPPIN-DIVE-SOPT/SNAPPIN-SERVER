@@ -18,14 +18,14 @@ public record ProductReviewResult(
 
     public static ProductReviewResult from(
         Review review,
-        List<ReviewPhoto> reviewPhotos
+        List<String> images
     ) {
         return new ProductReviewResult(
             review.getId(),
             extractReviewer(review),
             review.getRating(),
             extractCreatedDate(review),
-            extractImages(reviewPhotos),
+            images,
             review.getContent()
         );
     }
@@ -42,10 +42,10 @@ public record ProductReviewResult(
             .toLocalDate();
     }
 
-    private static List<String> extractImages(List<ReviewPhoto> reviewPhotos) {
-        return reviewPhotos.stream()
-            .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
-            .map(reviewPhoto -> reviewPhoto.getPhoto().getImageUrl())
-            .toList();
-    }
+//    private static List<String> extractImages(List<ReviewPhoto> reviewPhotos) {
+//        return reviewPhotos.stream()
+//            .sorted(Comparator.comparingInt(ReviewPhoto::getDisplayOrder))
+//            .map(reviewPhoto -> reviewPhoto.getPhoto().getImageUrl())
+//            .toList();
+//    }
 }

@@ -65,14 +65,18 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         List<ReviewPhoto> reviewPhotos =
             reviewPhotoRepository.findAllByReviewIds(reviewIds);
 
-        // reviewId 기준으로 그룹핑
-        Map<Long, List<ReviewPhoto>> photosByReviewId =
+        // reviewId 기준으로 presigned URL 변환 후 그룹핑
+        Map<Long, List<String>> photosByReviewId =
             reviewPhotos.stream()
                 .collect(Collectors.groupingBy(
-                    reviewPhoto -> reviewPhoto.getReview().getId()
+                    rp -> rp.getReview().getId(),
+                    Collectors.mapping(
+                        rp -> s3Service.getPresignedUrl(rp.getPhoto().getImageUrl()),
+                        Collectors.toList()
+                    )
                 ));
 
-        // DTO 변환 (조합 책임은 Service)
+        // DTO 변환
         List<ProductReviewResult> results =
             reviews.stream()
                 .map(review ->
