@@ -19,7 +19,11 @@ public interface ProductPhotoRepository extends JpaRepository<ProductPhoto, Long
             from ProductPhoto pp
             join fetch pp.photo ph
             where pp.product.id in :productIds
-              and pp.displayOrder = 1
+              and pp.displayOrder = (
+                  select min(pp2.displayOrder)
+                  from ProductPhoto pp2
+                  where pp2.product.id = pp.product.id
+              )
         """)
     List<ProductPhoto> findThumbnails(@Param("productIds") List<Long> productIds);
 
