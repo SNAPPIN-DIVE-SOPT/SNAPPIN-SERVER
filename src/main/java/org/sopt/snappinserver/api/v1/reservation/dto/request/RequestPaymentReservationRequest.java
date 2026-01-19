@@ -12,8 +12,8 @@ public record RequestPaymentReservationRequest(
     @Schema(description = "기본 촬영 비용", example = "80000")
     @NotNull @Positive Integer basePrice,
 
-    @Schema(description = "추가 비용 목록", example = "10000")
-    @Valid List<ExtraPriceResult> extraPrices,
+    @Schema(description = "추가 비용 목록")
+    List<ExtraPriceResult> extraPrices,
 
     @Schema(description = "최종 결제 금액", example = "90000")
     @NotNull @Positive Integer totalPrice
