@@ -212,7 +212,7 @@ public class ReservationController implements ReservationApi {
         ReservationPriceResult result = getReservationPriceUseCase.getReservationPrice(reservationId);
 
         return ApiResponseBody.ok(
-            ProductSuccessCode.GET_PRODUCT_PRICE_OK,
+            ReservationSuccessCode.GET_RESERVATION_PRICE_OK,
             ReservationPriceResponse.from(result)
         );
     }
