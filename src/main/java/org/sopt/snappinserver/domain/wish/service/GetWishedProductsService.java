@@ -18,6 +18,7 @@ import org.sopt.snappinserver.domain.wish.repository.WishProductRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedProductsUseCase;
+import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +32,7 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
     private final ProductMoodRepository productMoodRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
+    private final S3Service s3Service;
 
     @Override
     public WishedProductsResult getWishedProducts(Long userId) {
@@ -79,6 +81,7 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
             .findFirstByProductOrderByDisplayOrderAsc(product)
             .map(ProductPhoto::getPhoto)
             .map(Photo::getImageUrl)
+            .map(s3Service::getPresignedUrl)
             .orElse(null);
     }
 
