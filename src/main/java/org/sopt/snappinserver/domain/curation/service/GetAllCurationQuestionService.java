@@ -59,7 +59,7 @@ public class GetAllCurationQuestionService implements GetAllCurationQuestionUseC
     }
 
     private void validateLoginUser(Long userId) {
-        if(userRepository.existsById(userId)) {
+        if(!userRepository.existsById(userId)) {
             throw new CurationException(CurationErrorCode.CURATION_LOGIN_REQUIRED);
         }
     }
