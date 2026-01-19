@@ -15,7 +15,6 @@ import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListResponse
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductPeopleRangeResponse;
-import org.sopt.snappinserver.api.v1.product.dto.response.ProductPriceResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReservationResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReviewsResponse;
@@ -130,16 +129,4 @@ public interface ProductApi {
         @ModelAttribute GetProductListQuery query
     );
 
-    @Operation(
-        summary = "기본 촬영 비용 조회 API",
-        description = "작가의 결제 요청 과정에서 상품의 기본 촬영 비용을 조회합니다."
-    )
-    @GetMapping("/{productId}/price")
-    ApiResponseBody<ProductPriceResponse, Void> getProductPrice(
-        @Parameter(hidden = true)
-        CustomUserInfo userInfo,
-
-        @Schema(description = "상품 ID")
-        @PathVariable @NotNull Long productId
-    );
 }
