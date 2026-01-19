@@ -35,10 +35,10 @@ public record GetPortfolioDetailResponse(
     List<String> moods,
 
     @Schema(description = "작가 프로필")
-    GetPhotographerInfoResponse photographerInfo,
+    GetPortfolioPhotographerInfoResponse photographerInfo,
 
     @Schema(description = "관련 상품 정보")
-    GetProductInfoResponse productInfo
+    GetPortfolioProductInfoResponse productInfo
 ) {
 
     public static GetPortfolioDetailResponse from(GetPortfolioDetailResult result) {
@@ -52,8 +52,8 @@ public record GetPortfolioDetailResponse(
             result.place(),
             result.startsAt(),
             result.moods(),
-            GetPhotographerInfoResponse.from(result.photographerInfo()),
-            GetProductInfoResponse.from(result.productInfo())
+            GetPortfolioPhotographerInfoResponse.from(result.photographerInfo()),
+            GetPortfolioProductInfoResponse.from(result.productInfo())
         );
     }
 }
