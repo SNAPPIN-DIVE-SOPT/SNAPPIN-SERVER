@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.question.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.sopt.snappinserver.domain.question.domain.entity.Question;
 import org.sopt.snappinserver.domain.question.domain.enums.QuestionDomain;
@@ -11,4 +12,5 @@ public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     Optional<Question> findByQuestionDomainAndStep(QuestionDomain questionDomain, Integer step);
 
+    List<Question> findAllByQuestionDomainOrderByStep(QuestionDomain questionDomain);
 }
