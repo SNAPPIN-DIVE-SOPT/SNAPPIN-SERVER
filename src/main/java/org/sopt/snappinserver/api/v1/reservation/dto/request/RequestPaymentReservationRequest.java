@@ -1,7 +1,6 @@
 package org.sopt.snappinserver.api.v1.reservation.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
@@ -13,7 +12,7 @@ public record RequestPaymentReservationRequest(
     @NotNull @Positive Integer basePrice,
 
     @Schema(description = "추가 비용 목록")
-    List<ExtraPriceResult> extraPrices,
+    List<ExtraPriceRequest> extraPrices,
 
     @Schema(description = "최종 결제 금액", example = "90000")
     @NotNull @Positive Integer totalPrice
