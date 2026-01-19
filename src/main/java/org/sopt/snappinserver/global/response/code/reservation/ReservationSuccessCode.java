@@ -51,7 +51,7 @@ public enum ReservationSuccessCode implements SuccessCode {
     ),
     GET_RESERVATION_PRICE_OK(
         200,
-        "PRODUCT_200_006",
+        "RESERVATION_200_009",
         "예약 상품 기본 촬영 비용 조회에 성공했습니다."
     ),
 

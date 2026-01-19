@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.ReservationPriceResponse;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.ReservationPriceResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationPriceUseCase;
-import org.sopt.snappinserver.global.response.code.product.ProductSuccessCode;
 import org.sopt.snappinserver.global.response.code.reservation.ReservationSuccessCode;
 import org.sopt.snappinserver.api.v1.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.v1.reservation.dto.request.RequestPaymentReservationRequest;
