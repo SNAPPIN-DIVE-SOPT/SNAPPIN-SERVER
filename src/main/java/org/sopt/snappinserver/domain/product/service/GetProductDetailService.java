@@ -102,6 +102,9 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     private List<String> getProductPhotos(Product product) {
         return productPhotoRepository.findByProduct(product).stream()
             .map(ProductPhoto::getPhoto)
+            .filter(photo ->
+                photo != null && photo.getImageUrl() != null && !photo.getImageUrl().isBlank()
+            )
             .map(photo -> cloudFrontDomain + photo.getImageUrl())
             .toList();
     }
