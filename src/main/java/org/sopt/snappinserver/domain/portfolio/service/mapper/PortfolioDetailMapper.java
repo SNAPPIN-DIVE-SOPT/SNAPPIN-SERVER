@@ -36,10 +36,13 @@ public class PortfolioDetailMapper {
 
         List<String> presignedPortfolioImages =
             portfolioImageUrls.stream()
+                .filter(str -> str != null && !str.isBlank())
                 .map(str -> cloudFrontDomain + str)
                 .toList();
 
-        String presignedProductThumbnail = cloudFrontDomain + productThumbnailUrl;
+        String presignedProductThumbnail = (productThumbnailUrl != null)
+            ? cloudFrontDomain + productThumbnailUrl
+            : null;
 
         return new GetPortfolioDetailResult(
             portfolio.portfolioId(),
