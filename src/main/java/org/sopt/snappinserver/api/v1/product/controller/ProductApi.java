@@ -14,6 +14,7 @@ import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListMeta;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductClosedDatesResponse;
+import org.sopt.snappinserver.api.v1.product.dto.response.ProductDurationTimeResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductPeopleRangeResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReservationResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReviewsMetaResponse;
@@ -57,6 +58,20 @@ public interface ProductApi {
         @Schema(description = "상품 아이디", example = "1")
         @PathVariable @NotNull Long productId
     );
+
+    @Operation(
+        summary = "촬영 시간 조회",
+        description = "예약 과정에서 상품의 촬영 시간을 조회합니다."
+    )
+    @GetMapping("/{productId}/available/duration-time")
+    ApiResponseBody<ProductDurationTimeResponse, Void> getProductDurationTime(
+        @Parameter(hidden = true)
+        CustomUserInfo principal,
+
+        @Schema(description = "상품 아이디", example = "1")
+        @PathVariable @NotNull Long productId
+    );
+
 
     @Operation(
         summary = "달별 휴무일 목록 조회",
