@@ -29,7 +29,7 @@ public record GetProductDetailResponse(
     int price,
 
     @Schema(description = "스냅 작가 응답 DTO")
-    GetPhotographerInfoResponse photographerInfo,
+    GetProductPhotographerInfoResponse photographerInfo,
 
     @Schema(description = "상품 상세 조회 응답 DTO")
     GetProductInfoResponse productInfo
@@ -46,7 +46,7 @@ public record GetProductDetailResponse(
             result.averageRate(),
             result.reviewCount(),
             result.price(),
-            GetPhotographerInfoResponse.from(result.photographerInfo()),
+            GetProductPhotographerInfoResponse.from(result.photographerInfo()),
             GetProductInfoResponse.from(result.productInfo())
         );
     }
