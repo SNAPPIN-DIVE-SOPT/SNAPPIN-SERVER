@@ -2,7 +2,6 @@ package org.sopt.snappinserver.domain.wish.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioPhoto;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioPhotoRepository;
@@ -15,7 +14,6 @@ import org.sopt.snappinserver.domain.wish.repository.WishPortfolioRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfolioResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedPortfoliosUseCase;
-import org.sopt.snappinserver.global.s3.S3Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +26,6 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
     private final WishPortfolioRepository wishPortfolioRepository;
     private final PortfolioPhotoRepository portfolioPhotoRepository;
     private final UserRepository userRepository;
-    private final S3Service s3Service;
 
     @Value("${cloud.aws.cloud-front.domain}")
     private String cloudFrontDomain;
