@@ -40,6 +40,14 @@ public class GetProductDurationTimeService
 
 
     private int parseDurationTime(ProductOption option) {
+        String answer = option.getAnswer();
+
+        if (answer == null || answer.isBlank()) {
+            throw new ProductException(
+                ProductErrorCode.INVALID_PRODUCT_DURATION_TIME
+            );
+        }
+
         try {
             return Integer.parseInt(option.getAnswer());
         } catch (NumberFormatException e) {
