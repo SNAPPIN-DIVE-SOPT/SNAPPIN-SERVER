@@ -10,13 +10,17 @@ public record CreateKakaoLoginResponse(
     boolean isNew,
 
     @Schema(description = "인증 시 필요한 accessToken입니다. refreshToken은 쿠키로 내려드립니다.")
-    String accessToken
+    String accessToken,
+
+    @Schema(description = "현재 로그인한 유저 역할")
+    String role
 ) {
 
     public static CreateKakaoLoginResponse from(LoginResult loginResult){
         return new CreateKakaoLoginResponse(
             loginResult.isNew(),
-            loginResult.accessToken()
+            loginResult.accessToken(),
+            loginResult.role()
         );
     }
 }
