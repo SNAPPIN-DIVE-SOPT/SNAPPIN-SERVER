@@ -19,7 +19,7 @@ import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetImageResu
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPopularPortfolioResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +35,9 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
     private final PortfolioRepository portfolioRepository;
     private final PortfolioPhotoRepository portfolioPhotoRepository;
     private final PortfolioMoodRepository portfolioMoodRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetPopularPortfolioListResult getPopularPortfolioList() {
@@ -121,12 +123,12 @@ public class GetPopularPortfolioListService implements GetPopularPortfolioListUs
                 p,
                 photosByPortfolioId.getOrDefault(p.getId(), List.of()).stream()
                     .sorted(Comparator.comparingInt(PortfolioPhoto::getDisplayOrder))
-                    .map(portfolioPhoto -> GetImageResult.of(
-                        s3Service.getPresignedUrl(
-                            portfolioPhoto.getPhoto().getImageUrl()
-                        ),
-                        portfolioPhoto.getDisplayOrder()
-                    ))
+                    .map(portfolioPhoto ->
+                        GetImageResult.of(
+                            cloudFrontDomain + portfolioPhoto.getPhoto().getImageUrl(),
+                            portfolioPhoto.getDisplayOrder()
+                        )
+                    )
                     .toList(),
                 moodsByPortfolioId.getOrDefault(p.getId(), List.of())
             ))
