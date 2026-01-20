@@ -32,7 +32,7 @@ public class GetRecommendationPlaceService implements GetRecommendationPlaceUseC
                     .findBestPortfolioImageByPlaceId(place.getId())
                     .orElse(null);
 
-                String presignedUrl = (imageKey != null) ? cloudFrontDomain + (imageKey) : null;
+                String presignedUrl = (imageKey != null) ? cloudFrontDomain + imageKey : null;
 
                 return GetRecommendationPlaceResult.of(place, presignedUrl);
             })
