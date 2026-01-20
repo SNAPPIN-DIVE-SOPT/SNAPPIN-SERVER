@@ -12,7 +12,7 @@ public record ProductReservationRequest(
     @Schema(description = "촬영 희망 날짜", example = "2026-03-15")
     @NotNull LocalDate date,
 
-    @Schema(description = "촬영 시작 시간", example = "10:00")
+    @Schema(description = "촬영 시작 시간", example = "10:00", type = "string", format = "time")
     @NotNull LocalTime startTime,
 
     @Schema(description = "촬영 시간 (0.5시간 단위)", example = "2.5")
