@@ -8,6 +8,7 @@ import org.sopt.snappinserver.domain.place.service.usecase.GetRecommendationPlac
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryCustom;
 import org.sopt.snappinserver.domain.reservation.repository.ReservationRepositoryCustom;
 import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,9 @@ public class GetRecommendationPlaceService implements GetRecommendationPlaceUseC
     private final PortfolioRepositoryCustom portfolioRepositoryCustom;
     private final S3Service s3Service;
 
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
+
     @Override
     public List<GetRecommendationPlaceResult> getPlaceRecommendation() {
         List<Place> places = reservationRepositoryCustom.findTop5MostReservedPlacesInLastMonth();
@@ -30,9 +34,7 @@ public class GetRecommendationPlaceService implements GetRecommendationPlaceUseC
                     .findBestPortfolioImageByPlaceId(place.getId())
                     .orElse(null);
 
-                String presignedUrl = (imageKey != null)
-                    ? s3Service.getPresignedUrl(imageKey)
-                    : null;
+                String presignedUrl = (imageKey != null) ? cloudFrontDomain + (imageKey) : null;
 
                 return GetRecommendationPlaceResult.of(place, presignedUrl);
             })
