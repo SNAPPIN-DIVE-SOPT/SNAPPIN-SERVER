@@ -104,7 +104,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                         product.id,
                         photo.imageUrl,
                         product.title,
-                        review.rating.avg().coalesce(0.0),
+                        Expressions.numberTemplate(
+                            Double.class,
+                            "round({0}, 1)",
+                            review.rating.avg().coalesce(0.0)
+                        ),
                         review.id.countDistinct(),
                         photographer.nickname,
                         product.price
