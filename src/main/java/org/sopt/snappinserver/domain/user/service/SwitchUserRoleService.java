@@ -40,7 +40,7 @@ public class SwitchUserRoleService implements SwitchUserRoleUseCase {
 
         TokenPair tokenPair = authTokenManager.issueTokenPair(user, command.userAgent());
 
-        return SwitchUserRoleResult.from(tokenPair);
+        return SwitchUserRoleResult.from(tokenPair, user.getRole());
     }
 
     private User getExistingUser(SwitchUserRoleCommand command) {
