@@ -78,7 +78,8 @@ public class GetProductListService implements GetProductListUseCase {
         }
 
         return moodRepository.findAllById(moodIds).stream()
-            .collect(Collectors.groupingBy(
+            .collect(
+                Collectors.groupingBy(
                     Mood::getCategory,
                     Collectors.mapping(
                         Mood::getId,
