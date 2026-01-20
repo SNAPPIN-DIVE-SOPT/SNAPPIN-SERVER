@@ -20,4 +20,9 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, Lo
     );
 
     List<ProductOption> findByProduct(Product product);
+
+    Optional<ProductOption> findByProductIdAndProductOptionCategory(
+        Long productId,
+        ProductOptionCategory category
+    );
 }

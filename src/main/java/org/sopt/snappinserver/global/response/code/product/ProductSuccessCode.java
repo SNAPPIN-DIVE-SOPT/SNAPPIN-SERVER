@@ -16,6 +16,7 @@ public enum ProductSuccessCode implements SuccessCode {
     GET_PRODUCT_DETAIL_OK(200, "PRODUCT_200_005", "상품 상세 조회에 성공했습니다."),
     GET_PRODUCT_PRICE_OK(200, "PRODUCT_200_006", "상품 기본 촬영 비용 조회에 성공했습니다."),
     GET_PRODUCT_LIST_OK(200, "PRODUCT_200_007", "상품 목록 조회에 성공했습니다."),
+    GET_PRODUCT_DURATION_TIME_OK(200, "PRODUCT_200_008", "상품의 촬영 시간 조회에 성공했습니다."),
 
     // 201 CREATED
     POST_PRODUCT_RESERVATION_OK(201, "PRODUCT_201_001", "상품 예약 생성에 성공했습니다.");
