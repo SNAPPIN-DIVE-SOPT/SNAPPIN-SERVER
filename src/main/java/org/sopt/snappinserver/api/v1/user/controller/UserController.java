@@ -56,7 +56,7 @@ public class UserController implements UserApi {
     @PatchMapping("/role")
     public ApiResponseBody<GetSwitchedUserProfileResponse, Void> patchUserRole(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @CookieValue(name = "refreshToken") String refreshToken,
+        @CookieValue(name = "refreshToken", required = false) String refreshToken,
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
         HttpServletResponse httpServletResponse
     ) {
