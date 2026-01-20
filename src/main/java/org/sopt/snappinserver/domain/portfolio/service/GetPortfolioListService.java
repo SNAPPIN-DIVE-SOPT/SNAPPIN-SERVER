@@ -8,7 +8,7 @@ import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolio
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioListMeta;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioListResult;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioListUseCase;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,16 +20,17 @@ public class GetPortfolioListService implements GetPortfolioListUseCase {
     private static final int PAGE_SIZE = 30;
 
     private final PortfolioRepositoryCustom portfolioRepositoryCustom;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetPortfolioListResult getPortfolioList(GetPortfolioListQuery query) {
-
         List<GetPortfolioCardResult> rows = portfolioRepositoryCustom
             .findPortfolioCards(query.cursor(), query, PAGE_SIZE).stream()
             .map(result -> {
                 String presignedUrl = (result.imageUrl() != null && !result.imageUrl().isBlank())
-                    ? s3Service.getPresignedUrl(result.imageUrl())
+                    ? cloudFrontDomain + result.imageUrl()
                     : null;
 
                 return new GetPortfolioCardResult(
