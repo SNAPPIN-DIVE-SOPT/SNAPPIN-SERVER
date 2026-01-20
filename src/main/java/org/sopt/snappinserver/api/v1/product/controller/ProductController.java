@@ -34,6 +34,7 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductListUseCa
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
+import org.sopt.snappinserver.global.response.code.product.ProductSuccessCode;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;

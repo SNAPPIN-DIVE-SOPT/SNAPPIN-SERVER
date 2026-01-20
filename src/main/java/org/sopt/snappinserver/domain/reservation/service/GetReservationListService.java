@@ -21,7 +21,7 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReserva
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationListResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,9 @@ public class GetReservationListService implements GetReservationListUseCase {
     private final ReviewRepository reviewRepository;
     private final ProductMoodRepository productMoodRepository;
     private final ProductPhotoRepository productPhotoRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetReservationListResult getReservationList(
@@ -158,7 +160,7 @@ public class GetReservationListService implements GetReservationListUseCase {
         return productPhotoRepository.findThumbnails(productIds).stream()
             .collect(Collectors.toMap(
                 pp -> pp.getProduct().getId(),
-                pp -> s3Service.getPresignedUrl(pp.getPhoto().getImageUrl()),
+                pp -> cloudFrontDomain + (pp.getPhoto().getImageUrl()),
                 (existing, replacement) -> existing
             ));
     }

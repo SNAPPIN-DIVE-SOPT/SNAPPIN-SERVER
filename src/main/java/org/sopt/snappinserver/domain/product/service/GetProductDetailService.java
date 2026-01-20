@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
 import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 import org.sopt.snappinserver.domain.photographer.domain.entity.PhotographerAvailableLocation;
 import org.sopt.snappinserver.domain.photographer.domain.entity.PhotographerSpecialty;
@@ -33,7 +32,7 @@ import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewS
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductDetailUseCase;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.sopt.snappinserver.global.enums.SnapCategory;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,11 +46,13 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     private final ProductOptionRepository productOptionRepository;
     private final ProductRepositoryCustom productRepositoryCustom;
     private final ReviewRepository reviewRepository;
-    private final S3Service s3Service;
     private final ProductMoodRepository productMoodRepository;
     private final ProductAvailableLocationRepository productAvailableLocationRepository;
     private final PhotographerSpecialtyRepository photographerSpecialtyRepository;
     private final PhotographerAvailableLocationRepository photographerAvailableLocationRepository;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     public GetProductResult getProductDetail(Long userId, Long productId) {
         Product product = getProduct(productId);
@@ -101,8 +102,10 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     private List<String> getProductPhotos(Product product) {
         return productPhotoRepository.findByProduct(product).stream()
             .map(ProductPhoto::getPhoto)
-            .map(Photo::getImageUrl)
-            .map(s3Service::getPresignedUrl)
+            .filter(photo ->
+                photo != null && photo.getImageUrl() != null && !photo.getImageUrl().isBlank()
+            )
+            .map(photo -> cloudFrontDomain + photo.getImageUrl())
             .toList();
     }
 

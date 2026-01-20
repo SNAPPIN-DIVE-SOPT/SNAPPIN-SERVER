@@ -2,7 +2,6 @@ package org.sopt.snappinserver.domain.wish.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.domain.entity.ProductPhoto;
 import org.sopt.snappinserver.domain.product.repository.ProductMoodRepository;
@@ -18,7 +17,7 @@ import org.sopt.snappinserver.domain.wish.repository.WishProductRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedProductsUseCase;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +31,9 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
     private final ProductMoodRepository productMoodRepository;
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public WishedProductsResult getWishedProducts(Long userId) {
@@ -80,8 +81,7 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
         return productPhotoRepository
             .findFirstByProductOrderByDisplayOrderAsc(product)
             .map(ProductPhoto::getPhoto)
-            .map(Photo::getImageUrl)
-            .map(s3Service::getPresignedUrl)
+            .map(photo -> cloudFrontDomain + photo.getImageUrl())
             .orElse(null);
     }
 

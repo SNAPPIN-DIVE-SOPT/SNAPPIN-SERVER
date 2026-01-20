@@ -83,7 +83,7 @@ public class GetAllCurationQuestionService implements GetAllCurationQuestionUseC
                 Photo photo = questionPhoto.getPhoto();
                 return new GetPhotoResult(
                     photo.getId(),
-                    cloudFrontDomain.concat(photo.getImageUrl()),
+                    cloudFrontDomain + photo.getImageUrl(),
                     questionPhoto.getDisplayOrder()
                 );
             })

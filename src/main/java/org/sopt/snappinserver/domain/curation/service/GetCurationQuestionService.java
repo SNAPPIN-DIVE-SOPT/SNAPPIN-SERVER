@@ -13,7 +13,7 @@ import org.sopt.snappinserver.domain.question.domain.entity.QuestionPhoto;
 import org.sopt.snappinserver.domain.question.domain.enums.QuestionDomain;
 import org.sopt.snappinserver.domain.question.repository.QuestionPhotoRepository;
 import org.sopt.snappinserver.domain.question.repository.QuestionRepository;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +27,9 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
 
     private final QuestionRepository questionRepository;
     private final QuestionPhotoRepository questionPhotoRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetCurationQuestionResult retrieveCurationQuestionPhotos(Long userId, Integer step) {
@@ -74,10 +76,9 @@ public class GetCurationQuestionService implements GetCurationQuestionUseCase {
         return questionPhotos.stream()
             .map(questionPhoto -> {
                 Photo photo = questionPhoto.getPhoto();
-                String presignedUrl = s3Service.getPresignedUrl(photo.getImageUrl());
                 return new GetPhotoResult(
                     photo.getId(),
-                    presignedUrl,
+                    cloudFrontDomain + photo.getImageUrl(),
                     questionPhoto.getDisplayOrder()
                 );
             })
