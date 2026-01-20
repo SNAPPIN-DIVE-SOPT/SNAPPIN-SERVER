@@ -39,9 +39,10 @@ public class GetProductListService implements GetProductListUseCase {
         List<GetProductCardResult> resultsWithPresignedUrl =
             results.stream()
                 .map(result -> {
-                    String presignedUrl = (result.imageUrl() != null && !result.imageUrl().isBlank())
-                        ? cloudFrontDomain + result.imageUrl()
-                        : null;
+                    String presignedUrl =
+                        (result.imageUrl() != null && !result.imageUrl().isBlank())
+                            ? cloudFrontDomain + result.imageUrl()
+                            : null;
 
                     return new GetProductCardResult(
                         result.id(),
@@ -77,7 +78,8 @@ public class GetProductListService implements GetProductListUseCase {
         }
 
         return moodRepository.findAllById(moodIds).stream()
-            .collect(Collectors.groupingBy(
+            .collect(
+                Collectors.groupingBy(
                     Mood::getCategory,
                     Collectors.mapping(
                         Mood::getId,

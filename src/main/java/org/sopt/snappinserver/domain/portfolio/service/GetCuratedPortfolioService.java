@@ -24,7 +24,7 @@ import org.sopt.snappinserver.domain.portfolio.service.usecase.GetCuratedPortfol
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfolioListUseCase;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +43,9 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
     private final PortfolioPhotoRepository portfolioPhotoRepository;
     private final PortfolioMoodRepository portfolioMoodRepository;
     private final GetPopularPortfolioListUseCase getPopularPortfolioListUseCase;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetCuratedPortfolioResult getCuratedPortfolio(Long userId) {
@@ -106,7 +108,7 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
 
                 List<GetImageResult> imageResults = photos.stream()
                     .map(portfolioPhoto -> GetImageResult.of(
-                        s3Service.getPresignedUrl(portfolioPhoto.getPhoto().getImageUrl()),
+                        cloudFrontDomain + portfolioPhoto.getPhoto().getImageUrl(),
                         portfolioPhoto.getDisplayOrder()
                     ))
                     .toList();

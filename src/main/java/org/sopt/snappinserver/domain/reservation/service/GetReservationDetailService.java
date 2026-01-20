@@ -25,7 +25,7 @@ import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationD
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,7 +41,9 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
     private final ReviewRepository reviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
     private final ReservationAdditionalPaymentRepository reservationAdditionalPaymentRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetReservationDetailResult getReservationDetail(Long userId, Long reservationId) {
@@ -64,7 +66,8 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
 
     private Reservation getReservation(Long reservationId, Long userId) {
         Reservation reservation = reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
+            .orElseThrow(
+                () -> new ReservationException(ReservationErrorCode.RESERVATION_NOT_FOUND));
 
         validateAccessPermission(reservation, userId);
         updateStatus(reservation, userId);
@@ -97,7 +100,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
 
     private String getThumbnail(Product product) {
         return productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product)
-            .map(pp -> pp.getPhoto().getImageUrl()).map(s3Service::getPresignedUrl)
+            .map(pp -> cloudFrontDomain + pp.getPhoto().getImageUrl())
             .orElse(null);
     }
 
@@ -188,8 +191,8 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
                     reservation.getUser().getName(),
                     review.getRating(),
                     LocalDate.ofInstant(review.getCreatedAt(), KOREA_ZONE),
-                    photos.stream().map(rp -> rp.getPhoto().getImageUrl())
-                        .map(s3Service::getPresignedUrl)
+                    photos.stream()
+                        .map(rp -> cloudFrontDomain + rp.getPhoto().getImageUrl())
                         .toList(),
                     review.getContent()
                 );
