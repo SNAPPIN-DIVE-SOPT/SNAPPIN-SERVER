@@ -14,7 +14,7 @@ import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,9 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public ProductReviewPageResult getProductReviews(Long productId, Long cursor) {
@@ -44,7 +46,8 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         List<Review> reviews =
             (cursor == null)
                 ? reviewRepository.findReviewsWithUserByProductId(productId, pageable)
-                : reviewRepository.findReviewsWithUserByProductIdAndCursor(productId, cursor, pageable);
+                : reviewRepository.findReviewsWithUserByProductIdAndCursor(productId, cursor,
+                    pageable);
 
         boolean hasNext = reviews.size() > PAGE_SIZE;
         if (hasNext) {
@@ -71,7 +74,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
                 .collect(Collectors.groupingBy(
                     rp -> rp.getReview().getId(),
                     Collectors.mapping(
-                        rp -> s3Service.getPresignedUrl(rp.getPhoto().getImageUrl()),
+                        rp -> cloudFrontDomain + rp.getPhoto().getImageUrl(),
                         Collectors.toList()
                     )
                 ));
