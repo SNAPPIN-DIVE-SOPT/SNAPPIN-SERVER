@@ -15,7 +15,7 @@ import org.sopt.snappinserver.domain.product.service.dto.response.CursorMeta;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductListResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductListUseCase;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +28,9 @@ public class GetProductListService implements GetProductListUseCase {
 
     private final ProductRepositoryCustom productRepository;
     private final MoodRepository moodRepository;
-    private final S3Service s3Service;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     public GetProductListResult getProductList(GetProductListQuery query) {
         Map<MoodCategory, List<Long>> moodGroupMap = groupByCategory(query.moodIds());
@@ -37,9 +39,10 @@ public class GetProductListService implements GetProductListUseCase {
         List<GetProductCardResult> resultsWithPresignedUrl =
             results.stream()
                 .map(result -> {
-                    String presignedUrl = (result.imageUrl() != null && !result.imageUrl().isBlank())
-                        ? s3Service.getPresignedUrl(result.imageUrl())
-                        : null;
+                    String presignedUrl =
+                        (result.imageUrl() != null && !result.imageUrl().isBlank())
+                            ? cloudFrontDomain + result.imageUrl()
+                            : null;
 
                     return new GetProductCardResult(
                         result.id(),
