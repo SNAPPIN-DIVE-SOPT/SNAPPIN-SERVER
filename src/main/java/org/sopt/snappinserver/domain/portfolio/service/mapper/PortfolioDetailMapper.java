@@ -10,14 +10,15 @@ import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusPr
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
-import org.sopt.snappinserver.global.s3.S3Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 public class PortfolioDetailMapper {
 
-    private final S3Service s3Service;
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     public GetPortfolioDetailResult toResult(
         PortfolioDetailProjection portfolio,
@@ -35,11 +36,10 @@ public class PortfolioDetailMapper {
 
         List<String> presignedPortfolioImages =
             portfolioImageUrls.stream()
-                .map(s3Service::getPresignedUrl)
+                .map(str -> cloudFrontDomain + str)
                 .toList();
 
-        String presignedProductThumbnail =
-            s3Service.getPresignedUrl(productThumbnailUrl);
+        String presignedProductThumbnail = cloudFrontDomain + productThumbnailUrl;
 
         return new GetPortfolioDetailResult(
             portfolio.portfolioId(),
