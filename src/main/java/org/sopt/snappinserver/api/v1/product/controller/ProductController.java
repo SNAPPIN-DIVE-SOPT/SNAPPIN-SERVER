@@ -3,6 +3,9 @@ package org.sopt.snappinserver.api.v1.product.controller;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.api.v1.product.dto.response.ProductDurationTimeResponse;
+import org.sopt.snappinserver.domain.product.service.dto.response.ProductDurationTimeResult;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductDurationTimeUseCase;
 import org.sopt.snappinserver.global.response.code.product.ProductSuccessCode;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductDetailResponse;
@@ -51,6 +54,7 @@ public class ProductController implements ProductApi {
     private final PostProductReservationUseCase postProductReservationUseCase;
     private final GetProductDetailUseCase getProductDetailUseCase;
     private final GetProductListUseCase getProductListUseCase;
+    private final GetProductDurationTimeUseCase getProductDurationTimeUseCase;
 
     @Override
     public ApiResponseBody<ProductReviewsResponse, ProductReviewsMetaResponse> getProductReviews(
@@ -78,6 +82,20 @@ public class ProductController implements ProductApi {
         return ApiResponseBody.ok(
             ProductSuccessCode.GET_PRODUCT_PEOPLE_RANGE_OK,
             ProductPeopleRangeResponse.from(result)
+        );
+    }
+
+    @Override
+    public ApiResponseBody<ProductDurationTimeResponse, Void> getProductDurationTime(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        Long productId
+    ) {
+        ProductDurationTimeResult result =
+            getProductDurationTimeUseCase.getProductDurationTime(productId);
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_DURATION_TIME_OK,
+            ProductDurationTimeResponse.from(result)
         );
     }
 
