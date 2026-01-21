@@ -1,7 +1,14 @@
 package org.sopt.snappinserver.domain.portfolio.service;
 
+import static java.util.stream.Collectors.toList;
+
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
+import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
+import org.sopt.snappinserver.domain.mood.repository.MoodRepository;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryCustom;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
@@ -19,6 +26,7 @@ public class GetPortfolioListService implements GetPortfolioListUseCase {
 
     private static final int PAGE_SIZE = 30;
 
+    private final MoodRepository moodRepository;
     private final PortfolioRepositoryCustom portfolioRepositoryCustom;
 
     @Value("${cloud.aws.cloud-front.domain}")
@@ -26,8 +34,9 @@ public class GetPortfolioListService implements GetPortfolioListUseCase {
 
     @Override
     public GetPortfolioListResult getPortfolioList(GetPortfolioListQuery query) {
+        Map<MoodCategory, List<Long>> moodGroupMap = groupByCategory(query.moodIds());
         List<GetPortfolioCardResult> rows = portfolioRepositoryCustom
-            .findPortfolioCards(query.cursor(), query, PAGE_SIZE).stream()
+            .findPortfolioCards(query.cursor(), query, moodGroupMap, PAGE_SIZE).stream()
             .map(result -> {
                 String presignedUrl = (result.imageUrl() != null && !result.imageUrl().isBlank())
                     ? cloudFrontDomain + result.imageUrl()
@@ -48,6 +57,23 @@ public class GetPortfolioListService implements GetPortfolioListUseCase {
             portfolios,
             new GetPortfolioListMeta(hasNext, nextCursor)
         );
+    }
+
+    private Map<MoodCategory, List<Long>> groupByCategory(List<Long> moodIds) {
+        if (moodIds == null || moodIds.isEmpty()) {
+            return Map.of();
+        }
+
+        return moodRepository.findAllById(moodIds).stream()
+            .collect(
+                Collectors.groupingBy(
+                    Mood::getCategory,
+                    Collectors.mapping(
+                        Mood::getId,
+                        toList()
+                    )
+                )
+            );
     }
 
 }

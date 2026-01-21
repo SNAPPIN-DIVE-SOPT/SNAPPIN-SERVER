@@ -16,6 +16,8 @@ import static org.sopt.snappinserver.domain.product.domain.entity.QProductMood.p
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductPhoto.productPhoto;
 import static org.sopt.snappinserver.domain.wish.domain.entity.QWishPortfolio.wishPortfolio;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -23,9 +25,12 @@ import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
@@ -242,6 +247,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     public List<GetPortfolioCardResult> findPortfolioCards(
         Long cursor,
         GetPortfolioListQuery query,
+        Map<MoodCategory, List<Long>> moodGroupMap,
         int size
     ) {
         return jpaQueryFactory
@@ -264,7 +270,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .leftJoin(portfolioMood).on(portfolioMood.portfolio.id.eq(portfolio.id))
             .where(
                 cursorLt(cursor),
-                moodIn(query.moodIds()),
+                moodCategoryGroupedCondition(moodGroupMap),
                 productIdEq(query.productId()),
                 photographerIdEq(query.photographerId()),
                 snapCategoryEq(query.snapCategory()),
@@ -280,11 +286,35 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         return cursor == null ? null : portfolio.id.lt(cursor);
     }
 
-    private BooleanExpression moodIn(List<Long> moodIds) {
-        if (moodIds == null || moodIds.isEmpty()) {
+    private Predicate moodCategoryGroupedCondition(
+        Map<MoodCategory, List<Long>> moodGroupMap
+    ) {
+        if (moodGroupMap == null || moodGroupMap.isEmpty()) {
             return null;
         }
-        return portfolioMood.mood.id.in(moodIds);
+
+        BooleanBuilder builder = new BooleanBuilder();
+
+        for (Entry<MoodCategory, List<Long>> entry : moodGroupMap.entrySet()) {
+            if (entry.getValue() == null || entry.getValue().isEmpty()) {
+                continue;
+            }
+
+            builder.and(
+                portfolio.id.in(
+                    JPAExpressions
+                        .select(portfolioMood.portfolio.id)
+                        .from(portfolioMood)
+                        .join(portfolioMood.mood, mood)
+                        .where(
+                            mood.category.eq(entry.getKey()),
+                            mood.id.in(entry.getValue())
+                        )
+                )
+            );
+        }
+
+        return builder;
     }
 
     private BooleanExpression productIdEq(Long productId) {
