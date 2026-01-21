@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GetUserInfoService implements GetUserInfoUseCase {
 
-    private static final String basicProfileImageKey = "profile/basic_profile.png";
+    private static final String BASIC_PROFILE_IMAGE_KEY = "profile/basic_profile.png";
 
     private final UserRepository userRepository;
     private final PhotographerRepository photographerRepository;
@@ -59,8 +59,8 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     ) {
         String profileImageUrl =
             (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
-                ? cloudFrontDomain + basicProfileImageKey
-                : user.getProfileImageUrl();
+                ? cloudFrontDomain + BASIC_PROFILE_IMAGE_KEY
+                : cloudFrontDomain + user.getProfileImageUrl();
         boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<Long> moodIds = curationRepository.findTop3MoodIdsByUserId(user.getId());
         List<String> moodNames = getMoodNames(moodIds);
@@ -88,7 +88,7 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     ) {
         String profileImageUrl =
             (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
-                ? cloudFrontDomain + basicProfileImageKey
+                ? cloudFrontDomain + BASIC_PROFILE_IMAGE_KEY
                 : cloudFrontDomain + user.getProfileImageUrl();
         boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<String> specialties = getSpecialties(photographer);
