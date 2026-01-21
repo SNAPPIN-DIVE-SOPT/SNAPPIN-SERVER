@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = MAX_NAME_LENGTH)
     private String name;
 
-    @Column(nullable = false, length = MAX_PROFILE_IMAGE_URL_LENGTH)
+    @Column(length = MAX_PROFILE_IMAGE_URL_LENGTH)
     private String profileImageUrl;
 
     @Builder(access = AccessLevel.PRIVATE)
@@ -88,17 +88,13 @@ public class User extends BaseEntity {
     }
 
     private static void validateProfileImageUrl(String profileImageUrl) {
-        validateProfileImageExists(profileImageUrl);
         validateProfileImageLength(profileImageUrl);
     }
 
-    private static void validateProfileImageExists(String profileImageUrl) {
-        if (profileImageUrl == null || profileImageUrl.isBlank()) {
-            throw new UserException(UserErrorCode.PROFILE_IMAGE_URL_REQUIRED);
-        }
-    }
-
     private static void validateProfileImageLength(String profileImageUrl) {
+        if (profileImageUrl == null || profileImageUrl.isBlank()) {
+            return;
+        }
         if (profileImageUrl.length() > MAX_PROFILE_IMAGE_URL_LENGTH) {
             throw new UserException(UserErrorCode.PROFILE_IMAGE_URL_TOO_LONG);
         }
