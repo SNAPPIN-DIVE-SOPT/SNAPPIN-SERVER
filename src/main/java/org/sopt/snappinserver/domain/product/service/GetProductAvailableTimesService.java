@@ -66,7 +66,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         }
 
         List<LocalTime> slots = createTimeSlots(workStart, lastStartTime);
-        List<Reservation> reservations = getConfirmedReservations(date, product);
+        List<Reservation> reservations = getBlockedReservations(date, product);
         List<ProductAvailableTimeResult> results = getProductAvailableTimeResults(
             slots,
             reservations,
@@ -118,7 +118,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
     }
 
     // 시간 슬롯별 예약 가능 여부 계산
-    private List<Reservation> getConfirmedReservations(LocalDate date, Product product) {
+    private List<Reservation> getBlockedReservations(LocalDate date, Product product) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.plusDays(ONE_DAY).atStartOfDay();
 
@@ -126,7 +126,13 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
             product,
             startOfDay,
             endOfDay,
-            List.of(ReservationStatus.RESERVATION_CONFIRMED, ReservationStatus.SHOOT_COMPLETED)
+            List.of(
+                ReservationStatus.RESERVATION_REQUESTED,
+                ReservationStatus.PHOTOGRAPHER_CHECKING,
+                ReservationStatus.PAYMENT_REQUESTED,
+                ReservationStatus.RESERVATION_CONFIRMED,
+                ReservationStatus.SHOOT_COMPLETED
+            )
         );
     }
 
