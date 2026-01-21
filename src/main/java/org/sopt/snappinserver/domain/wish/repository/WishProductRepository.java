@@ -16,11 +16,14 @@ public interface WishProductRepository extends JpaRepository<WishProduct, Long> 
     Optional<WishProduct> findByUserAndProduct(User user, Product product);
 
     @Query("""
-        select wp
-        from WishProduct wp
-        join fetch wp.product p
-        join fetch p.photographer
-        where wp.user = :user
-    """)
-    List<WishProduct> findAllByUserWithProduct(@Param("user") User user);
+            select wp
+            from WishProduct wp
+            join fetch wp.product p
+            join fetch p.photographer
+            where wp.user = :user
+            order by wp.createdAt desc
+        """)
+    List<WishProduct> findAllByUserWithProductOrderByCreatedAtDesc(
+        @Param("user") User user
+    );
 }

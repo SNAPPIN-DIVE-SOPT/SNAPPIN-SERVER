@@ -13,5 +13,5 @@ public interface WishPortfolioRepository extends JpaRepository<WishPortfolio, Lo
 
     Optional<WishPortfolio> findByUserAndPortfolio(User user, Portfolio portfolio);
 
-    List<WishPortfolio> findAllByUser(User user);
+    List<WishPortfolio> findAllByUserOrderByCreatedAtDesc(User user);
 }

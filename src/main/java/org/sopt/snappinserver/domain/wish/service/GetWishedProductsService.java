@@ -50,7 +50,7 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
 
     private List<WishedProductResult> getWishedProductResults(User user) {
         return wishProductRepository
-            .findAllByUserWithProduct(user)
+            .findAllByUserWithProductOrderByCreatedAtDesc(user)
             .stream()
             .map(WishProduct::getProduct)
             .map(this::mapToWishedProductResult)

@@ -45,7 +45,7 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
 
     private List<WishedPortfolioResult> getWishedPortfolioResults(User user) {
         return wishPortfolioRepository
-            .findAllByUser(user)
+            .findAllByUserOrderByCreatedAtDesc(user)
             .stream()
             .map(WishPortfolio::getPortfolio)
             .map(this::mapToWishedPortfolioResult)
