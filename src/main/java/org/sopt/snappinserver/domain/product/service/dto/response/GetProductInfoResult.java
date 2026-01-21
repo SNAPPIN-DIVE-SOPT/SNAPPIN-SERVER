@@ -15,7 +15,7 @@ public record GetProductInfoResult(
     List<String> moods,
     String maxPeople,
     String photographerCount,
-    String durationTime,
+    double durationTime,
     String provideRaw,
     String provideOriginalJpg,
     String originalJpgCount,
@@ -48,7 +48,9 @@ public record GetProductInfoResult(
                 .toList(),
             options.get(ProductOptionCategory.MAX_PEOPLE),
             options.get(ProductOptionCategory.PHOTOGRAPHER_COUNT),
-            options.get(ProductOptionCategory.DURATION_TIME),
+            Math.round(Double.parseDouble(
+                options.get(ProductOptionCategory.DURATION_TIME)) / 60d * 10
+            ) / 10d,
             options.get(ProductOptionCategory.PROVIDE_RAW),
             options.get(ProductOptionCategory.PROVIDE_ORIGINAL_JPG),
             options.get(ProductOptionCategory.ORIGINAL_JPG_COUNT),
