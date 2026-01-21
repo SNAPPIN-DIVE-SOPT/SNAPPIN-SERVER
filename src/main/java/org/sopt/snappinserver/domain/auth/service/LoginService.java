@@ -31,8 +31,7 @@ public class LoginService implements LoginUseCase {
         User user = getSocialUserService.registerOrGetUser(
             KAKAO,
             kakaoUserInfo.socialId(),
-            kakaoUserInfo.nickname(),
-            kakaoUserInfo.profileImage()
+            kakaoUserInfo.nickname()
         );
         TokenPair tokenPair = authTokenManager.issueTokenPair(user, userAgent);
 
