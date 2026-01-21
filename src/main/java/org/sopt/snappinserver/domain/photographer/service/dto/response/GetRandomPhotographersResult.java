@@ -16,12 +16,13 @@ public record GetRandomPhotographersResult(
 
     public static GetRandomPhotographersResult of(
         Photographer photographer,
+        String profileImageUrl,
         List<PhotographerSpecialty> specialties
     ) {
         return new GetRandomPhotographersResult(
             photographer.getId(),
             photographer.getNickname(),
-            photographer.getUser().getProfileImageUrl(),
+            profileImageUrl,
             photographer.isNewPhotographer(),
             photographer.getBio(),
             specialties.stream()

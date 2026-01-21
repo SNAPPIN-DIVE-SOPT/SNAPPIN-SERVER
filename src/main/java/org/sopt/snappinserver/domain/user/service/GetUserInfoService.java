@@ -17,6 +17,7 @@ import org.sopt.snappinserver.domain.user.service.dto.response.GetClientInfoResu
 import org.sopt.snappinserver.domain.user.service.dto.response.GetPhotographerInfoResult;
 import org.sopt.snappinserver.domain.user.service.dto.response.GetUserInfoResult;
 import org.sopt.snappinserver.domain.user.service.usecase.GetUserInfoUseCase;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,17 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GetUserInfoService implements GetUserInfoUseCase {
 
+    private static final String basicProfileImageKey = "profile/basic_profile.png";
+
     private final UserRepository userRepository;
     private final PhotographerRepository photographerRepository;
     private final MoodRepository moodRepository;
     private final CurationRepositoryCustom curationRepository;
     private final PhotographerSpecialtyRepository specialtyRepository;
     private final PhotographerAvailableLocationRepository locationRepository;
+
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
 
     @Override
     public GetUserInfoResult getUserInfo(Long userId) {
@@ -51,11 +57,22 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     private GetUserInfoResult getClientInfo(
         User user
     ) {
+        String profileImageUrl =
+            (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
+                ? cloudFrontDomain + basicProfileImageKey
+                : user.getProfileImageUrl();
+        boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<Long> moodIds = curationRepository.findTop3MoodIdsByUserId(user.getId());
         List<String> moodNames = getMoodNames(moodIds);
         GetClientInfoResult clientInfo = new GetClientInfoResult(user.getName(), moodNames);
 
-        return GetUserInfoResult.of(user, null, clientInfo, null);
+        return GetUserInfoResult.of(
+            user,
+            profileImageUrl,
+            hasPhotographerProfile,
+            clientInfo,
+            null
+        );
     }
 
     private List<String> getMoodNames(List<Long> moodIds) {
@@ -69,6 +86,11 @@ public class GetUserInfoService implements GetUserInfoUseCase {
         User user,
         Photographer photographer
     ) {
+        String profileImageUrl =
+            (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
+                ? cloudFrontDomain + basicProfileImageKey
+                : cloudFrontDomain + user.getProfileImageUrl();
+        boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<String> specialties = getSpecialties(photographer);
         List<String> locations = getAvailableLocations(photographer);
         GetPhotographerInfoResult photographerInfo = new GetPhotographerInfoResult(
@@ -78,7 +100,13 @@ public class GetUserInfoService implements GetUserInfoUseCase {
             locations
         );
 
-        return GetUserInfoResult.of(user, photographer, null, photographerInfo);
+        return GetUserInfoResult.of(
+            user,
+            profileImageUrl,
+            hasPhotographerProfile,
+            null,
+            photographerInfo
+        );
     }
 
     private List<String> getSpecialties(Photographer photographer) {

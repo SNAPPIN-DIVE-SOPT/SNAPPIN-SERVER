@@ -23,16 +23,15 @@ public class GetSocialUserService {
     public User registerOrGetUser(
         SocialProvider socialProvider,
         String providerId,
-        String name,
-        String profileImage
+        String name
     ) {
         return authProviderRepository.findBySocialProviderAndProviderId(socialProvider, providerId)
             .map(AuthProvider::getUser)
-            .orElseGet(() -> createUser(providerId, name, profileImage));
+            .orElseGet(() -> createUser(providerId, name));
     }
 
-    private User createUser(String providerId, String name, String profileImage) {
-        User user = userRepository.save(User.create(UserRole.CLIENT, name, profileImage));
+    private User createUser(String providerId, String name) {
+        User user = userRepository.save(User.create(UserRole.CLIENT, name, null));
         authProviderRepository.save(AuthProvider.create(user, KAKAO, providerId));
 
         return user;
