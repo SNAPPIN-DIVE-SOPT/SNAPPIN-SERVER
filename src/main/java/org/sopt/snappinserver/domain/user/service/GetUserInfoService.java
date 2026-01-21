@@ -57,14 +57,22 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     private GetUserInfoResult getClientInfo(
         User user
     ) {
-        String profileImageUrl = (user.getProfileImageUrl() == null)
-            ? cloudFrontDomain + basicProfileImageKey
-            : user.getProfileImageUrl();
+        String profileImageUrl =
+            (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
+                ? cloudFrontDomain + basicProfileImageKey
+                : user.getProfileImageUrl();
+        boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<Long> moodIds = curationRepository.findTop3MoodIdsByUserId(user.getId());
         List<String> moodNames = getMoodNames(moodIds);
         GetClientInfoResult clientInfo = new GetClientInfoResult(user.getName(), moodNames);
 
-        return GetUserInfoResult.of(user, profileImageUrl, null, clientInfo, null);
+        return GetUserInfoResult.of(
+            user,
+            profileImageUrl,
+            hasPhotographerProfile,
+            clientInfo,
+            null
+        );
     }
 
     private List<String> getMoodNames(List<Long> moodIds) {
@@ -78,9 +86,11 @@ public class GetUserInfoService implements GetUserInfoUseCase {
         User user,
         Photographer photographer
     ) {
-        String profileImageUrl = (user.getProfileImageUrl() == null)
-            ? cloudFrontDomain + basicProfileImageKey
-            : user.getProfileImageUrl();
+        String profileImageUrl =
+            (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
+                ? cloudFrontDomain + basicProfileImageKey
+                : user.getProfileImageUrl();
+        boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<String> specialties = getSpecialties(photographer);
         List<String> locations = getAvailableLocations(photographer);
         GetPhotographerInfoResult photographerInfo = new GetPhotographerInfoResult(
@@ -90,7 +100,13 @@ public class GetUserInfoService implements GetUserInfoUseCase {
             locations
         );
 
-        return GetUserInfoResult.of(user, profileImageUrl, photographer, null, photographerInfo);
+        return GetUserInfoResult.of(
+            user,
+            profileImageUrl,
+            hasPhotographerProfile,
+            null,
+            photographerInfo
+        );
     }
 
     private List<String> getSpecialties(Photographer photographer) {
