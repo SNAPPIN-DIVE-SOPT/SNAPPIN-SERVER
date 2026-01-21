@@ -13,6 +13,7 @@ public record GetUserInfoResult(
 ) {
     public static GetUserInfoResult of(
         User user,
+        String profileImageUrl,
         Photographer photographer,
         GetClientInfoResult clientInfo,
         GetPhotographerInfoResult photographerInfo
@@ -20,7 +21,7 @@ public record GetUserInfoResult(
         return new GetUserInfoResult(
             user.getId(),
             user.getRole().name(),
-            user.getProfileImageUrl(),
+            profileImageUrl,
             photographer != null,
             clientInfo,
             photographerInfo
