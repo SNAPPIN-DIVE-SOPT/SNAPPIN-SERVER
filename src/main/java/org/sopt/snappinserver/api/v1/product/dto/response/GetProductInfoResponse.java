@@ -74,8 +74,8 @@ public record GetProductInfoResponse(
                 .map(m -> m.concat("명"))
                 .orElse(null),
             getProductInfoResult.photographerCount(),
-            Optional.ofNullable(getProductInfoResult.durationTime())
-                .map(d -> d.concat("시간"))
+            Optional.of(getProductInfoResult.durationTime())
+                .map(d -> String.format("%.1f시간", d))
                 .orElse(null),
             getProductInfoResult.provideRaw(),
             getProductInfoResult.provideOriginalJpg(),
