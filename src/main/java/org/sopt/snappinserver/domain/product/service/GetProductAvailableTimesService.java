@@ -166,7 +166,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         LocalTime reservedStart = reservation.getReservedAt().toLocalTime();
         LocalTime reservedEnd = reservedStart.plusMinutes(reservation.getDurationTime());
 
-        return slot.isBefore(reservedEnd) && slot.plusMinutes(durationMinutes)
+        return slot.isBefore(reservedEnd) && slot.plusMinutes(reservation.getDurationTime())
             .isAfter(reservedStart);
     }
 }
