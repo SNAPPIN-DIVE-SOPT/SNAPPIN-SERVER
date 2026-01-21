@@ -1,8 +1,10 @@
 package org.sopt.snappinserver.domain.portfolio.repository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
@@ -40,6 +42,7 @@ public interface PortfolioRepositoryCustom {
     List<GetPortfolioCardResult> findPortfolioCards(
         Long cursor,
         GetPortfolioListQuery query,
+        Map<MoodCategory, List<Long>> moodGroupMap,
         int size
     );
 }
