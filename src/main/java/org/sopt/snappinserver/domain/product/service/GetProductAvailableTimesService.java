@@ -69,8 +69,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         List<Reservation> reservations = getBlockedReservations(date, product);
         List<ProductAvailableTimeResult> results = getProductAvailableTimeResults(
             slots,
-            reservations,
-            durationMinutes
+            reservations
         );
 
         return new ProductAvailableTimesResult(date, results);
@@ -139,13 +138,12 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
     // 시간대별 예약 가능 여부 목록 생성
     private List<ProductAvailableTimeResult> getProductAvailableTimeResults(
         List<LocalTime> slots,
-        List<Reservation> reservations,
-        int durationMinutes
+        List<Reservation> reservations
     ) {
         return slots.stream()
             .map(slot -> new ProductAvailableTimeResult(
                 slot,
-                isAvailableTimeSlot(slot, reservations, durationMinutes)
+                isAvailableTimeSlot(slot, reservations)
             ))
             .toList();
     }
@@ -153,20 +151,18 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
     // 특정 시작 시간 슬롯이 예약 가능한지 판단
     private boolean isAvailableTimeSlot(
         LocalTime slot,
-        List<Reservation> reservations,
-        int durationMinutes
+        List<Reservation> reservations
     ) {
         return reservations.stream().noneMatch(
-            reservation -> isOverlapping(slot, reservation, durationMinutes)
+            reservation -> isOverlapping(slot, reservation)
         );
     }
 
     // 시간 슬롯과 예약 시간대가 겹치는지 판단
-    private boolean isOverlapping(LocalTime slot, Reservation reservation, int durationMinutes) {
+    private boolean isOverlapping(LocalTime slot, Reservation reservation) {
         LocalTime reservedStart = reservation.getReservedAt().toLocalTime();
         LocalTime reservedEnd = reservedStart.plusMinutes(reservation.getDurationTime());
 
-        return slot.isBefore(reservedEnd) && slot.plusMinutes(reservation.getDurationTime())
-            .isAfter(reservedStart);
+        return !slot.isBefore(reservedStart) && slot.isBefore(reservedEnd);
     }
 }
