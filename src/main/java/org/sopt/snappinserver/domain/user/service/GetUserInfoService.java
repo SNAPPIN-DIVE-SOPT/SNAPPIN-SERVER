@@ -89,7 +89,7 @@ public class GetUserInfoService implements GetUserInfoUseCase {
         String profileImageUrl =
             (user.getProfileImageUrl() == null || user.getProfileImageUrl().isBlank())
                 ? cloudFrontDomain + basicProfileImageKey
-                : user.getProfileImageUrl();
+                : cloudFrontDomain + user.getProfileImageUrl();
         boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<String> specialties = getSpecialties(photographer);
         List<String> locations = getAvailableLocations(photographer);

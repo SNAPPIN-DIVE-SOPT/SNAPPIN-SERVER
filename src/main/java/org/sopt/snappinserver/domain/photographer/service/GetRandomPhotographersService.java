@@ -31,7 +31,7 @@ public class GetRandomPhotographersService implements GetRandomPhotographersUseC
             .map(photographer -> {
                 String profileImageUrl = (photographer.getUser().getProfileImageUrl() == null)
                     ? cloudFrontDomain + baseProfileImageKey
-                    : photographer.getUser().getProfileImageUrl();
+                    : cloudFrontDomain + photographer.getUser().getProfileImageUrl();
                 List<PhotographerSpecialty> specialties = photographerSpecialtyRepository
                     .findAllByPhotographer(photographer);
 
