@@ -1,6 +1,8 @@
 package org.sopt.snappinserver.api.v1.reservation.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailProductResult;
 
@@ -17,7 +19,7 @@ public record ReservationDetailProductResponse(
     String title,
 
     @Schema(description = "평균 별점", example = "4.7")
-    Double rate,
+    BigDecimal rate,
 
     @Schema(description = "리뷰 개수", example = "20")
     int reviewCount,
@@ -37,7 +39,8 @@ public record ReservationDetailProductResponse(
             result.id(),
             result.imageUrl(),
             result.title(),
-            result.rate(),
+            BigDecimal.valueOf(result.rate())
+                .setScale(1, RoundingMode.HALF_UP),
             result.reviewCount(),
             result.photographer(),
             result.price(),
