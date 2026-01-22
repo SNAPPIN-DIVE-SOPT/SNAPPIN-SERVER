@@ -1,8 +1,11 @@
 package org.sopt.snappinserver.domain.product.service;
 
+import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographer.photographer;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 import org.sopt.snappinserver.domain.place.domain.entity.Place;
 import org.sopt.snappinserver.domain.place.domain.exception.PlaceErrorCode;
 import org.sopt.snappinserver.domain.place.domain.exception.PlaceException;
@@ -43,10 +46,11 @@ public class PostProductReservationService implements PostProductReservationUseC
         ProductReservationCommand command
     ) {
         Product product = getProduct(productId);
+        Photographer photographer = product.getPhotographer();
         User user = getUser(userId);
         Place place = getPlace(command);
 
-        validateNoOverlappingReservation(product, command);
+        validateNoOverlappingReservation(photographer, command);
 
         Reservation reservation = createReservation(product, user, place, command);
         Reservation saved = reservationRepository.save(reservation);
@@ -73,15 +77,15 @@ public class PostProductReservationService implements PostProductReservationUseC
     }
 
     private void validateNoOverlappingReservation(
-        Product product,
+        Photographer photographer,
         ProductReservationCommand command
     ) {
         LocalDateTime startAt = command.reservedAt();
         LocalDateTime endAt = startAt.plusMinutes(command.durationTime());
 
         List<Reservation> reservations =
-            reservationRepository.findAllByProductAndReservationStatusIn(
-                product,
+            reservationRepository.findByPhotographerAndStatusIn(
+                photographer.getId(),
                 List.of(
                     ReservationStatus.RESERVATION_REQUESTED,
                     ReservationStatus.PHOTOGRAPHER_CHECKING,
