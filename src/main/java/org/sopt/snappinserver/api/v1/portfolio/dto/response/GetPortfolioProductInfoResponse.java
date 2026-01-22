@@ -1,6 +1,8 @@
 package org.sopt.snappinserver.api.v1.portfolio.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetProductInfoResult;
 
@@ -16,8 +18,8 @@ public record GetPortfolioProductInfoResponse(
     @Schema(description = "상품명")
     String title,
 
-    @Schema(description = "리뷰 별점 평균")
-    Double rate,
+    @Schema(description = "리뷰 평균 별점")
+    BigDecimal rate,
 
     @Schema(description = "리뷰 수")
     long reviewCount,
@@ -33,11 +35,16 @@ public record GetPortfolioProductInfoResponse(
 ) {
 
     public static GetPortfolioProductInfoResponse from(GetProductInfoResult result) {
+        BigDecimal rate = result.rate() == null
+            ? BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP)
+            : BigDecimal.valueOf(result.rate())
+                .setScale(1, RoundingMode.HALF_UP);
+
         return new GetPortfolioProductInfoResponse(
             result.id(),
             result.imageUrl(),
             result.title(),
-            result.rate(),
+            rate,
             result.reviewCount(),
             result.photographer(),
             result.price(),
