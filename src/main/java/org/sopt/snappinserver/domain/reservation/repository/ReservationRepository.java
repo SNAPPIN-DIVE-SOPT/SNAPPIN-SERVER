@@ -61,18 +61,30 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     // 작가의 모든 상품에 걸린 예약 목록
     @Query("""
-    select r
-    from Reservation r
-    join r.product p
-    where p.photographer.id = :photographerId
-      and r.reservedAt >= :start
-      and r.reservedAt < :end
-      and r.reservationStatus in :statuses
-""")
+            select r
+            from Reservation r
+            join r.product p
+            where p.photographer.id = :photographerId
+              and r.reservedAt >= :start
+              and r.reservedAt < :end
+              and r.reservationStatus in :statuses
+        """)
     List<Reservation> findBlockedReservationsByPhotographerIdAndDate(
         @Param("photographerId") Long photographerId,
         @Param("start") LocalDateTime start,
         @Param("end") LocalDateTime end,
+        @Param("statuses") List<ReservationStatus> statuses
+    );
+
+    @Query("""
+            select r
+            from Reservation r
+            join r.product p
+            where p.photographer.id = :photographerId
+              and r.reservationStatus in :statuses
+        """)
+    List<Reservation> findByPhotographerAndStatusIn(
+        @Param("photographerId") Long photographerId,
         @Param("statuses") List<ReservationStatus> statuses
     );
 
