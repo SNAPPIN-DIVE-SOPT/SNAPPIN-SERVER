@@ -74,9 +74,7 @@ public record GetProductInfoResponse(
                 .map(m -> m.concat("명"))
                 .orElse(null),
             getProductInfoResult.photographerCount(),
-            Optional.of(getProductInfoResult.durationTime())
-                .map(d -> String.format("%.1f시간", d))
-                .orElse(null),
+            formatDurationTime(getProductInfoResult.durationTime()),
             getProductInfoResult.provideRaw(),
             getProductInfoResult.provideOriginalJpg(),
             getProductInfoResult.originalJpgCount(),
@@ -90,5 +88,11 @@ public record GetProductInfoResponse(
             getProductInfoResult.equipment(),
             getProductInfoResult.caution()
         );
+    }
+
+    private static String formatDurationTime(double d) {
+        return Math.floor(d) == d
+            ? String.format("%.0f시간", d)
+            : String.format("%.1f시간", d);
     }
 }
