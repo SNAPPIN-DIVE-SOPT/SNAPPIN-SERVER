@@ -165,6 +165,17 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             .toList();
     }
 
+    @Override
+    public List<String> findProductMoods(Long productId) {
+        return jpaQueryFactory
+            .select(mood.name)
+            .from(productMood)
+            .join(productMood.mood, mood)
+            .where(productMood.product.id.eq(productId))
+            .orderBy(productMood.id.asc())
+            .fetch();
+    }
+
     private BooleanExpression cursorLt(Long cursor) {
         return cursor == null ? null : product.id.lt(cursor);
     }
@@ -293,6 +304,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             .from(productMood)
             .join(mood).on(productMood.mood.id.eq(mood.id))
             .where(productMood.product.id.in(productIds))
+            .orderBy(productMood.id.asc())
             .fetch()) {
             String s = tuple.get(mood.name);
             map.computeIfAbsent(tuple.get(productMood.product.id), k -> new ArrayList<>()).add(s);

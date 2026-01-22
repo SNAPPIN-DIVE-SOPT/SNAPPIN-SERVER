@@ -15,6 +15,7 @@ public interface PortfolioMoodRepository extends JpaRepository<PortfolioMood, Lo
             FROM PortfolioMood pm
             JOIN FETCH pm.mood
             WHERE pm.portfolio.id IN :portfolioIds
+            ORDER BY pm.id
         """)
     List<PortfolioMood> findByPortfolioIds(
         @Param("portfolioIds") List<Long> portfolioIds

@@ -160,16 +160,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .from(portfolioMood)
             .join(portfolioMood.mood, mood)
             .where(portfolioMood.portfolio.id.eq(portfolioId))
-            .fetch();
-    }
-
-    @Override
-    public List<String> findProductMoods(Long productId) {
-        return jpaQueryFactory
-            .select(mood.name)
-            .from(productMood)
-            .join(productMood.mood, mood)
-            .where(productMood.product.id.eq(productId))
+            .orderBy(portfolioMood.id.asc())
             .fetch();
     }
 

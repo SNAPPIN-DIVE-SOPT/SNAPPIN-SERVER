@@ -28,6 +28,6 @@ public interface ProductPhotoRepository extends JpaRepository<ProductPhoto, Long
     List<ProductPhoto> findThumbnails(@Param("productIds") List<Long> productIds);
 
 
-    List<ProductPhoto> findByProduct(Product product);
+    List<ProductPhoto> findByProductOrderByDisplayOrderAsc(Product product);
 
 }

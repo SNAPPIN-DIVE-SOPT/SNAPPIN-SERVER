@@ -63,7 +63,7 @@ public class GetProductDetailService implements GetProductDetailUseCase {
 
         List<ProductAvailableLocation> availableLocations = productAvailableLocationRepository
             .findByProduct(product);
-        List<ProductMood> productMoods = productMoodRepository.findAllByProduct(product);
+        List<ProductMood> productMoods = productMoodRepository.findAllByProductOrderById(product);
 
         Photographer photographer = product.getPhotographer();
         List<String> specialties = getSpecialties(photographer);
@@ -100,7 +100,7 @@ public class GetProductDetailService implements GetProductDetailUseCase {
     }
 
     private List<String> getProductPhotos(Product product) {
-        return productPhotoRepository.findByProduct(product).stream()
+        return productPhotoRepository.findByProductOrderByDisplayOrderAsc(product).stream()
             .map(ProductPhoto::getPhoto)
             .filter(photo ->
                 photo != null && photo.getImageUrl() != null && !photo.getImageUrl().isBlank()
