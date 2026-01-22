@@ -3,6 +3,7 @@ package org.sopt.snappinserver.domain.product.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
 
     private static final int ONE_DAY = 1;
     private static final int TIME_SLOT_INTERVAL_MINUTES = 30;
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
 
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
@@ -142,8 +144,8 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         List<Reservation> reservations,
         LocalDate date
     ) {
-        LocalDate today = LocalDate.now();
-        LocalTime now = LocalTime.now();
+        LocalDate today = LocalDate.now(KOREA_ZONE);
+        LocalTime now = LocalTime.now(KOREA_ZONE);
 
         return slots.stream()
             .map(slot -> {
