@@ -17,7 +17,7 @@ public class GetPlaceListService implements GetPlaceListUseCase {
     private final PlaceRepository placeRepository;
 
     public GetPlaceListResult getPlaceList(String keyword) {
-        List<Place> places = placeRepository.findTop4ByNameContainingOrderByNameAsc(keyword);
+        List<Place> places = placeRepository.findTop4ByNameStartingWithOrderByNameAsc(keyword);
 
         return GetPlaceListResult.from(places);
     }

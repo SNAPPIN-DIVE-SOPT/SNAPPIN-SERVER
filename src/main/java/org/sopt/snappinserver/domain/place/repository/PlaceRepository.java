@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PlaceRepository extends JpaRepository<Place, Long> {
 
-    List<Place> findTop4ByNameContainingOrderByNameAsc(String name);
+    List<Place> findTop4ByNameStartingWithOrderByNameAsc(String name);
 }
