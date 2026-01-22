@@ -35,12 +35,16 @@ public record ReservationDetailProductResponse(
 ) {
 
     public static ReservationDetailProductResponse from(GetReservationDetailProductResult result) {
+        BigDecimal rate = result.rate() == null
+            ? BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP)
+            : BigDecimal.valueOf(result.rate())
+                .setScale(1, RoundingMode.HALF_UP);
+
         return new ReservationDetailProductResponse(
             result.id(),
             result.imageUrl(),
             result.title(),
-            BigDecimal.valueOf(result.rate())
-                .setScale(1, RoundingMode.HALF_UP),
+            rate,
             result.reviewCount(),
             result.photographer(),
             result.price(),
