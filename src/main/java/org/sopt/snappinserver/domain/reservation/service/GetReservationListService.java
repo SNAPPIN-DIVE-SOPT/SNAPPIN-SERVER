@@ -211,7 +211,7 @@ public class GetReservationListService implements GetReservationListUseCase {
                 product.getTitle(),
                 stats.averageRating(),
                 (int) stats.reviewCount(),
-                product.getPhotographer().getUser().getName(),
+                product.getPhotographer().getNickname(),
                 product.getPrice(),
                 productMoodMap.getOrDefault(productId, List.of()),
                 reviewedReservationIds.contains(reservation.getId())

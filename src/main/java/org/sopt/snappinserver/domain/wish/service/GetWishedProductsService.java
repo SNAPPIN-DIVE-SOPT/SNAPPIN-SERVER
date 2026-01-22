@@ -71,7 +71,7 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
             product.getTitle(),
             reviewStats.averageRating(),
             (int) reviewStats.reviewCount(),
-            product.getPhotographer().getName(),
+            product.getPhotographer().getNickname(),
             product.getPrice(),
             moods
         );
