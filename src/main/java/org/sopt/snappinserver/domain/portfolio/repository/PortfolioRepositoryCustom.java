@@ -24,8 +24,6 @@ public interface PortfolioRepositoryCustom {
 
     List<String> findPortfolioMoods(Long portfolioId);
 
-    List<String> findProductMoods(Long productId);
-
     String findProductThumbnailUrl(Long productId);
 
     List<SnapCategory> findPhotographerSpecialties(Long photographerId);

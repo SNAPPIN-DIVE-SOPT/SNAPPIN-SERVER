@@ -15,4 +15,7 @@ public interface ProductRepositoryCustom {
         GetProductListQuery query,
         Map<MoodCategory, List<Long>> moodGroupMap
     );
+
+    List<String> findProductMoods(Long productId);
+
 }

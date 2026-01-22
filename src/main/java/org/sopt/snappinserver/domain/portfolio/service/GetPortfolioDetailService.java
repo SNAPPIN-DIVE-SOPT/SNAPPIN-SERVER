@@ -14,6 +14,7 @@ import org.sopt.snappinserver.domain.portfolio.service.mapper.PortfolioDetailMap
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioDetailUseCase;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.repository.ProductRepository;
+import org.sopt.snappinserver.domain.product.repository.ProductRepositoryCustom;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.sopt.snappinserver.global.enums.SnapCategory;
@@ -25,26 +26,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GetPortfolioDetailService implements GetPortfolioDetailUseCase {
 
-    private final PortfolioRepositoryCustom queryRepository;
+    private final PortfolioRepositoryCustom portfolioRepositoryCustom;
     private final ProductRepository productRepository;
     private final ReviewRepository reviewRepository;
     private final PortfolioDetailMapper mapper;
     private final PortfolioRepository portfolioRepository;
+    private final ProductRepositoryCustom productRepositoryCustom;
 
     @Override
     public GetPortfolioDetailResult findPortfolioDetail(Long userId, Long portfolioId) {
         validateExistsPortfolio(portfolioId);
-        PortfolioDetailProjection portfolioProjection = queryRepository.findDetail(portfolioId);
-        LikeStatusProjection likeStatus = queryRepository.findLikeStatus(portfolioId, userId);
+        PortfolioDetailProjection portfolioProjection = portfolioRepositoryCustom.findDetail(portfolioId);
+        LikeStatusProjection likeStatus = portfolioRepositoryCustom.findLikeStatus(portfolioId, userId);
 
-        List<String> portfolioImages = queryRepository.findPortfolioImageUrls(portfolioId);
-        List<String> portfolioMoods = queryRepository.findPortfolioMoods(portfolioId);
-        List<String> photographerSpecialties = queryRepository
+        List<String> portfolioImages = portfolioRepositoryCustom.findPortfolioImageUrls(portfolioId);
+        List<String> portfolioMoods = portfolioRepositoryCustom.findPortfolioMoods(portfolioId);
+        List<String> photographerSpecialties = portfolioRepositoryCustom
             .findPhotographerSpecialties(portfolioProjection.photographerId())
             .stream()
             .map(SnapCategory::getCategory)
             .toList();
-        List<String> photographerLocations = queryRepository.findPhotographerAvailableLocations(
+        List<String> photographerLocations = portfolioRepositoryCustom.findPhotographerAvailableLocations(
             portfolioProjection.photographerId()
         );
 
@@ -53,8 +55,8 @@ public class GetPortfolioDetailService implements GetPortfolioDetailUseCase {
         ProductReviewStatsResult reviewStats = reviewRepository.findReviewStatsByProductId(
             product.getId()
         );
-        String productThumbnail = queryRepository.findProductThumbnailUrl(product.getId());
-        List<String> productMoods = queryRepository.findProductMoods(product.getId());
+        String productThumbnail = portfolioRepositoryCustom.findProductThumbnailUrl(product.getId());
+        List<String> productMoods = productRepositoryCustom.findProductMoods(product.getId());
 
         return mapper.toResult(
             portfolioProjection,
