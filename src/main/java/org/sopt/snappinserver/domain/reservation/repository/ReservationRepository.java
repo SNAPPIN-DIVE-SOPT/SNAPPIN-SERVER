@@ -35,7 +35,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         join fetch r.user u
         where u.id = :userId
           and r.reservationStatus in :statuses
-        order by r.createdAt desc
+        order by r.updatedAt desc
     """)
     List<Reservation> findClientReservations(
         @Param("userId") Long userId,
@@ -51,7 +51,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         join fetch r.user u
         where ph.user.id = :userId
           and r.reservationStatus in :statuses
-        order by r.createdAt desc
+        order by r.updatedAt desc
     """)
     List<Reservation> findPhotographerReservations(
         @Param("userId") Long userId,
