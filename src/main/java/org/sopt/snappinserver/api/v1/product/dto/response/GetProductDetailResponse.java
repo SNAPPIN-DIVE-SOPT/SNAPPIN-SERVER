@@ -1,6 +1,8 @@
 package org.sopt.snappinserver.api.v1.product.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResult;
 
@@ -20,7 +22,7 @@ public record GetProductDetailResponse(
     boolean isLiked,
 
     @Schema(description = "평균 별점")
-    Double averageRate,
+    BigDecimal averageRate,
 
     @Schema(description = "리뷰 개수")
     long reviewCount,
@@ -43,7 +45,8 @@ public record GetProductDetailResponse(
             result.images(),
             result.title(),
             result.isLiked(),
-            result.averageRate(),
+            BigDecimal.valueOf(result.averageRate())
+                .setScale(1, RoundingMode.HALF_UP),
             result.reviewCount(),
             result.price(),
             GetProductPhotographerInfoResponse.from(result.photographerInfo()),
