@@ -37,15 +37,18 @@ public record ReservationListProductResponse(
     boolean isReviewed
 ) {
 
-    public static ReservationListProductResponse from(
-        GetReservationListProductResult result
-    ) {
+    public static ReservationListProductResponse from(GetReservationListProductResult result) {
+        BigDecimal rate = result.rate() == null
+            ? BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP)
+            : BigDecimal.valueOf(result.rate())
+                .setScale(1, RoundingMode.HALF_UP);
+
+
         return new ReservationListProductResponse(
             result.id(),
             result.imageUrl(),
             result.title(),
-            BigDecimal.valueOf(result.rate())
-                .setScale(1, RoundingMode.HALF_UP),
+            rate,
             result.reviewCount(),
             result.photographer(),
             result.price(),
