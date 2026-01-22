@@ -19,7 +19,7 @@ public interface PortfolioPhotoRepository extends JpaRepository<PortfolioPhoto, 
             FROM PortfolioPhoto pp
             JOIN FETCH pp.photo
             WHERE pp.portfolio.id IN :portfolioIds
-            ORDER BY pp.portfolio.id, pp.displayOrder
+            ORDER BY pp.displayOrder
         """)
     List<PortfolioPhoto> findByPortfolioIds(@Param("portfolioIds") List<Long> portfolioIds);
 }
