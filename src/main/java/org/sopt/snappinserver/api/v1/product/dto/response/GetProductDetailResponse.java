@@ -37,16 +37,18 @@ public record GetProductDetailResponse(
     GetProductInfoResponse productInfo
 ) {
 
-    public static GetProductDetailResponse from(
-        GetProductResult result
-    ) {
+    public static GetProductDetailResponse from(GetProductResult result) {
+        BigDecimal rate = result.averageRate() == null
+            ? BigDecimal.ZERO.setScale(1, RoundingMode.HALF_UP)
+            : BigDecimal.valueOf(result.averageRate())
+                .setScale(1, RoundingMode.HALF_UP);
+
         return new GetProductDetailResponse(
             result.id(),
             result.images(),
             result.title(),
             result.isLiked(),
-            BigDecimal.valueOf(result.averageRate())
-                .setScale(1, RoundingMode.HALF_UP),
+            rate,
             result.reviewCount(),
             result.price(),
             GetProductPhotographerInfoResponse.from(result.photographerInfo()),
