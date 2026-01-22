@@ -117,7 +117,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
             product.getTitle(),
             resolveAverageRating(stats),
             resolveReviewCount(stats),
-            product.getPhotographer().getName(),
+            product.getPhotographer().getNickname(),
             product.getPrice(),
             getMoodNames(product)
         );
