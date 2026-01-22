@@ -2,6 +2,7 @@ package org.sopt.snappinserver.domain.reservation.repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.reservation.domain.entity.Reservation;
 import org.sopt.snappinserver.domain.reservation.domain.enums.ReservationStatus;
@@ -57,4 +58,22 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
         @Param("userId") Long userId,
         @Param("statuses") List<ReservationStatus> statuses
     );
+
+    // 작가의 모든 상품에 걸린 예약 목록
+    @Query("""
+    select r
+    from Reservation r
+    join r.product p
+    where p.photographer.id = :photographerId
+      and r.reservedAt >= :start
+      and r.reservedAt < :end
+      and r.reservationStatus in :statuses
+""")
+    List<Reservation> findBlockedReservationsByPhotographerIdAndDate(
+        @Param("photographerId") Long photographerId,
+        @Param("start") LocalDateTime start,
+        @Param("end") LocalDateTime end,
+        @Param("statuses") List<ReservationStatus> statuses
+    );
+
 }
