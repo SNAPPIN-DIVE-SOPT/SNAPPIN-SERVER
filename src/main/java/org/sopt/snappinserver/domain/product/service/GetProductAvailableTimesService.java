@@ -69,7 +69,8 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         List<Reservation> reservations = getBlockedReservations(date, product);
         List<ProductAvailableTimeResult> results = getProductAvailableTimeResults(
             slots,
-            reservations
+            reservations,
+            date
         );
 
         return new ProductAvailableTimesResult(date, results);
@@ -138,13 +139,22 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
     // 시간대별 예약 가능 여부 목록 생성
     private List<ProductAvailableTimeResult> getProductAvailableTimeResults(
         List<LocalTime> slots,
-        List<Reservation> reservations
+        List<Reservation> reservations,
+        LocalDate date
     ) {
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+
         return slots.stream()
-            .map(slot -> new ProductAvailableTimeResult(
-                slot,
-                isAvailableTimeSlot(slot, reservations)
-            ))
+            .map(slot -> {
+                boolean isAvailable = isAvailableTimeSlot(slot, reservations);
+
+                if (date.isEqual(today) && slot.isBefore(now)) {
+                    isAvailable = false;
+                }
+
+                return new ProductAvailableTimeResult(slot, isAvailable);
+            })
             .toList();
     }
 
