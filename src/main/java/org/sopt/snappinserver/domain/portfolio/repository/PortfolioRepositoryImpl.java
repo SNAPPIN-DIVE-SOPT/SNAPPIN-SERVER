@@ -266,18 +266,15 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                     .and(portfolioPhoto.displayOrder.eq(1))
             )
             .join(portfolioPhoto.photo, photo)
-            .leftJoin(portfolioPlace).on(portfolioPlace.portfolio.id.eq(portfolio.id))
-            .leftJoin(portfolioMood).on(portfolioMood.portfolio.id.eq(portfolio.id))
             .where(
                 cursorLt(cursor),
                 moodCategoryGroupedCondition(moodGroupMap),
                 productIdEq(query.productId()),
                 photographerIdEq(query.photographerId()),
                 snapCategoryEq(query.snapCategory()),
-                placeEq(query.placeId())
+                placeExists(query.placeId())
             )
-            .distinct()
-            .orderBy(portfolio.id.desc())
+            .orderBy(portfolio.createdAt.desc())
             .limit(size + 1)
             .fetch();
     }
@@ -329,8 +326,18 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         return category == null ? null : portfolio.snapCategory.eq(category);
     }
 
-    private BooleanExpression placeEq(Long placeId) {
-        return placeId == null ? null : portfolioPlace.place.id.eq(placeId);
+    private BooleanExpression placeExists(Long placeId) {
+        if (placeId == null) return null;
+
+        return JPAExpressions
+            .selectOne()
+            .from(portfolioPlace)
+            .where(
+                portfolioPlace.portfolio.id.eq(portfolio.id),
+                portfolioPlace.place.id.eq(placeId)
+            )
+            .exists();
     }
+
 
 }
