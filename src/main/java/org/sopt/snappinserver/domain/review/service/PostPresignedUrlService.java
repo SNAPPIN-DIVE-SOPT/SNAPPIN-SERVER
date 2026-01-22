@@ -18,13 +18,16 @@ import org.springframework.stereotype.Service;
 public class PostPresignedUrlService implements PostPresignedUrlUseCase {
 
     private static final List<String> ALLOWED_EXTENSIONS =
-        List.of("jpg", "jpeg", "png", "webp");
+        List.of("jpg", "jpeg", "png", "webp", "heic", "heif");
 
     private static final List<String> ALLOWED_CONTENT_TYPES =
         List.of(
             "image/jpeg",
             "image/png",
-            "image/webp"
+            "image/webp",
+            "image/heic",
+            "image/heif",
+            "application/octet-stream"
         );
 
     private final UserRepository userRepository;
