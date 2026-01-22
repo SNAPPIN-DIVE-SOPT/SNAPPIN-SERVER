@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.domain.portfolio.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPopularPortfol
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,8 +54,10 @@ public class GetCuratedPortfolioService implements GetCuratedPortfolioUseCase {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new PortfolioException(PortfolioErrorCode.USER_NOT_FOUND));
 
-        List<Curation> curations = curationRepository
-            .findTop3ByUserOrderByRankAscCreatedAtDesc(user);
+        List<Curation> curations =
+            curationRepository.findLatestByUser(user, PageRequest.of(0, 3));
+
+        curations.sort(Comparator.comparing(Curation::getRank));
 
         if (curations.isEmpty()) {
             return GetCuratedPortfolioResult.from(
