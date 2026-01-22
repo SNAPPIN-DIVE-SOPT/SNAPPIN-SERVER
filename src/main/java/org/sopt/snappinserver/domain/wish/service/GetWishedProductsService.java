@@ -87,7 +87,7 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
 
     private List<String> findMoodNames(Product product) {
         return productMoodRepository
-            .findAllByProduct(product)
+            .findAllByProductOrderById(product)
             .stream()
             .map(productMood -> productMood.getMood().getName())
             .toList();

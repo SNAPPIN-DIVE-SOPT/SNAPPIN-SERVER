@@ -135,7 +135,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
     }
 
     private List<String> getMoodNames(Product product) {
-        return productMoodRepository.findAllByProduct(product).stream()
+        return productMoodRepository.findAllByProductOrderById(product).stream()
             .map(pm -> pm.getMood().getName())
             .toList();
     }
