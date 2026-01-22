@@ -3,6 +3,7 @@ package org.sopt.snappinserver.domain.product.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
 
     private static final int ONE_DAY = 1;
     private static final int TIME_SLOT_INTERVAL_MINUTES = 30;
+    private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
 
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
@@ -69,7 +71,8 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
         List<Reservation> reservations = getBlockedReservations(date, product);
         List<ProductAvailableTimeResult> results = getProductAvailableTimeResults(
             slots,
-            reservations
+            reservations,
+            date
         );
 
         return new ProductAvailableTimesResult(date, results);
@@ -138,13 +141,22 @@ public class GetProductAvailableTimesService implements GetProductAvailableTimes
     // 시간대별 예약 가능 여부 목록 생성
     private List<ProductAvailableTimeResult> getProductAvailableTimeResults(
         List<LocalTime> slots,
-        List<Reservation> reservations
+        List<Reservation> reservations,
+        LocalDate date
     ) {
+        LocalDate today = LocalDate.now(KOREA_ZONE);
+        LocalTime now = LocalTime.now(KOREA_ZONE);
+
         return slots.stream()
-            .map(slot -> new ProductAvailableTimeResult(
-                slot,
-                isAvailableTimeSlot(slot, reservations)
-            ))
+            .map(slot -> {
+                boolean isAvailable = isAvailableTimeSlot(slot, reservations);
+
+                if (date.isEqual(today) && slot.isBefore(now)) {
+                    isAvailable = false;
+                }
+
+                return new ProductAvailableTimeResult(slot, isAvailable);
+            })
             .toList();
     }
 
