@@ -274,7 +274,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                 snapCategoryEq(query.snapCategory()),
                 placeExists(query.placeId())
             )
-            .orderBy(portfolio.createdAt.desc())
+            .orderBy(portfolio.id.desc())
             .limit(size + 1)
             .fetch();
     }
