@@ -27,7 +27,8 @@ public record GetRecommendationPhotographerInfoResponse(
 ) {
 
     public static GetRecommendationPhotographerInfoResponse from(
-        GetRandomPhotographersResult result) {
+        GetRandomPhotographersResult result
+    ) {
         return new GetRecommendationPhotographerInfoResponse(
             result.id(),
             result.name(),
