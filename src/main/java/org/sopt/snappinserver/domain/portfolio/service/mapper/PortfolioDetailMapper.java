@@ -56,6 +56,7 @@ public class PortfolioDetailMapper {
             portfolioMoods,
             GetPhotographerInfoResult.of(
                 photographer,
+                cloudFrontDomain + photographer.getUser().getProfileImageUrl(),
                 photographerSpecialties,
                 photographerLocations
             ),

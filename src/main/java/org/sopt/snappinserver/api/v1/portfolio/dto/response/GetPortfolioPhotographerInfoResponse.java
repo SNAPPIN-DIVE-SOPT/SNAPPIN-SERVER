@@ -13,6 +13,9 @@ public record GetPortfolioPhotographerInfoResponse(
     @Schema(description = "작가명")
     String name,
 
+    @Schema(description = "작가 프로필 이미지")
+    String imageUrl,
+
     @Schema(description = "작가 한줄 소개")
     String bio,
 
@@ -29,6 +32,7 @@ public record GetPortfolioPhotographerInfoResponse(
         return new GetPortfolioPhotographerInfoResponse(
             result.id(),
             result.name(),
+            result.imageUrl(),
             result.bio(),
             result.specialties(),
             result.locations()
