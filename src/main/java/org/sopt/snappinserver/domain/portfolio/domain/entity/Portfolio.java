@@ -19,13 +19,12 @@ import lombok.NoArgsConstructor;
 import org.sopt.snappinserver.domain.portfolio.domain.exception.PortfolioErrorCode;
 import org.sopt.snappinserver.domain.portfolio.domain.exception.PortfolioException;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
-import org.sopt.snappinserver.global.entity.BaseEntity;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Portfolio extends BaseEntity {
+public class Portfolio {
 
     private static final int MAX_DESCRIPTION_LENGTH = 1024;
 
