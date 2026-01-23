@@ -13,6 +13,9 @@ public record GetPhotographerProfileResponse(
     @Schema(description = "작가가 설정한 작가명", example = "스윙스냅")
     String name,
 
+    @Schema(description = "작가 프로필 이미지 URL")
+    String profileImageUrl,
+
     @Schema(description = "작가 한 줄 소개", example = "일상의 아름다움을 포착합니다")
     String bio,
 
@@ -27,6 +30,7 @@ public record GetPhotographerProfileResponse(
         return new GetPhotographerProfileResponse(
             result.id(),
             result.name(),
+            result.profileImageUrl(),
             result.bio(),
             result.specialties(),
             result.locations()
