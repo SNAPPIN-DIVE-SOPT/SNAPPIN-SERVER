@@ -10,6 +10,7 @@ import org.sopt.snappinserver.global.enums.SnapCategory;
 public record GetPhotographerProfileResult(
     Long id,
     String name,
+    String profileImageUrl,
     String bio,
     List<String> specialties,
     List<String> locations
@@ -17,12 +18,14 @@ public record GetPhotographerProfileResult(
 
     public static GetPhotographerProfileResult of(
         Photographer photographer,
+        String profileImageUrl,
         List<PhotographerSpecialty> specialties,
         List<PhotographerAvailableLocation> locations
     ) {
         return new GetPhotographerProfileResult(
             photographer.getId(),
             photographer.getNickname(),
+            profileImageUrl,
             photographer.getBio(),
 
             specialties.stream()

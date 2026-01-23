@@ -12,6 +12,7 @@ import org.sopt.snappinserver.domain.photographer.repository.PhotographerReposit
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerSpecialtyRepository;
 import org.sopt.snappinserver.domain.photographer.service.dto.response.GetPhotographerProfileResult;
 import org.sopt.snappinserver.domain.photographer.service.usecase.GetPhotographerProfileUseCase;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +25,12 @@ public class GetPhotographerProfileService implements GetPhotographerProfileUseC
     private final PhotographerSpecialtyRepository photographerSpecialtyRepository;
     private final PhotographerAvailableLocationRepository photographerAvailableLocationRepository;
 
+    @Value("${cloud.aws.cloud-front.domain}")
+    private String cloudFrontDomain;
+
     public GetPhotographerProfileResult getPhotographerProfile(Long photographerId) {
         Photographer photographer = getExistingPhotographer(photographerId);
+        String profileImageUrl = cloudFrontDomain + photographer.getUser().getProfileImageUrl();
 
         List<PhotographerSpecialty> specialties = photographerSpecialtyRepository
             .findAllByPhotographer(photographer);
@@ -35,7 +40,12 @@ public class GetPhotographerProfileService implements GetPhotographerProfileUseC
             .findAllByPhotographer(photographer);
         validateAvailableLocationExists(availableLocations);
 
-        return GetPhotographerProfileResult.of(photographer, specialties, availableLocations);
+        return GetPhotographerProfileResult.of(
+            photographer,
+            profileImageUrl,
+            specialties,
+            availableLocations
+        );
     }
 
     private Photographer getExistingPhotographer(Long photographerId) {
