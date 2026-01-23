@@ -94,7 +94,7 @@ public class GetUserInfoService implements GetUserInfoUseCase {
         List<String> specialties = getSpecialties(photographer);
         List<String> locations = getAvailableLocations(photographer);
         GetPhotographerInfoResult photographerInfo = new GetPhotographerInfoResult(
-            photographer.getName(),
+            photographer.getNickname(),
             photographer.getBio(),
             specialties,
             locations
