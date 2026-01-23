@@ -71,9 +71,11 @@ public class GetProductDetailService implements GetProductDetailUseCase {
 
         List<ProductOption> productOptions = productOptionRepository.findByProduct(product);
         Map<ProductOptionCategory, String> optionMap = getProductOptions(productOptions);
+        String profileImageUrl = cloudFrontDomain + photographer.getUser().getProfileImageUrl();
 
         GetPhotographerInfoResult photographerInfoResult = getPhotographerInfoResult(
             photographer,
+            profileImageUrl,
             specialties,
             locations
         );
@@ -144,10 +146,15 @@ public class GetProductDetailService implements GetProductDetailUseCase {
             .toList();
     }
 
-    private static GetPhotographerInfoResult getPhotographerInfoResult(Photographer photographer,
-        List<String> specialties, List<String> locations) {
+    private static GetPhotographerInfoResult getPhotographerInfoResult(
+        Photographer photographer,
+        String photographerImageUrl,
+        List<String> specialties,
+        List<String> locations
+    ) {
         return GetPhotographerInfoResult.of(
             photographer,
+            photographerImageUrl,
             specialties,
             locations
         );

@@ -13,6 +13,9 @@ public record GetProductPhotographerInfoResponse(
     @Schema(description = "작가 이름")
     String name,
 
+    @Schema(description = "프로필 이미지 URL")
+    String profileImageUrl,
+
     @Schema(description = "한줄 소개")
     String bio,
 
@@ -27,6 +30,7 @@ public record GetProductPhotographerInfoResponse(
         return new GetProductPhotographerInfoResponse(
             result.id(),
             result.name(),
+            result.profileImageUrl(),
             result.bio(),
             result.specialties(),
             result.locations()

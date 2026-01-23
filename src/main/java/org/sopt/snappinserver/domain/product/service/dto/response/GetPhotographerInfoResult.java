@@ -6,6 +6,7 @@ import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 public record GetPhotographerInfoResult(
     Long id,
     String name,
+    String profileImageUrl,
     String bio,
     List<String> specialties,
     List<String> locations
@@ -13,12 +14,14 @@ public record GetPhotographerInfoResult(
 
     public static GetPhotographerInfoResult of(
         Photographer photographer,
+        String profileImageUrl,
         List<String> specialties,
         List<String> locations
     ) {
         return new GetPhotographerInfoResult(
             photographer.getId(),
             photographer.getNickname(),
+            profileImageUrl,
             photographer.getBio(),
             specialties,
             locations
