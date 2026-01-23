@@ -17,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class GetRandomPhotographersService implements GetRandomPhotographersUseCase {
 
-    private static final String BASE_PROFILE_IMAGE_KEY = "profile/basic_profile.png";
-
     private final PhotographerRepository photographerRepository;
     private final PhotographerSpecialtyRepository photographerSpecialtyRepository;
 
@@ -30,7 +28,7 @@ public class GetRandomPhotographersService implements GetRandomPhotographersUseC
         return photographers.stream()
             .map(photographer -> {
                 String profileImageUrl = (photographer.getUser().getProfileImageUrl() == null)
-                    ? cloudFrontDomain + BASE_PROFILE_IMAGE_KEY
+                    ? null
                     : cloudFrontDomain + photographer.getUser().getProfileImageUrl();
                 List<PhotographerSpecialty> specialties = photographerSpecialtyRepository
                     .findAllByPhotographer(photographer);
