@@ -101,11 +101,29 @@ reviews:
         - 필터링/검색은 query string 사용
         
         [Annotation 위치 기준]
-        - 검증 관련 (@Valid, @NotNull 등):	인터페이스에 위치
-        - 요청 관련 (@RequestBody, @RequestParam, @PathVariable):	인터페이스에 위치
-        - 인증 관련 (@AuthenticationPrincipal): 컨트롤러 구현체에 위치
-          단, 인증 관련 어노테이션은 인터페이스에서 @parameter(hidden = true) 붙여서 스웨거에 표시되지 않는 것으로 구현
-        
+        1. Interface (계약 / 명세 계층)
+          - Swagger 관련 (@Tag, @Operation, @Schema, @Parameter): 인터페이스에 위치
+          - HTTP Mapping 관련 (@GetMapping, @PostMapping, @PutMapping, @PatchMapping, @DeleteMapping): 인터페이스에 위치
+          - 요청 관련 (@RequestBody, @RequestParam, @PathVariable, @ModelAttribute, @RequestPart, @RequestHeader, @CookieValue): 인터페이스에 위치
+          - 형식 검증 관련 (@Valid, @NotNull, @NotBlank, @NotEmpty, @Min, @Max, @Positive, @PositiveOrZero, @Size, @Pattern, @DateTimeFormat): 인터페이스에 위치
+          - 인증 파라미터 문서 숨김 (@Parameter(hidden = true)): 인터페이스에 위치
+          - 상태 코드 (@ResponseStatus), CORS 정책 (@CrossOrigin): 정책에 따라 인터페이스에 위치 가능하나 위치 일관성 유지
+
+        2. Controller (실행 / 런타임 계층)
+          - Base Path (@RequestMapping): 컨트롤러 구현체에 위치
+          - 인증 관련 (@AuthenticationPrincipal): 컨트롤러 구현체에 위치
+          - Bean 등록 (@RestController, @Controller): 컨트롤러 구현체에 위치
+          - AOP 기반 검증 활성화 (@Validated): 컨트롤러 구현체에 위치
+          - 예외 처리 (@ExceptionHandler): 컨트롤러 구현체에 위치
+          - 바인딩 제어 (@InitBinder): 컨트롤러 구현체에 위치
+          - DI / 로깅 (@RequiredArgsConstructor, @Slf4j): 컨트롤러 구현체에 위치
+          - 상태 코드 (@ResponseStatus), CORS 정책 (@CrossOrigin): 정책에 따라 컨트롤러에 위치 가능하나 위치 일관성 유지
+
+        [중복 선언 금지]
+        - 동일한 Mapping, Validation, 요청 정의 어노테이션을 Interface와 Controller에 동시에 선언하지 않음
+        - 계약은 Interface 단일 책임
+        - Controller는 실행 책임
+
         [Layer별 검증 책임]
         1. API Layer (Interface/Controller)
         - 책임: 요청 데이터의 형식(Format) 검증
