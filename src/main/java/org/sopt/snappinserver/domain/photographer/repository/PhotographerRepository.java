@@ -14,6 +14,8 @@ public interface PhotographerRepository extends JpaRepository<Photographer, Long
 
     boolean existsByUser(User user);
 
+    boolean existsByUserId(Long userId);
+
     @Query(
         value = """
                 SELECT *
