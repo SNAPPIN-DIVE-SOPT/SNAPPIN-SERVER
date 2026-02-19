@@ -35,7 +35,7 @@ public class LoginService implements LoginUseCase {
         );
         TokenPair tokenPair = authTokenManager.issueTokenPair(user, userAgent);
 
-        return LoginResult.of(isNew, tokenPair, user.getRole());
+        return LoginResult.of(isNew, tokenPair, user);
     }
 
     private KakaoUserProfile fetchKakaoUserInfo(String redirectUri, String accessCode) {
