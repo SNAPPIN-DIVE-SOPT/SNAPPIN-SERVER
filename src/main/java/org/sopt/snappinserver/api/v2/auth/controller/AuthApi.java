@@ -1,6 +1,7 @@
 package org.sopt.snappinserver.api.v2.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +31,6 @@ public interface AuthApi {
 
         @RequestHeader(value = "User-Agent", required = false) String userAgent,
 
-        HttpServletResponse httpServletResponse
+        @Parameter(hidden = true) HttpServletResponse httpServletResponse
     );
 }
