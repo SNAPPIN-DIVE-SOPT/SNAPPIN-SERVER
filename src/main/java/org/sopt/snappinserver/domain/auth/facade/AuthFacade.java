@@ -21,10 +21,10 @@ public class AuthFacade {
         String userAgent
     ) {
         LoginResult loginResult = loginUseCase.kakaoLogin(redirectUri, accessCode, userAgent);
-        GetPhotographerExistenceResult hasPhotographerProfile = getPhotographerExistenceUseCase
+        GetPhotographerExistenceResult photographerExistence = getPhotographerExistenceUseCase
             .getHasPhotographerProfile(loginResult.userId());
 
-        return LoginWithPhotographerProfileResult.of(loginResult, hasPhotographerProfile);
+        return LoginWithPhotographerProfileResult.of(loginResult, photographerExistence);
     }
 
 }
