@@ -69,6 +69,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/reviews/images").authenticated()
                 .requestMatchers(AUTHENTICATED_URLS).authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login/kakao").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v2/auth/login/kakao").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/reissue").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/photos/process").permitAll()
                 .requestMatchers(HttpMethod.GET, PUBLIC_GET_URLS).permitAll()
