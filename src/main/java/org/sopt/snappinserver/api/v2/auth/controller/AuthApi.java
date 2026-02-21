@@ -23,7 +23,7 @@ public interface AuthApi {
     )
     ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
 
-        @Schema(description = "카카오에 등록할 redirect_uri 주소입니다.", example = "http://localhost:8080/api/v1/auth/login/kakao", nullable = true)
+        @Schema(description = "카카오에 등록할 redirect_uri 주소입니다.", example = "http://localhost:8080/api/v2/auth/login/kakao", nullable = true)
         @RequestParam(name = "redirect_uri", required = false) String clientRedirectUri,
 
         @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
