@@ -5,6 +5,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 import org.sopt.snappinserver.api.v1.curation.dto.response.CreateMoodCurationResponse;
 import org.sopt.snappinserver.api.v1.curation.dto.response.GetAllCurationQuestionsResponse;
@@ -31,6 +34,9 @@ public interface CurationApi {
         CustomUserInfo userInfo,
 
         @Schema(description = "조회할 단계", example = "1")
+        @NotNull(message = "단계는 필수입니다.")
+        @Min(value = 1, message = "단계는 1 이상이어야 합니다.")
+        @Max(value = 5, message = "단계는 5 이하여야 합니다.")
         @RequestParam
         Integer step
     );
