@@ -3,6 +3,8 @@ package org.sopt.snappinserver.api.v1.place.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 import org.sopt.snappinserver.api.v1.place.dto.response.GetPlaceListResponse;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,8 @@ public interface PlaceApi {
     @GetMapping
     ApiResponseBody<GetPlaceListResponse, Void> getPlaces(
         @Schema(description = "장소 검색어")
+        @NotBlank(message = "검색 키워드는 필수입니다.")
+        @Length(max = 32, message = "검색 키워드는 최대 32자까지 입력할 수 있습니다.")
         @RequestParam String keyword
     );
 }
