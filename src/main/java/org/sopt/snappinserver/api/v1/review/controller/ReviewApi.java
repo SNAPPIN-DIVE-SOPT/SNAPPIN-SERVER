@@ -2,7 +2,6 @@ package org.sopt.snappinserver.api.v1.review.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +36,7 @@ public interface ReviewApi {
     )
     @GetMapping("/{reviewId}")
     ApiResponseBody<GetReviewDetailResponse, Void> getReviewDetail(
-        @Schema(description = "리뷰 ID")
+        @Parameter(description = "리뷰 ID")
         @PathVariable @NotNull Long reviewId
     );
 }
