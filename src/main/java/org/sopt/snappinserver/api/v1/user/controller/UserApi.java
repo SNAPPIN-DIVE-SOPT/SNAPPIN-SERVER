@@ -8,6 +8,8 @@ import org.sopt.snappinserver.api.v1.user.dto.response.GetSwitchedUserProfileRes
 import org.sopt.snappinserver.api.v1.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @Tag(name = "01 - User", description = "사용자 관련 API")
@@ -17,6 +19,7 @@ public interface UserApi {
         summary = "유저 정보 조회 API",
         description = "현재 로그인한 사용자의 역할을 기반으로 사용자 정보를 조회합니다."
     )
+    @GetMapping("/me")
     ApiResponseBody<GetUserInfoResponse, Void> getUserInfo(
         @Parameter(hidden = true)
         CustomUserInfo userInfo
@@ -26,12 +29,15 @@ public interface UserApi {
         summary = "유저 프로필 전환 API",
         description = "현재 로그인한 사용자가 유저 프로필 전환이 가능한 경우, 사용자 역할을 전환하여 accessCode를 재발급합니다."
     )
+    @PatchMapping("/role")
     ApiResponseBody<GetSwitchedUserProfileResponse, Void> patchUserRole(
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+        @RequestHeader(value = "User-Agent", required = false)
+        String userAgent,
 
+        @Parameter(hidden = true)
         HttpServletResponse httpServletResponse
     );
 }
