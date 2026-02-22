@@ -1,5 +1,8 @@
 package org.sopt.snappinserver.api.v1.curation.controller;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 import org.sopt.snappinserver.api.v1.curation.dto.response.CreateMoodCurationResponse;
@@ -31,6 +34,10 @@ public class CurationController implements CurationApi {
     @Override
     public ApiResponseBody<GetCurationQuestionPhotosResponse, Void> getCurationQuestion(
         @AuthenticationPrincipal CustomUserInfo userInfo,
+
+        @NotNull(message = "단계는 필수입니다.")
+        @Min(value = 1, message = "단계는 1 이상이어야 합니다.")
+        @Max(value = 5, message = "단계는 5 이하여야 합니다.")
         Integer step
     ) {
         GetCurationQuestionResult result = getCurationQuestionUseCase.retrieveCurationQuestionPhotos(
