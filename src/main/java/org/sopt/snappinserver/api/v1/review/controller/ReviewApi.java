@@ -13,6 +13,7 @@ import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "011 - Review", description = "리뷰 관련 API")
@@ -22,6 +23,7 @@ public interface ReviewApi {
         summary = "리뷰 사진 url 발급 API",
         description = "리뷰에 업로드하는 사진을 저장할 S3 Presigned URL을 생성하여 반환합니다."
     )
+    @PostMapping("/image")
     ApiResponseBody<PostPresignedUrlResponse, Void> postPresignedUrl(
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
