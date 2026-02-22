@@ -22,9 +22,6 @@ import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioDetai
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioListUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +36,6 @@ public class PortfolioController implements PortfolioApi {
     private final GetPortfolioListUseCase getPortfolioListUseCase;
 
     @Override
-    @GetMapping("/popular")
     public ApiResponseBody<GetPopularPortfolioListResponse, Void> getPopularPortfolios() {
         GetPopularPortfolioListResult result = getPopularPortfolioListUseCase
             .getPopularPortfolioList();
@@ -49,10 +45,9 @@ public class PortfolioController implements PortfolioApi {
     }
 
     @Override
-    @GetMapping("/{portfolioId}")
     public ApiResponseBody<GetPortfolioDetailResponse, Void> getPortfolioDetail(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @PathVariable Long portfolioId
+        Long portfolioId
     ) {
         Long userId = (userInfo != null) ? userInfo.userId() : null;
         GetPortfolioDetailResult result = getPortfolioDetailUseCase.findPortfolioDetail(
@@ -65,7 +60,6 @@ public class PortfolioController implements PortfolioApi {
     }
 
     @Override
-    @GetMapping("/recommendation")
     public ApiResponseBody<GetCurationResponse, Void> getCuratedPortfolios(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
@@ -78,9 +72,8 @@ public class PortfolioController implements PortfolioApi {
     }
 
     @Override
-    @GetMapping
     public ApiResponseBody<GetPortfolioListResponse, GetPortfolioMetaResponse> getPortfolioList(
-        @ModelAttribute GetPortfolioListRequest request
+        GetPortfolioListRequest request
     ) {
         GetPortfolioListQuery query = getQuery(request);
         GetPortfolioListResult result = getPortfolioListUseCase.getPortfolioList(query);
