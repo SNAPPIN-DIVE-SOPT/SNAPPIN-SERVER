@@ -12,13 +12,11 @@ import org.sopt.snappinserver.api.v1.wish.dto.response.WishedPortfoliosResponse;
 import org.sopt.snappinserver.api.v1.wish.dto.response.WishedProductsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "012 - Wish", description = "좋아요 관련 API")
-@Validated
 public interface WishApi {
 
     @Operation(
