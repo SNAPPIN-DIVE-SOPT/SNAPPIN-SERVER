@@ -34,6 +34,7 @@ public interface UserApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
+        @Parameter(description = "유저가 로그인한 기기")
         @RequestHeader(value = "User-Agent", required = false)
         String userAgent,
 

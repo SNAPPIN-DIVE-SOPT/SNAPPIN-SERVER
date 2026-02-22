@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.api.v1.photographer.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -21,7 +21,7 @@ public interface PhotographerApi {
     )
     @GetMapping("/{photographerId}")
     ApiResponseBody<GetPhotographerProfileResponse, Void> getPhotographerProfile(
-        @Schema(description = "조회할 작가 ID")
+        @Parameter(description = "조회할 작가 ID")
         @NotNull(message = "작가 ID는 필수입니다.")
         @Positive(message = "작가 ID는 양수여야 합니다.")
         @PathVariable
