@@ -17,20 +17,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "01 - Auth", description = "인증/인가 관련 API V2")
 public interface AuthApi {
 
-    @PostMapping("/login/kakao")
     @Operation(
         summary = "카카오 로그인",
         description = "인가 코드를 받아 카카오로 소셜 로그인을 진행합니다."
     )
+    @PostMapping("/login/kakao")
     ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
-
         @Schema(description = "카카오에 등록할 redirect_uri 주소입니다.", example = "http://localhost:8080/api/v2/auth/login/kakao", nullable = true)
-        @RequestParam(name = "redirect_uri", required = false) String clientRedirectUri,
+        @RequestParam(name = "redirect_uri", required = false)
+        String clientRedirectUri,
 
-        @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
+        @Valid
+        @RequestBody
+        CreateKakaoLoginRequest createKakaoLoginRequest,
 
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+        @RequestHeader(value = "User-Agent", required = false)
+        String userAgent,
 
-        @Parameter(hidden = true) HttpServletResponse httpServletResponse
+        @Parameter(hidden = true)
+        HttpServletResponse httpServletResponse
     );
 }
