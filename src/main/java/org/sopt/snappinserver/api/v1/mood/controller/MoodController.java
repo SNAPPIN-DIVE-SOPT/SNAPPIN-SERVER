@@ -1,14 +1,13 @@
 package org.sopt.snappinserver.api.v1.mood.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sopt.snappinserver.global.response.code.mood.MoodSuccessCode;
 import org.sopt.snappinserver.api.v1.mood.dto.response.GetMoodFilterListResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.mood.service.dto.response.GetMoodFilterListResult;
 import org.sopt.snappinserver.domain.mood.service.usecase.GetMoodFilterListUseCase;
+import org.sopt.snappinserver.global.response.code.mood.MoodSuccessCode;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +19,6 @@ public class MoodController implements MoodApi {
     private final GetMoodFilterListUseCase getMoodFilterListUseCase;
 
     @Override
-    @GetMapping
     public ApiResponseBody<GetMoodFilterListResponse, Void> getAllMoodFilters(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
