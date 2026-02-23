@@ -37,7 +37,6 @@ import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservat
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -167,7 +166,7 @@ public class ProductController implements ProductApi {
 
     @Override
     public ApiResponseBody<GetProductListResponse, GetProductListMeta> getProductList(
-        @ModelAttribute GetProductListQuery query
+        GetProductListQuery query
     ) {
         GetProductListResult result = getProductListUseCase.getProductList(query);
         GetProductListResponse response = GetProductListResponse.from(result);

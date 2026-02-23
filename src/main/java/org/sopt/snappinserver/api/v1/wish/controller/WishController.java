@@ -19,12 +19,14 @@ import org.sopt.snappinserver.domain.wish.service.usecase.PostWishPortfolioUseCa
 import org.sopt.snappinserver.domain.wish.service.usecase.PostWishProductUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/wishes")
 @RequiredArgsConstructor
 @RestController
+@Validated
 public class WishController implements WishApi {
 
     private final PostWishPortfolioUseCase postWishPortfolioUseCase;

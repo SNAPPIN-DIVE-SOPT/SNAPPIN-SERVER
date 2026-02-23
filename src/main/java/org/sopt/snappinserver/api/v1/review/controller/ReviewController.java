@@ -2,7 +2,6 @@ package org.sopt.snappinserver.api.v1.review.controller;
 
 import static org.sopt.snappinserver.global.response.code.review.ReviewSuccessCode.POST_PRESIGNED_URL_OK;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.global.response.code.review.ReviewSuccessCode;
 import org.sopt.snappinserver.api.v1.review.dto.request.PostPresignedUrlRequest;
@@ -16,8 +15,6 @@ import org.sopt.snappinserver.domain.review.service.usecase.GetReviewDetailUseCa
 import org.sopt.snappinserver.domain.review.service.usecase.PostPresignedUrlUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,10 +27,9 @@ public class ReviewController implements ReviewApi {
     private final GetReviewDetailUseCase getReviewDetailUseCase;
 
     @Override
-    @PostMapping("/image")
     public ApiResponseBody<PostPresignedUrlResponse, Void> postPresignedUrl(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @Valid @RequestBody PostPresignedUrlRequest request
+        PostPresignedUrlRequest request
     ) {
         PostPresignedUrlCommand command = getPostPresignedUrlCommand(userInfo, request);
         PostPresignedUrlResult result = postPresignedUrlUseCase.getPresignedUrlForUpload(command);
