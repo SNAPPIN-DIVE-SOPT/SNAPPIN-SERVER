@@ -18,9 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +36,6 @@ public class UserController implements UserApi {
     private long refreshTokenSeconds;
 
     @Override
-    @GetMapping("/me")
     public ApiResponseBody<GetUserInfoResponse, Void> getUserInfo(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
@@ -50,10 +46,9 @@ public class UserController implements UserApi {
     }
 
     @Override
-    @PatchMapping("/role")
     public ApiResponseBody<GetSwitchedUserProfileResponse, Void> patchUserRole(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+        String userAgent,
         HttpServletResponse httpServletResponse
     ) {
         SwitchUserRoleCommand command = getCommand(userInfo, userAgent);

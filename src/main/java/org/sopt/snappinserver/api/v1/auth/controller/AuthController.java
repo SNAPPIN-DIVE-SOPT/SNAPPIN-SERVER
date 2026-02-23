@@ -1,10 +1,8 @@
 package org.sopt.snappinserver.api.v1.auth.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.sopt.snappinserver.global.response.code.auth.AuthSuccessCode;
 import org.sopt.snappinserver.api.v1.auth.dto.request.CreateKakaoLoginRequest;
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateAccessTokenResponse;
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateKakaoLoginResponse;
@@ -16,17 +14,13 @@ import org.sopt.snappinserver.domain.auth.service.dto.response.ReissueTokenResul
 import org.sopt.snappinserver.domain.auth.service.usecase.LoginUseCase;
 import org.sopt.snappinserver.domain.auth.service.usecase.LogoutUseCase;
 import org.sopt.snappinserver.domain.auth.service.usecase.ReissueTokenUseCase;
+import org.sopt.snappinserver.global.response.code.auth.AuthSuccessCode;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/auth")
@@ -46,11 +40,10 @@ public class AuthController implements AuthApi {
     private long refreshTokenSeconds;
 
     @Override
-    @PostMapping("/login/kakao")
     public ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
-        @RequestParam(name = "redirect_uri", required = false) String clientRedirectUri,
-        @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+        String clientRedirectUri,
+        CreateKakaoLoginRequest createKakaoLoginRequest,
+        String userAgent,
         HttpServletResponse httpServletResponse
     ) {
         String redirectUri =
@@ -72,10 +65,9 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    @PostMapping("/reissue")
     public ApiResponseBody<CreateAccessTokenResponse, Void> createReissuedTokens(
-        @CookieValue(name = "refreshToken", required = false) String refreshToken,
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
+        String refreshToken,
+        String userAgent,
         HttpServletResponse httpServletResponse
     ) {
         validateCookieExists(refreshToken);
@@ -96,10 +88,9 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    @PostMapping("/logout")
     public ApiResponseBody<Void, Void> logout(
         @AuthenticationPrincipal CustomUserInfo principal,
-        @CookieValue(name = "refreshToken", required = false) String refreshToken,
+        String refreshToken,
         HttpServletResponse httpServletResponse
     ) {
         logoutUseCase.logout(principal.userId(), refreshToken);

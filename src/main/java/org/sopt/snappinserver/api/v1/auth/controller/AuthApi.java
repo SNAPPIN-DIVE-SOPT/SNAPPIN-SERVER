@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.api.v1.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -10,8 +10,8 @@ import org.sopt.snappinserver.api.v1.auth.dto.response.CreateAccessTokenResponse
 import org.sopt.snappinserver.api.v1.auth.dto.response.CreateKakaoLoginResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,15 +23,21 @@ public interface AuthApi {
         summary = "카카오 로그인",
         description = "인가 코드를 받아 카카오로 소셜 로그인을 진행합니다."
     )
+    @PostMapping("/login/kakao")
     ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
+        @Parameter(description = "카카오에 등록할 redirect_uri 주소입니다.", example = "http://localhost:8080/api/v1/auth/login/kakao")
+        @RequestParam(name = "redirect_uri", required = false)
+        String clientRedirectUri,
 
-        @Schema(description = "카카오에 등록할 redirect_uri 주소입니다.", example = "http://localhost:8080/api/v1/auth/login/kakao", nullable = true)
-        @RequestParam(name = "redirect_uri", required = false) String clientRedirectUri,
+        @Valid
+        @RequestBody
+        CreateKakaoLoginRequest createKakaoLoginRequest,
 
-        @Valid @RequestBody CreateKakaoLoginRequest createKakaoLoginRequest,
+        @Parameter(description = "유저가 로그인한 기기")
+        @RequestHeader(value = "User-Agent", required = false)
+        String userAgent,
 
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
-
+        @Parameter(hidden = true)
         HttpServletResponse httpServletResponse
     );
 
@@ -39,13 +45,17 @@ public interface AuthApi {
         summary = "토큰 재발급",
         description = "accessToken 만료 시, 기존 Refresh Token 으로 새로운 accessToken 을 반환하고, 새로운 refreshToken 으로 쿠키를 교체합니다."
     )
+    @PostMapping("/reissue")
     ApiResponseBody<CreateAccessTokenResponse, Void> createReissuedTokens(
+        @Parameter(description = "재발급 때 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
+        @CookieValue(name = "refreshToken")
+        String refreshToken,
 
-        @Schema(description = "재발급 때 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
-        @CookieValue(name = "refreshToken") String refreshToken,
+        @Parameter(description = "유저 로그인 기기")
+        @RequestHeader(value = "User-Agent", required = false)
+        String userAgent,
 
-        @RequestHeader(value = "User-Agent", required = false) String userAgent,
-
+        @Parameter(hidden = true)
         HttpServletResponse httpServletResponse
     );
 
@@ -53,14 +63,16 @@ public interface AuthApi {
         summary = "로그아웃",
         description = "accessToken 으로 인증된 사용자를 기준으로 refreshToken 을 무효화하여 사용자를 로그아웃 처리합니다."
     )
+    @PostMapping("/logout")
     ApiResponseBody<Void, Void> logout(
+        @Parameter(hidden = true)
+        CustomUserInfo principal,
 
-        @Schema(description = "인증이 필요합니다.")
-        @AuthenticationPrincipal CustomUserInfo principal,
+        @Parameter(description = "로그아웃 시 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
+        @CookieValue(name = "refreshToken", required = false)
+        String refreshToken,
 
-        @Schema(description = "로그아웃 시 사용할 refreshToken 입니다. 쿠키 설정만 해주시면 자동으로 보내집니다.")
-        @CookieValue(name = "refreshToken", required = false) String refreshToken,
-
+        @Parameter(hidden = true)
         HttpServletResponse response
     );
 

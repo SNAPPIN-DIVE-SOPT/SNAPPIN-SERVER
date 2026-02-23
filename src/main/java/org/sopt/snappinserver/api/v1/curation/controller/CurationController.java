@@ -16,8 +16,6 @@ import org.sopt.snappinserver.domain.curation.service.usecase.GetCurationQuestio
 import org.sopt.snappinserver.global.response.code.curation.CurationSuccessCode;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +29,6 @@ public class CurationController implements CurationApi {
     private final GetAllCurationQuestionUseCase getAllCurationQuestionUseCase;
 
     @Override
-    @GetMapping
     public ApiResponseBody<GetCurationQuestionPhotosResponse, Void> getCurationQuestion(
         @AuthenticationPrincipal CustomUserInfo userInfo,
         Integer step
@@ -46,7 +43,6 @@ public class CurationController implements CurationApi {
     }
 
     @Override
-    @PostMapping
     public ApiResponseBody<CreateMoodCurationResponse, Void> createMoodCuration(
         @AuthenticationPrincipal CustomUserInfo userInfo,
         CreateMoodCurationRequest request
@@ -62,7 +58,6 @@ public class CurationController implements CurationApi {
     }
 
     @Override
-    @GetMapping("/all")
     public ApiResponseBody<GetAllCurationQuestionsResponse, Void> getAllCurationQuestions(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
