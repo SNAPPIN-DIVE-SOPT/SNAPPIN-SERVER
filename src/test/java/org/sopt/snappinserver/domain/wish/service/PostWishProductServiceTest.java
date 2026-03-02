@@ -14,12 +14,14 @@ import org.sopt.snappinserver.domain.product.repository.ProductRepository;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.sopt.snappinserver.domain.wish.domain.entity.WishProduct;
+import org.sopt.snappinserver.domain.wish.domain.exception.WishErrorCode;
+import org.sopt.snappinserver.domain.wish.domain.exception.WishException;
 import org.sopt.snappinserver.domain.wish.repository.WishProductRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -79,6 +81,28 @@ class PostWishProductServiceTest {
             assertThat(result.liked()).isFalse();
             verify(wishProductRepository, times(1)).delete(existingWish);
             verify(wishProductRepository, never()).save(any(WishProduct.class));
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 사용자일 경우 USER_NOT_FOUND 예외를 던진다")
+        void throw_whenUserNotFound() {
+            Long userId = 1L;
+            Long productId = 10L;
+
+            when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+            WishException ex = catchThrowableOfType(
+                () -> postWishProductService.toggleProductWish(userId, productId),
+                WishException.class
+            );
+
+            assertThat(ex).isNotNull();
+            assertThat(ex.getErrorCode()).isEqualTo(WishErrorCode.USER_NOT_FOUND);
+
+            verify(productRepository, never()).findById(anyLong());
+            verify(wishProductRepository, never()).findByUserAndProduct(any(), any());
+            verify(wishProductRepository, never()).save(any());
+            verify(wishProductRepository, never()).delete(any());
         }
     }
 }
