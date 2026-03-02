@@ -57,5 +57,28 @@ class PostWishProductServiceTest {
             verify(wishProductRepository, times(1)).save(any(WishProduct.class));
             verify(wishProductRepository, never()).delete(any(WishProduct.class));
         }
+
+        @Test
+        @DisplayName("기존 위시가 있으면 위시를 삭제하고 liked=false를 반환한다")
+        void cancel_whenExists() {
+            Long userId = 1L;
+            Long productId = 10L;
+
+            User user = mock(User.class);
+            Product product = mock(Product.class);
+            WishProduct existingWish = mock(WishProduct.class);
+
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+            when(wishProductRepository.findByUserAndProduct(user, product)).thenReturn(Optional.of(existingWish));
+
+            WishProductResult result = postWishProductService.toggleProductWish(userId, productId);
+
+            assertThat(result).isNotNull();
+            assertThat(result.productId()).isEqualTo(productId);
+            assertThat(result.liked()).isFalse();
+            verify(wishProductRepository, times(1)).delete(existingWish);
+            verify(wishProductRepository, never()).save(any(WishProduct.class));
+        }
     }
 }
