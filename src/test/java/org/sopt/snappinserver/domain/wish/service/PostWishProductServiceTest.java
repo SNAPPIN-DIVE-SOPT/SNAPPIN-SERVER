@@ -84,7 +84,7 @@ class PostWishProductServiceTest {
         }
 
         @Test
-        @DisplayName("존재하지 않는 사용자일 경우 USER_NOT_FOUND 예외를 던진다")
+        @DisplayName("유저가 없으면 USER_NOT_FOUND 예외를 던진다")
         void throw_whenUserNotFound() {
             Long userId = 1L;
             Long productId = 10L;
@@ -100,6 +100,30 @@ class PostWishProductServiceTest {
             assertThat(ex.getErrorCode()).isEqualTo(WishErrorCode.USER_NOT_FOUND);
 
             verify(productRepository, never()).findById(anyLong());
+            verify(wishProductRepository, never()).findByUserAndProduct(any(), any());
+            verify(wishProductRepository, never()).save(any());
+            verify(wishProductRepository, never()).delete(any());
+        }
+
+        @Test
+        @DisplayName("존재하지 않는 상품일 경우 PRODUCT_NOT_FOUND 예외를 던진다")
+        void throw_whenProductNotFound() {
+            Long userId = 1L;
+            Long productId = 10L;
+
+            User user = mock(User.class);
+
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+            WishException ex = catchThrowableOfType(
+                () -> postWishProductService.toggleProductWish(userId, productId),
+                WishException.class
+            );
+
+            assertThat(ex).isNotNull();
+            assertThat(ex.getErrorCode()).isEqualTo(WishErrorCode.PRODUCT_NOT_FOUND);
+
             verify(wishProductRepository, never()).findByUserAndProduct(any(), any());
             verify(wishProductRepository, never()).save(any());
             verify(wishProductRepository, never()).delete(any());
