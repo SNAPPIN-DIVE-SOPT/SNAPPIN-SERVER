@@ -18,6 +18,7 @@ import org.sopt.snappinserver.domain.wish.domain.exception.WishErrorCode;
 import org.sopt.snappinserver.domain.wish.domain.exception.WishException;
 import org.sopt.snappinserver.domain.wish.repository.WishProductRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishProductResult;
+import org.mockito.ArgumentCaptor;
 
 import java.util.Optional;
 
@@ -69,8 +70,13 @@ class PostWishProductServiceTest {
             // 3. 위시 생성이므로 liked=true인지 확인
             assertThat(result.liked()).isTrue();
             // 4. 저장이 1번 호출되었는지 확인
-            verify(wishProductRepository, times(1)).save(any(WishProduct.class));
-            // 5. 삭제는 호출되지 않았는지 확인
+            ArgumentCaptor<WishProduct> captor = ArgumentCaptor.forClass(WishProduct.class);
+            verify(wishProductRepository, times(1)).save(captor.capture());
+            // 5. 저장된 위시가 요청 user/product로 생성되었는지 확인
+            WishProduct savedWish = captor.getValue();
+            assertThat(savedWish.getUser()).isSameAs(user);
+            assertThat(savedWish.getProduct()).isSameAs(product);
+            // 6. 삭제는 호출되지 않았는지 확인
             verify(wishProductRepository, never()).delete(any(WishProduct.class));
         }
 
