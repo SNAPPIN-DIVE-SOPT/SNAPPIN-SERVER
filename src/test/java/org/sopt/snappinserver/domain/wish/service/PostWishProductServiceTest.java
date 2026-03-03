@@ -181,7 +181,6 @@ class PostWishProductServiceTest {
             assertThat(ex).isNotNull();
 
             // 3. 에러 코드가 PRODUCT_NOT_FOUND인지 확인
-            // WishException에 getErrorCode()가 없으면 이 줄은 컴파일 에러가 날 수 있음(확실하지 않음)
             assertThat(ex.getErrorCode()).isEqualTo(WishErrorCode.PRODUCT_NOT_FOUND);
 
             // 4. 상품이 없으면 위시 조회/저장/삭제가 수행되지 않았는지 확인
