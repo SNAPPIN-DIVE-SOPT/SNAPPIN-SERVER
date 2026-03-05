@@ -71,7 +71,7 @@ class GetWishedPortfoliosServiceTest {
             // 3-1. 포트폴리오 식별자(id) 반환값 설정
             when(portfolio1.getId()).thenReturn(10L);
 
-            // 4. 위시 엔티티 Mock 객체 준비 (user가 좋아요한 포트폴리오를 의미)
+            // 4. 위시 엔티티 Mock 객체 준비
             WishPortfolio wish1 = mock(WishPortfolio.class);
             // 4-1. wish에서 portfolio를 꺼내면 위에서 만든 portfolio1이 나오도록 설정
             when(wish1.getPortfolio()).thenReturn(portfolio1);
@@ -89,7 +89,7 @@ class GetWishedPortfoliosServiceTest {
             when(userRepository.findById(userId)).thenReturn(Optional.of(user));
             // 6-2. 위시 목록 조회 결과로 wish1 하나를 반환 (최근 좋아요 순 정렬은 repo가 보장한다고 가정)
             when(wishPortfolioRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(List.of(wish1));
-            // 6-3. 대표 이미지(첫 번째 사진) 조회 성공
+            // 6-3. 대표 이미지 조회 성공
             when(portfolioPhotoRepository.findFirstByPortfolioOrderByDisplayOrderAsc(portfolio1))
                 .thenReturn(Optional.of(portfolioPhoto));
 
@@ -108,7 +108,7 @@ class GetWishedPortfoliosServiceTest {
         }
 
         @Test
-        @DisplayName("성공 케이스 - 대표 이미지가 없으면 imageUrl은 null이며, repo 정렬 순서가 유지된다")
+        @DisplayName("성공 케이스 - 대표 이미지가 없으면 imageUrl은 null이며, repository의 정렬 순서가 유지된다")
         void getWishedPortfolios_Success_withoutImage_andKeepsOrder() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
@@ -176,8 +176,7 @@ class GetWishedPortfoliosServiceTest {
             // [Then] 결과 검증
             // 1. 예외가 발생하는지 확인
             WishException ex = catchThrowableOfType(
-                () -> service.getWishedPortfolios(userId),
-                WishException.class
+                () -> service.getWishedPortfolios(userId), WishException.class
             );
 
             // 2. 예외 객체가 null이 아닌지 확인
