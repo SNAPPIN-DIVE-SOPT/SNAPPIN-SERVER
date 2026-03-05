@@ -161,7 +161,7 @@ class GetWishedPortfoliosServiceTest {
         }
 
         @Test
-        @DisplayName("예외 테스트 - 유저가 없으면 USER_NOT_FOUND 예외를 던진다")
+        @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던진다")
         void throw_whenUserNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
