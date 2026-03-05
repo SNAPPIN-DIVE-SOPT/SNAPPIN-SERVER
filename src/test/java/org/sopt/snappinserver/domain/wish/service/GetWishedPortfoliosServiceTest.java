@@ -1,8 +1,6 @@
 package org.sopt.snappinserver.domain.wish.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -53,7 +51,7 @@ class GetWishedPortfoliosServiceTest {
     class GetWishedPortfolios {
 
         @Test
-        @DisplayName("좋아요한 포트폴리오 목록 조회 성공 테스트 - 대표 이미지가 있으면 cloudFrontDomain과 합쳐서 내려준다")
+        @DisplayName("좋아요한 포트폴리오 목록 조회 성공 테스트 - 대표 이미지가 있는 경우")
         void getWishedPortfolios_Success_withImage() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
@@ -101,6 +99,59 @@ class GetWishedPortfoliosServiceTest {
             assertThat(result.portfolios().get(0).id()).isEqualTo(10L);
             // 4. imageUrl이 cloudFrontDomain + photo.imageUrl 형태로 합쳐졌는지 확인
             assertThat(result.portfolios().get(0).imageUrl()).isEqualTo("https://cdn.example.com/images/a.jpg");
+        }
+
+        @Test
+        @DisplayName("좋아요한 포트폴리오 목록 조회 성공 테스트 - 대표 이미지가 없는 경우 및 정렬 검사")
+        void getWishedPortfolios_Success_withoutImage_andKeepsOrder() {
+            // [Given] 테스트 시 필요한 데이터 생성
+            // 1. 요청 파라미터 준비
+            Long userId = 1L;
+
+            // 2. 유저 Mock 객체 준비
+            User user = mock(User.class);
+
+            // 3. 포트폴리오 Mock 객체 2개 준비
+            Portfolio portfolio1 = mock(Portfolio.class);
+            when(portfolio1.getId()).thenReturn(10L);
+            Portfolio portfolio2 = mock(Portfolio.class);
+            when(portfolio2.getId()).thenReturn(20L);
+
+            // 4. 위시 엔티티 Mock 객체 2개 준비
+            WishPortfolio wish1 = mock(WishPortfolio.class);
+            when(wish1.getPortfolio()).thenReturn(portfolio1);
+            WishPortfolio wish2 = mock(WishPortfolio.class);
+            when(wish2.getPortfolio()).thenReturn(portfolio2);
+
+            // 5. Mockito에게 행동 지시
+            // 5-1. 유저 조회 성공
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            // 5-2. 위시 목록은 repo가 createdAt desc로 정렬해서 내려준다고 가정
+            //      테스트에서는 wish2(최근) -> wish1(과거) 순으로 내려주고, 서비스가 이 순서를 유지하는지 검증
+            when(wishPortfolioRepository.findAllByUserOrderByCreatedAtDesc(user)).thenReturn(List.of(wish2, wish1));
+
+            // 5-3. 두 포트폴리오 모두 대표 이미지가 없다고 가정 (Optional.empty())
+            when(portfolioPhotoRepository.findFirstByPortfolioOrderByDisplayOrderAsc(portfolio2))
+                .thenReturn(Optional.empty());
+            when(portfolioPhotoRepository.findFirstByPortfolioOrderByDisplayOrderAsc(portfolio1))
+                .thenReturn(Optional.empty());
+
+            // [When] 테스트할 서비스 메서드 호출
+            WishedPortfoliosResult result = service.getWishedPortfolios(userId);
+
+            // [Then] 결과 검증
+            // 1. 결과 객체가 null이 아닌지 확인
+            assertThat(result).isNotNull();
+            // 2. 포트폴리오 리스트가 2개인지 확인 (정렬 검증을 위해 2개 이상 필요)
+            assertThat(result.portfolios()).hasSize(2);
+
+            // 3. 서비스가 중간에서 순서를 바꾸지 않고, repo에서 내려준 순서를 유지하는지 확인
+            assertThat(result.portfolios().get(0).id()).isEqualTo(20L);
+            assertThat(result.portfolios().get(1).id()).isEqualTo(10L);
+
+            // 4. 대표 이미지가 없으면 imageUrl이 null로 내려오는지 확인
+            assertThat(result.portfolios().get(0).imageUrl()).isNull();
+            assertThat(result.portfolios().get(1).imageUrl()).isNull();
         }
     }
 }
