@@ -168,9 +168,7 @@ class PostWishProductServiceTest {
             // 3-2. 상품 조회 실패(존재하지 않음)
             when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-            // [When] 테스트할 서비스 메서드 호출
-
-            // [Then] 결과 검증
+            // [When/Then] 테스트할 서비스 메서드 호출 및 결과 검증
             // 1. 예외가 발생하는지 확인
             WishException ex = catchThrowableOfType(
                 () -> postWishProductService.toggleProductWish(userId, productId),
