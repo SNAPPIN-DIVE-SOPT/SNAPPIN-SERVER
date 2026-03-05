@@ -25,7 +25,7 @@ import org.sopt.snappinserver.domain.wish.domain.exception.WishErrorCode;
 import org.sopt.snappinserver.domain.wish.domain.exception.WishException;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import org.sopt.snappinserver.domain.photo.domain.entity.Photo; // 확실하지 않음: 프로젝트에 맞게 경로 수정 필요할 수 있음
+import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioPhoto;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioPhotoRepository;
