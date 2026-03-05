@@ -40,7 +40,7 @@ class PostWishProductServiceTest {
     class ToggleProductWish {
 
         @Test
-        @DisplayName("기존 위시가 없으면 위시를 생성하고 liked=true를 반환한다")
+        @DisplayName("성공 케이스 - 기존 위시가 없으면 위시를 생성하고 liked=true를 반환한다")
         void like_whenNotExists() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
@@ -81,7 +81,7 @@ class PostWishProductServiceTest {
         }
 
         @Test
-        @DisplayName("기존 위시가 있으면 위시를 삭제하고 liked=false를 반환한다")
+        @DisplayName("성공 케이스 - 기존 위시가 있으면 위시를 삭제하고 liked=false를 반환한다")
         void cancel_whenExists() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
@@ -118,7 +118,7 @@ class PostWishProductServiceTest {
         }
 
         @Test
-        @DisplayName("유저가 없으면 USER_NOT_FOUND 예외를 던진다")
+        @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던진다")
         void throw_whenUserNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
@@ -152,7 +152,7 @@ class PostWishProductServiceTest {
         }
 
         @Test
-        @DisplayName("상품이 없으면 PRODUCT_NOT_FOUND 예외를 던진다")
+        @DisplayName("예외 케이스 - 상품이 없으면 PRODUCT_NOT_FOUND 예외를 던진다")
         void throw_whenProductNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
