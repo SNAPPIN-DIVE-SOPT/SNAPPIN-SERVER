@@ -262,12 +262,10 @@ class GetWishedProductsServiceTest {
                 .thenReturn(Optional.empty());
 
             // 6-4. 리뷰 통계 조회 성공
-            when(reviewRepository.findReviewStatsByProductId(any()))
-                .thenReturn(stats);
+            when(reviewRepository.findReviewStatsByProductId(anyLong())).thenReturn(stats);
 
             // 6-5. 무드 태그 없음
-            when(productMoodRepository.findAllByProductOrderById(any()))
-                .thenReturn(List.of());
+            when(productMoodRepository.findAllByProductOrderById(any())).thenReturn(List.of());
 
             // [When] 테스트할 서비스 메서드 호출
             WishedProductsResult result = service.getWishedProducts(userId);
