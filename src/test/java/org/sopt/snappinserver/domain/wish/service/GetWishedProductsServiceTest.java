@@ -116,6 +116,35 @@ class GetWishedProductsServiceTest {
             // 8-5. 무드 태그 조회 성공
             when(productMoodRepository.findAllByProductOrderById(product))
                 .thenReturn(List.of(productMood));
+
+            // [When] 테스트할 서비스 메서드 호출
+            WishedProductsResult result = service.getWishedProducts(userId);
+
+            // [Then] 결과 검증
+            // 1. 결과 객체가 null이 아닌지 확인
+            assertThat(result).isNotNull();
+            // 2. 상품 리스트가 1개인지 확인
+            assertThat(result.products()).hasSize(1);
+
+            var item = result.products().get(0);
+
+            // 3. id, title, price 매핑 확인
+            assertThat(item.id()).isEqualTo(10L);
+            assertThat(item.title()).isEqualTo("스냅 촬영 상품");
+            assertThat(item.price()).isEqualTo(100000);
+
+            // 4. 대표 이미지가 cloudFrontDomain + imageUrl 형태로 합쳐졌는지 확인
+            assertThat(item.imageUrl()).isEqualTo("https://cdn.example.com/images/a.jpg");
+
+            // 5. 리뷰 통계가 매핑되는지 확인
+            assertThat(item.rate()).isEqualTo(4.5);
+            assertThat(item.reviewCount()).isEqualTo(10);
+
+            // 6. 작가명 매핑 확인
+            assertThat(item.photographer()).isEqualTo("작가");
+
+            // 7. 무드 태그 매핑 확인
+            assertThat(item.moods()).containsExactly("따뜻한");
         }
 
     }
