@@ -168,7 +168,7 @@ class GetWishedPortfoliosServiceTest {
         void getWishedPortfolios_Success_emptyWishList() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
