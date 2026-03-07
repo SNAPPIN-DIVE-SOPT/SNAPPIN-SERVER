@@ -283,27 +283,32 @@ class GetWishedProductsServiceTest {
         @Test
         @DisplayName("성공 케이스 - 위시한 상품이 없으면 빈 리스트를 반환한다")
         void success_emptyWishList_returnsEmpty() {
-            // [Given]
+            // [Given] 테스트 시 필요한 데이터 생성
+            // 1. 요청 파라미터 준비
             Long userId = 1L;
 
+            // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
 
-            // 유저 조회 성공
+            // 3. Mockito에게 행동 지시
+            // 3-1. 유저 조회 성공
             when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
-            // 위시 목록이 비어있음
+            // 3-2. 위시 목록이 비어있는 경우
             when(wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user))
                 .thenReturn(List.of());
 
-            // [When]
+            // [When] 테스트할 서비스 메서드 호출
             WishedProductsResult result = service.getWishedProducts(userId);
 
-            // [Then]
+            // [Then] 결과 검증
+            // 1. 결과 객체가 null이 아닌지 확인
             assertThat(result).isNotNull();
+            // 2. 상품 리스트가 null이 아닌지 확인
             assertThat(result.products()).isNotNull();
+            // 3. 상품 리스트가 비어있는지 확인
             assertThat(result.products()).isEmpty();
 
-            // 빈 리스트면 하위 repo 호출이 없어야 함 (불필요 호출 방지)
+            // 4. 위시 목록이 없으면 하위 repository 호출이 발생하지 않는지 확인
             verify(productPhotoRepository, never()).findFirstByProductOrderByDisplayOrderAsc(any());
             verify(reviewRepository, never()).findReviewStatsByProductId(any());
             verify(productMoodRepository, never()).findAllByProductOrderById(any());
@@ -312,23 +317,27 @@ class GetWishedProductsServiceTest {
         @Test
         @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던지고, 이후 로직이 수행되지 않는다")
         void throw_whenUserNotFound() {
-            // [Given]
+            // [Given] 테스트 시 필요한 데이터 생성
+            // 1. 요청 파라미터 준비
             Long userId = 1L;
 
-            // 유저 조회 실패
+            // 2. Mockito에게 행동 지시
+            // 2-1. 유저 조회 실패 (존재하지 않음)
             when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-            // [When/Then]
+            // [When/Then] 테스트할 서비스 메서드 호출 및 결과 검증
+            // 1. 예외가 발생하는지 확인
             WishException ex = catchThrowableOfType(
                 () -> service.getWishedProducts(userId),
                 WishException.class
             );
 
-            // 1. 예외 객체 검증
+            // 2. 예외 객체가 null이 아닌지 확인
             assertThat(ex).isNotNull();
+            // 3. 에러 코드가 USER_NOT_FOUND인지 확인
             assertThat(ex.getErrorCode()).isEqualTo(WishErrorCode.USER_NOT_FOUND);
 
-            // 2. 유저가 없으면 이후 로직(위시 조회 등)이 수행되지 않았는지 확인
+            // 4. 유저가 없으면 이후 로직(위시 조회/대표 이미지 조회 등)이 수행되지 않았는지 확인
             verify(wishProductRepository, never()).findAllByUserWithProductOrderByCreatedAtDesc(any());
             verify(productPhotoRepository, never()).findFirstByProductOrderByDisplayOrderAsc(any());
             verify(reviewRepository, never()).findReviewStatsByProductId(any());
