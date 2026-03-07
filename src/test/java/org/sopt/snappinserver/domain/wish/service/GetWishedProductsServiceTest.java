@@ -242,6 +242,17 @@ class GetWishedProductsServiceTest {
             when(productMoodRepository.findAllByProductOrderById(any()))
                 .thenReturn(List.of());
 
+            // [When]
+            WishedProductsResult result = service.getWishedProducts(userId);
+
+            // [Then]
+            assertThat(result).isNotNull();
+            assertThat(result.products()).hasSize(2);
+
+            // 서비스가 중간에서 순서를 바꾸지 않는지 확인
+            assertThat(result.products().get(0).id()).isEqualTo(20L);
+            assertThat(result.products().get(1).id()).isEqualTo(10L);
+
         }
     }
 }
