@@ -281,6 +281,35 @@ class GetWishedProductsServiceTest {
         }
 
         @Test
+        @DisplayName("성공 케이스 - 위시한 상품이 없으면 빈 리스트를 반환한다")
+        void success_emptyWishList_returnsEmpty() {
+            // [Given]
+            Long userId = 1L;
+
+            User user = mock(User.class);
+
+            // 유저 조회 성공
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+            // 위시 목록이 비어있음
+            when(wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user))
+                .thenReturn(List.of());
+
+            // [When]
+            WishedProductsResult result = service.getWishedProducts(userId);
+
+            // [Then]
+            assertThat(result).isNotNull();
+            assertThat(result.products()).isNotNull();
+            assertThat(result.products()).isEmpty();
+
+            // 빈 리스트면 하위 repo 호출이 없어야 함 (불필요 호출 방지)
+            verify(productPhotoRepository, never()).findFirstByProductOrderByDisplayOrderAsc(any());
+            verify(reviewRepository, never()).findReviewStatsByProductId(any());
+            verify(productMoodRepository, never()).findAllByProductOrderById(any());
+        }
+
+        @Test
         @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던지고, 이후 로직이 수행되지 않는다")
         void throw_whenUserNotFound() {
             // [Given]
