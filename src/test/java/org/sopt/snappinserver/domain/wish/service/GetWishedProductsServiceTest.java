@@ -41,6 +41,9 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsRes
 @ExtendWith(MockitoExtension.class)
 class GetWishedProductsServiceTest {
 
+    private static final Long USER_ID = 1L;
+    private static final String CDN_DOMAIN = "https://cdn.example.com";
+
     @Mock private WishProductRepository wishProductRepository;
     @Mock private ProductPhotoRepository productPhotoRepository;
     @Mock private ProductMoodRepository productMoodRepository;
@@ -54,7 +57,7 @@ class GetWishedProductsServiceTest {
         // [Given] 테스트 시 필요한 환경 세팅
         // 1. @Value로 주입되는 cloudFrontDomain은 단위 테스트에서 null일 수 있음
         // 2. ReflectionTestUtils로 service 내부 필드(cloudFrontDomain)에 테스트용 값을 주입
-        ReflectionTestUtils.setField(service, "cloudFrontDomain", "https://cdn.example.com");
+        ReflectionTestUtils.setField(service, "cloudFrontDomain", CDN_DOMAIN);
     }
 
     @Nested
@@ -65,7 +68,7 @@ class GetWishedProductsServiceTest {
         void getWishedProducts_Success_withImage_review_moods() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
@@ -152,7 +155,7 @@ class GetWishedProductsServiceTest {
         void getWishedProducts_Success_withoutImage() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
@@ -208,7 +211,7 @@ class GetWishedProductsServiceTest {
         void getWishedProducts_Success_keepsOrder() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
@@ -285,7 +288,7 @@ class GetWishedProductsServiceTest {
         void success_emptyWishList_returnsEmpty() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
