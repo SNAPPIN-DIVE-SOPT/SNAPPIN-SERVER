@@ -183,6 +183,13 @@ class GetWishedProductsServiceTest {
             when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
             when(productMoodRepository.findAllByProductOrderById(product)).thenReturn(List.of());
 
+            // [When]
+            WishedProductsResult result = service.getWishedProducts(userId);
+
+            // [Then]
+            assertThat(result).isNotNull();
+            assertThat(result.products()).hasSize(1);
+            assertThat(result.products().get(0).imageUrl()).isNull();
         }
 
     }
