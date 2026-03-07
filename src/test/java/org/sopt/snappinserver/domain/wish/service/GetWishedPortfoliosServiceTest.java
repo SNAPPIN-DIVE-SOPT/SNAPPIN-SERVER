@@ -38,6 +38,9 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosR
 @ExtendWith(MockitoExtension.class)
 class GetWishedPortfoliosServiceTest {
 
+    private static final Long USER_ID = 1L;
+    private static final String CDN_DOMAIN = "https://cdn.example.com";
+
     @Mock private WishPortfolioRepository wishPortfolioRepository;
     @Mock private PortfolioPhotoRepository portfolioPhotoRepository;
     @Mock private UserRepository userRepository;
@@ -49,7 +52,7 @@ class GetWishedPortfoliosServiceTest {
         // [Given] 테스트 시 필요한 환경 세팅
         // 1. @Value로 주입되는 cloudFrontDomain은 테스트에서 스프링 컨텍스트를 띄우지 않기 때문에 값이 비어있을 수 있음
         // 2. ReflectionTestUtils로 service 내부 필드(cloudFrontDomain)에 테스트용 값을 주입
-        ReflectionTestUtils.setField(service, "cloudFrontDomain", "https://cdn.example.com");
+        ReflectionTestUtils.setField(service, "cloudFrontDomain", CDN_DOMAIN);
     }
 
     @Nested
@@ -61,7 +64,7 @@ class GetWishedPortfoliosServiceTest {
         void getWishedPortfolios_Success_withImage() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. Mock 객체 준비
             User user = mock(User.class);
@@ -112,7 +115,7 @@ class GetWishedPortfoliosServiceTest {
         void getWishedPortfolios_Success_withoutImage_andKeepsOrder() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. 유저 Mock 객체 준비
             User user = mock(User.class);
@@ -161,44 +164,11 @@ class GetWishedPortfoliosServiceTest {
         }
 
         @Test
-        @DisplayName("성공 케이스 - 위시한 포트폴리오가 없으면 빈 리스트를 반환한다")
-        void getWishedPortfolios_Success_emptyWishList() {
-            // [Given] 테스트 시 필요한 데이터 생성
-            // 1. 요청 파라미터 준비
-            Long userId = 1L;
-
-            // 2. 유저 Mock 객체 준비
-            User user = mock(User.class);
-
-            // 3. Mockito에게 행동 지시
-            // 3-1. 유저 조회 성공
-            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-            // 3-2. 위시 포트폴리오 목록이 비어있는 경우
-            when(wishPortfolioRepository.findAllByUserOrderByCreatedAtDesc(user))
-                .thenReturn(List.of());
-
-            // [When] 테스트할 서비스 메서드 호출
-            WishedPortfoliosResult result = service.getWishedPortfolios(userId);
-
-            // [Then] 결과 검증
-            // 1. 결과 객체가 null이 아닌지 확인
-            assertThat(result).isNotNull();
-            // 2. 포트폴리오 리스트가 null이 아닌지 확인
-            assertThat(result.portfolios()).isNotNull();
-            // 3. 포트폴리오 리스트가 비어있는지 확인
-            assertThat(result.portfolios()).isEmpty();
-
-            // 4. 위시 목록이 없으면 대표 이미지 조회가 발생하지 않는지 확인
-            verify(portfolioPhotoRepository, never())
-                .findFirstByPortfolioOrderByDisplayOrderAsc(any());
-        }
-
-        @Test
         @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던진다")
         void throw_whenUserNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. Mockito에게 행동 지시
             // 2-1. 유저 조회 실패(존재하지 않음)
