@@ -147,5 +147,43 @@ class GetWishedProductsServiceTest {
             assertThat(item.moods()).containsExactly("따뜻한");
         }
 
+        @Test
+        @DisplayName("성공 케이스 - 대표 이미지가 없으면 imageUrl은 null이다")
+        void getWishedProducts_Success_withoutImage() {
+            // [Given] 테스트 시 필요한 데이터 생성
+            Long userId = 1L;
+
+            User user = mock(User.class);
+
+            Product product = mock(Product.class);
+            when(product.getId()).thenReturn(10L);
+            when(product.getTitle()).thenReturn("상품");
+            when(product.getPrice()).thenReturn(50000);
+
+            var photographer = mock(Photographer.class);
+            when(photographer.getNickname()).thenReturn("작가");
+            when(product.getPhotographer()).thenReturn(photographer);
+
+            WishProduct wish = mock(WishProduct.class);
+            when(wish.getProduct()).thenReturn(product);
+
+            ProductReviewStatsResult stats = mock(ProductReviewStatsResult.class);
+            when(stats.averageRating()).thenReturn(4.0);
+            when(stats.reviewCount()).thenReturn(2L);
+
+            // Mockito에게 행동 지시
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            when(wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user))
+                .thenReturn(List.of(wish));
+
+            // 대표 이미지 없음
+            when(productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product))
+                .thenReturn(Optional.empty());
+
+            when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
+            when(productMoodRepository.findAllByProductOrderById(product)).thenReturn(List.of());
+
+        }
+
     }
 }
