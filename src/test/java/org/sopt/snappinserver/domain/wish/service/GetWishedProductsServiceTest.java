@@ -279,5 +279,31 @@ class GetWishedProductsServiceTest {
             assertThat(result.products().get(0).id()).isEqualTo(20L);
             assertThat(result.products().get(1).id()).isEqualTo(10L);
         }
+
+        @Test
+        @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던지고, 이후 로직이 수행되지 않는다")
+        void throw_whenUserNotFound() {
+            // [Given]
+            Long userId = 1L;
+
+            // 유저 조회 실패
+            when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+            // [When/Then]
+            WishException ex = catchThrowableOfType(
+                () -> service.getWishedProducts(userId),
+                WishException.class
+            );
+
+            // 1. 예외 객체 검증
+            assertThat(ex).isNotNull();
+            assertThat(ex.getErrorCode()).isEqualTo(WishErrorCode.USER_NOT_FOUND);
+
+            // 2. 유저가 없으면 이후 로직(위시 조회 등)이 수행되지 않았는지 확인
+            verify(wishProductRepository, never()).findAllByUserWithProductOrderByCreatedAtDesc(any());
+            verify(productPhotoRepository, never()).findFirstByProductOrderByDisplayOrderAsc(any());
+            verify(reviewRepository, never()).findReviewStatsByProductId(any());
+            verify(productMoodRepository, never()).findAllByProductOrderById(any());
+        }
     }
 }
