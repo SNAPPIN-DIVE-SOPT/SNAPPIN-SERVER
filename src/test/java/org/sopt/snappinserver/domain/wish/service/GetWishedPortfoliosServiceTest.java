@@ -164,6 +164,39 @@ class GetWishedPortfoliosServiceTest {
         }
 
         @Test
+        @DisplayName("성공 케이스 - 위시한 포트폴리오가 없으면 빈 리스트를 반환한다")
+        void getWishedPortfolios_Success_emptyWishList() {
+            // [Given] 테스트 시 필요한 데이터 생성
+            // 1. 요청 파라미터 준비
+            Long userId = 1L;
+
+            // 2. 유저 Mock 객체 준비
+            User user = mock(User.class);
+
+            // 3. Mockito에게 행동 지시
+            // 3-1. 유저 조회 성공
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            // 3-2. 위시 포트폴리오 목록이 비어있는 경우
+            when(wishPortfolioRepository.findAllByUserOrderByCreatedAtDesc(user))
+                .thenReturn(List.of());
+
+            // [When] 테스트할 서비스 메서드 호출
+            WishedPortfoliosResult result = service.getWishedPortfolios(userId);
+
+            // [Then] 결과 검증
+            // 1. 결과 객체가 null이 아닌지 확인
+            assertThat(result).isNotNull();
+            // 2. 포트폴리오 리스트가 null이 아닌지 확인
+            assertThat(result.portfolios()).isNotNull();
+            // 3. 포트폴리오 리스트가 비어있는지 확인
+            assertThat(result.portfolios()).isEmpty();
+
+            // 4. 위시 목록이 없으면 대표 이미지 조회가 발생하지 않는지 확인
+            verify(portfolioPhotoRepository, never())
+                .findFirstByPortfolioOrderByDisplayOrderAsc(any());
+        }
+
+        @Test
         @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던진다")
         void throw_whenUserNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
