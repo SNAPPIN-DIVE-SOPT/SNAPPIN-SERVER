@@ -192,5 +192,56 @@ class GetWishedProductsServiceTest {
             assertThat(result.products().get(0).imageUrl()).isNull();
         }
 
+        @Test
+        @DisplayName("성공 케이스 - repository의 최신 좋아요 순(createdAt desc) 정렬을 서비스가 그대로 유지한다")
+        void getWishedProducts_Success_keepsOrder() {
+            // [Given] 테스트 시 필요한 데이터 생성
+            Long userId = 1L;
+
+            User user = mock(User.class);
+
+            Product product1 = mock(Product.class);
+            when(product1.getId()).thenReturn(10L);
+            var photographer1 = mock(Photographer.class);
+            when(photographer1.getNickname()).thenReturn("작가1");
+            when(product1.getPhotographer()).thenReturn(photographer1);
+            when(product1.getTitle()).thenReturn("상품1");
+            when(product1.getPrice()).thenReturn(1000);
+
+            Product product2 = mock(Product.class);
+            when(product2.getId()).thenReturn(20L);
+            var photographer2 = mock(Photographer.class);
+            when(photographer2.getNickname()).thenReturn("작가2");
+            when(product2.getPhotographer()).thenReturn(photographer2);
+            when(product2.getTitle()).thenReturn("상품2");
+            when(product2.getPrice()).thenReturn(2000);
+
+            WishProduct wish1 = mock(WishProduct.class);
+            when(wish1.getProduct()).thenReturn(product1);
+            WishProduct wish2 = mock(WishProduct.class);
+            when(wish2.getProduct()).thenReturn(product2);
+
+            // 리뷰 통계는 각 상품마다 호출되므로, 공통 stub 처리
+            ProductReviewStatsResult stats = mock(ProductReviewStatsResult.class);
+            when(stats.averageRating()).thenReturn(0.0);
+            when(stats.reviewCount()).thenReturn(0L);
+
+            // [Given - Mockito 행동 지시]
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+            // repo가 최신순으로 내려준다고 가정: wish2(최근) -> wish1(과거)
+            when(wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user))
+                .thenReturn(List.of(wish2, wish1));
+
+            when(productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(any()))
+                .thenReturn(Optional.empty());
+
+            when(reviewRepository.findReviewStatsByProductId(any()))
+                .thenReturn(stats);
+
+            when(productMoodRepository.findAllByProductOrderById(any()))
+                .thenReturn(List.of());
+
+        }
     }
 }
