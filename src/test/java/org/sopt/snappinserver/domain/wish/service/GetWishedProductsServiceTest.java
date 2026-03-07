@@ -102,7 +102,21 @@ class GetWishedProductsServiceTest {
             when(mood.getName()).thenReturn("따뜻한");
             when(productMood.getMood()).thenReturn(mood);
 
+            // 8. Mockito에게 행동 지시
+            // 8-1. 유저 조회 성공
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+            // 8-2. 위시 목록 조회 결과로 wish 하나 반환 (정렬은 repo가 보장한다고 가정)
+            when(wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user))
+                .thenReturn(List.of(wish));
+            // 8-3. 대표 이미지 조회 성공
+            when(productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product))
+                .thenReturn(Optional.of(productPhoto));
+            // 8-4. 리뷰 통계 조회 성공
+            when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
+            // 8-5. 무드 태그 조회 성공
+            when(productMoodRepository.findAllByProductOrderById(product))
+                .thenReturn(List.of(productMood));
         }
-        
+
     }
 }
