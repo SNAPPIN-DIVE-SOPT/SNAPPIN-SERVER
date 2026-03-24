@@ -39,6 +39,10 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfoliosR
 class GetWishedPortfoliosServiceTest {
 
     private static final Long USER_ID = 1L;
+    private static final Long PORTFOLIO_ID_1 = 10L;
+    private static final Long PORTFOLIO_ID_2 = 20L;
+
+    private static final String IMAGE_PATH = "/images/a.jpg";
     private static final String CDN_DOMAIN = "https://cdn.example.com";
 
     @Mock private WishPortfolioRepository wishPortfolioRepository;
@@ -72,7 +76,7 @@ class GetWishedPortfoliosServiceTest {
             // 3. 포트폴리오 Mock 객체 준비
             Portfolio portfolio1 = mock(Portfolio.class);
             // 3-1. 포트폴리오 식별자(id) 반환값 설정
-            when(portfolio1.getId()).thenReturn(10L);
+            when(portfolio1.getId()).thenReturn(PORTFOLIO_ID_1);
 
             // 4. 위시 엔티티 Mock 객체 준비
             WishPortfolio wish1 = mock(WishPortfolio.class);
@@ -83,7 +87,7 @@ class GetWishedPortfoliosServiceTest {
             PortfolioPhoto portfolioPhoto = mock(PortfolioPhoto.class);
             Photo photo = mock(Photo.class);
             // 5-1. Photo의 imageUrl이 "/images/a.jpg"로 반환되도록 설정
-            when(photo.getImageUrl()).thenReturn("/images/a.jpg");
+            when(photo.getImageUrl()).thenReturn(IMAGE_PATH);
             // 5-2. PortfolioPhoto에서 photo를 꺼내면 위에서 만든 photo가 나오도록 설정
             when(portfolioPhoto.getPhoto()).thenReturn(photo);
 
@@ -105,9 +109,9 @@ class GetWishedPortfoliosServiceTest {
             // 2. 포트폴리오 리스트가 1개인지 확인
             assertThat(result.portfolios()).hasSize(1);
             // 3. 내려준 포트폴리오 id가 기대값(10L)인지 확인
-            assertThat(result.portfolios().get(0).id()).isEqualTo(10L);
+            assertThat(result.portfolios().get(0).id()).isEqualTo(PORTFOLIO_ID_1);
             // 4. imageUrl이 cloudFrontDomain + photo.imageUrl 형태로 합쳐졌는지 확인
-            assertThat(result.portfolios().get(0).imageUrl()).isEqualTo("https://cdn.example.com/images/a.jpg");
+            assertThat(result.portfolios().get(0).imageUrl()).isEqualTo(CDN_DOMAIN + IMAGE_PATH);
         }
 
         @Test
@@ -122,9 +126,9 @@ class GetWishedPortfoliosServiceTest {
 
             // 3. 포트폴리오 Mock 객체 2개 준비
             Portfolio portfolio1 = mock(Portfolio.class);
-            when(portfolio1.getId()).thenReturn(10L);
+            when(portfolio1.getId()).thenReturn(PORTFOLIO_ID_1);
             Portfolio portfolio2 = mock(Portfolio.class);
-            when(portfolio2.getId()).thenReturn(20L);
+            when(portfolio2.getId()).thenReturn(PORTFOLIO_ID_2);
 
             // 4. 위시 엔티티 Mock 객체 2개 준비
             WishPortfolio wish1 = mock(WishPortfolio.class);
@@ -155,8 +159,8 @@ class GetWishedPortfoliosServiceTest {
             assertThat(result.portfolios()).hasSize(2);
 
             // 3. 서비스가 중간에서 순서를 바꾸지 않고, repo에서 내려준 순서를 유지하는지 확인
-            assertThat(result.portfolios().get(0).id()).isEqualTo(20L);
-            assertThat(result.portfolios().get(1).id()).isEqualTo(10L);
+            assertThat(result.portfolios().get(0).id()).isEqualTo(PORTFOLIO_ID_2);
+            assertThat(result.portfolios().get(1).id()).isEqualTo(PORTFOLIO_ID_1);
 
             // 4. 대표 이미지가 없으면 imageUrl이 null로 내려오는지 확인
             assertThat(result.portfolios().get(0).imageUrl()).isNull();
