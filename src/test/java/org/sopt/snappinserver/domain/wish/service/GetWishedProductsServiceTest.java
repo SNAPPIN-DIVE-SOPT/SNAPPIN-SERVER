@@ -283,6 +283,86 @@ class GetWishedProductsServiceTest {
         }
 
         @Test
+        @DisplayName("성공 케이스 - 하나의 상품에 대해 3개의 무드가 있을 때 순서가 유지된다")
+        void getWishedProducts_Success_moodOrderPreserved() {
+            // [Given] 테스트 시 필요한 데이터 생성
+            // 1. 요청 파라미터 준비
+            Long userId = USER_ID;
+
+            // 2. 유저 Mock 객체 준비
+            User user = mock(User.class);
+
+            // 3. 상품(Product) Mock 객체 준비
+            Product product = mock(Product.class);
+            when(product.getId()).thenReturn(10L);
+            when(product.getTitle()).thenReturn("상품");
+            when(product.getPrice()).thenReturn(1000);
+
+            // 3-1. 작가(photographer) 닉네임 객체 준비
+            Photographer photographer = mock(Photographer.class);
+            when(photographer.getNickname()).thenReturn("작가");
+            when(product.getPhotographer()).thenReturn(photographer);
+
+            // 4. 위시 엔티티(WishProduct) Mock 객체 준비
+            WishProduct wish = mock(WishProduct.class);
+            when(wish.getProduct()).thenReturn(product);
+
+            // 5. 대표 이미지 없음
+            when(productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product))
+                .thenReturn(Optional.empty());
+
+            // 6. 리뷰 통계 Mock 객체 준비
+            ProductReviewStatsResult stats = mock(ProductReviewStatsResult.class);
+            when(stats.averageRating()).thenReturn(0.0);
+            when(stats.reviewCount()).thenReturn(0L);
+
+            // 7. 무드 태그(ProductMood -> Mood -> name) Mock 객체 3개 준비
+            ProductMood pm1 = mock(ProductMood.class);
+            ProductMood pm2 = mock(ProductMood.class);
+            ProductMood pm3 = mock(ProductMood.class);
+
+            Mood mood1 = mock(Mood.class);
+            Mood mood2 = mock(Mood.class);
+            Mood mood3 = mock(Mood.class);
+
+            // 7-1. 무드 이름 설정
+            when(mood1.getName()).thenReturn("무드1");
+            when(mood2.getName()).thenReturn("무드2");
+            when(mood3.getName()).thenReturn("무드3");
+
+            // 7-2. ProductMood에서 Mood 반환 설정
+            when(pm1.getMood()).thenReturn(mood1);
+            when(pm2.getMood()).thenReturn(mood2);
+            when(pm3.getMood()).thenReturn(mood3);
+
+            // 8. Mockito에게 행동 지시
+            // 8-1. 무드 태그를 정렬된 순서로 반환 (순서 검증 핵심)
+            when(productMoodRepository.findAllByProductOrderById(product))
+                .thenReturn(List.of(pm1, pm2, pm3));
+
+            // 8-2. 유저 조회 성공
+            when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+            // 8-3. 위시 목록 조회 결과로 wish 하나 반환
+            when(wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user))
+                .thenReturn(List.of(wish));
+
+            // 8-4. 리뷰 통계 조회 성공
+            when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
+
+            // [When] 테스트할 서비스 메서드 호출
+            WishedProductsResult result = service.getWishedProducts(userId);
+
+            // [Then] 결과 검증
+            // 1. 상품 리스트가 1개인지 확인
+            assertThat(result.products()).hasSize(1);
+            // 2. 무드 순서가 유지되는지 확인
+            WishedProductResult item = result.products().get(0);
+            assertThat(item.moods())
+                .containsExactly("무드1", "무드2", "무드3");
+        }
+
+        @Test
         @DisplayName("성공 케이스 - 위시한 상품이 없으면 빈 리스트를 반환한다")
         void success_emptyWishList_returnsEmpty() {
             // [Given] 테스트 시 필요한 데이터 생성
