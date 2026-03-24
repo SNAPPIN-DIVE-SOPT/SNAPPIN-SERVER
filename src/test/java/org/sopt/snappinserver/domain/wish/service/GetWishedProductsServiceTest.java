@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.sopt.snappinserver.domain.photo.domain.entity.Photo;
 import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
+import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductResult;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
@@ -80,7 +81,7 @@ class GetWishedProductsServiceTest {
             when(product.getPrice()).thenReturn(100000);
 
             // 3-1. 작가(photographer) 닉네임 객체 준비
-            var photographer = mock(Photographer.class);
+            Photographer photographer = mock(Photographer.class);
             when(photographer.getNickname()).thenReturn("작가");
             when(product.getPhotographer()).thenReturn(photographer);
 
@@ -90,7 +91,7 @@ class GetWishedProductsServiceTest {
 
             // 5. 대표 이미지 조회에 필요한 ProductPhoto/Photo Mock 객체 준비
             ProductPhoto productPhoto = mock(ProductPhoto.class);
-            var photo = mock(Photo.class);
+            Photo photo = mock(Photo.class);
             when(photo.getImageUrl()).thenReturn("/images/a.jpg");
             when(productPhoto.getPhoto()).thenReturn(photo);
 
@@ -101,7 +102,7 @@ class GetWishedProductsServiceTest {
 
             // 7. 무드 태그(ProductMood -> Mood -> name) Mock 객체 준비
             ProductMood productMood = mock(ProductMood.class);
-            var mood = mock(Mood.class);
+            Mood mood = mock(Mood.class);
             when(mood.getName()).thenReturn("따뜻한");
             when(productMood.getMood()).thenReturn(mood);
 
@@ -129,7 +130,7 @@ class GetWishedProductsServiceTest {
             // 2. 상품 리스트가 1개인지 확인
             assertThat(result.products()).hasSize(1);
 
-            var item = result.products().get(0);
+            WishedProductResult item = result.products().get(0);
 
             // 3. id, title, price 매핑 확인
             assertThat(item.id()).isEqualTo(10L);
@@ -167,7 +168,7 @@ class GetWishedProductsServiceTest {
             when(product.getPrice()).thenReturn(50000);
 
             // 3-1. 작가(photographer) 닉네임 객체 준비
-            var photographer = mock(Photographer.class);
+            Photographer photographer = mock(Photographer.class);
             when(photographer.getNickname()).thenReturn("작가");
             when(product.getPhotographer()).thenReturn(photographer);
 
@@ -228,11 +229,11 @@ class GetWishedProductsServiceTest {
             when(product2.getPrice()).thenReturn(2000);
 
             // 3-1. 작가(photographer) 닉네임 객체 준비
-            var photographer1 = mock(Photographer.class);
+            Photographer photographer1 = mock(Photographer.class);
             when(photographer1.getNickname()).thenReturn("작가1");
             when(product1.getPhotographer()).thenReturn(photographer1);
 
-            var photographer2 = mock(Photographer.class);
+            Photographer photographer2 = mock(Photographer.class);
             when(photographer2.getNickname()).thenReturn("작가2");
             when(product2.getPhotographer()).thenReturn(photographer2);
 
