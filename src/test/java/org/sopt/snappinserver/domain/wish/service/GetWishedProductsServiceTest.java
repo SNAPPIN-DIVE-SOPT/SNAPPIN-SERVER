@@ -146,7 +146,7 @@ class GetWishedProductsServiceTest {
 
             // 5. 리뷰 통계가 매핑되는지 확인
             assertThat(item.rate()).isEqualTo(4.5);
-            assertThat(item.reviewCount()).isEqualTo(10L);
+            assertThat(item.reviewCount()).isEqualTo(10);
 
             // 6. 작가명 매핑 확인
             assertThat(item.photographer()).isEqualTo("작가");
