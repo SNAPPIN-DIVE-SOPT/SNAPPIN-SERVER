@@ -43,6 +43,10 @@ import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsRes
 class GetWishedProductsServiceTest {
 
     private static final Long USER_ID = 1L;
+    private static final Long PRODUCT_ID_1 = 10L;
+    private static final Long PRODUCT_ID_2 = 20L;
+
+    private static final String IMAGE_PATH = "/images/a.jpg";
     private static final String CDN_DOMAIN = "https://cdn.example.com";
 
     @Mock private WishProductRepository wishProductRepository;
@@ -76,7 +80,7 @@ class GetWishedProductsServiceTest {
 
             // 3. 상품(Product) Mock 객체 준비
             Product product = mock(Product.class);
-            when(product.getId()).thenReturn(10L);
+            when(product.getId()).thenReturn(PRODUCT_ID_1);
             when(product.getTitle()).thenReturn("스냅 촬영 상품");
             when(product.getPrice()).thenReturn(100000);
 
@@ -92,7 +96,7 @@ class GetWishedProductsServiceTest {
             // 5. 대표 이미지 조회에 필요한 ProductPhoto/Photo Mock 객체 준비
             ProductPhoto productPhoto = mock(ProductPhoto.class);
             Photo photo = mock(Photo.class);
-            when(photo.getImageUrl()).thenReturn("/images/a.jpg");
+            when(photo.getImageUrl()).thenReturn(IMAGE_PATH);
             when(productPhoto.getPhoto()).thenReturn(photo);
 
             // 6. 리뷰 통계 Mock 객체 준비 (평균 별점/리뷰 수)
@@ -116,7 +120,7 @@ class GetWishedProductsServiceTest {
             when(productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product))
                 .thenReturn(Optional.of(productPhoto));
             // 8-4. 리뷰 통계 조회 성공
-            when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
+            when(reviewRepository.findReviewStatsByProductId(PRODUCT_ID_1)).thenReturn(stats);
             // 8-5. 무드 태그 조회 성공
             when(productMoodRepository.findAllByProductOrderById(product))
                 .thenReturn(List.of(productMood));
@@ -133,16 +137,16 @@ class GetWishedProductsServiceTest {
             WishedProductResult item = result.products().get(0);
 
             // 3. id, title, price 매핑 확인
-            assertThat(item.id()).isEqualTo(10L);
+            assertThat(item.id()).isEqualTo(PRODUCT_ID_1);
             assertThat(item.title()).isEqualTo("스냅 촬영 상품");
             assertThat(item.price()).isEqualTo(100000);
 
             // 4. 대표 이미지가 cloudFrontDomain + imageUrl 형태로 합쳐졌는지 확인
-            assertThat(item.imageUrl()).isEqualTo("https://cdn.example.com/images/a.jpg");
+            assertThat(item.imageUrl()).isEqualTo(CDN_DOMAIN + IMAGE_PATH);
 
             // 5. 리뷰 통계가 매핑되는지 확인
             assertThat(item.rate()).isEqualTo(4.5);
-            assertThat(item.reviewCount()).isEqualTo(10);
+            assertThat(item.reviewCount()).isEqualTo(10L);
 
             // 6. 작가명 매핑 확인
             assertThat(item.photographer()).isEqualTo("작가");
@@ -163,7 +167,7 @@ class GetWishedProductsServiceTest {
 
             // 3. 상품(Product) Mock 객체 준비
             Product product = mock(Product.class);
-            when(product.getId()).thenReturn(10L);
+            when(product.getId()).thenReturn(PRODUCT_ID_1);
             when(product.getTitle()).thenReturn("상품");
             when(product.getPrice()).thenReturn(50000);
 
@@ -191,7 +195,7 @@ class GetWishedProductsServiceTest {
             when(productPhotoRepository.findFirstByProductOrderByDisplayOrderAsc(product))
                 .thenReturn(Optional.empty());
             // 6-4. 리뷰 통계 조회 성공
-            when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
+            when(reviewRepository.findReviewStatsByProductId(PRODUCT_ID_1)).thenReturn(stats);
             // 6-5. 무드 태그 없음
             when(productMoodRepository.findAllByProductOrderById(product)).thenReturn(List.of());
 
@@ -219,12 +223,12 @@ class GetWishedProductsServiceTest {
 
             // 3. 상품(Product) Mock 객체 2개 준비
             Product product1 = mock(Product.class);
-            when(product1.getId()).thenReturn(10L);
+            when(product1.getId()).thenReturn(PRODUCT_ID_1);
             when(product1.getTitle()).thenReturn("상품1");
             when(product1.getPrice()).thenReturn(1000);
 
             Product product2 = mock(Product.class);
-            when(product2.getId()).thenReturn(20L);
+            when(product2.getId()).thenReturn(PRODUCT_ID_2);
             when(product2.getTitle()).thenReturn("상품2");
             when(product2.getPrice()).thenReturn(2000);
 
@@ -278,8 +282,8 @@ class GetWishedProductsServiceTest {
             assertThat(result.products()).hasSize(2);
 
             // 3. 서비스가 중간에서 순서를 바꾸지 않고, repo에서 내려준 순서를 유지하는지 확인
-            assertThat(result.products().get(0).id()).isEqualTo(20L);
-            assertThat(result.products().get(1).id()).isEqualTo(10L);
+            assertThat(result.products().get(0).id()).isEqualTo(PRODUCT_ID_2);
+            assertThat(result.products().get(1).id()).isEqualTo(PRODUCT_ID_1);
         }
 
         @Test
@@ -294,7 +298,7 @@ class GetWishedProductsServiceTest {
 
             // 3. 상품(Product) Mock 객체 준비
             Product product = mock(Product.class);
-            when(product.getId()).thenReturn(10L);
+            when(product.getId()).thenReturn(PRODUCT_ID_1);
             when(product.getTitle()).thenReturn("상품");
             when(product.getPrice()).thenReturn(1000);
 
@@ -348,7 +352,7 @@ class GetWishedProductsServiceTest {
                 .thenReturn(List.of(wish));
 
             // 8-4. 리뷰 통계 조회 성공
-            when(reviewRepository.findReviewStatsByProductId(10L)).thenReturn(stats);
+            when(reviewRepository.findReviewStatsByProductId(PRODUCT_ID_1)).thenReturn(stats);
 
             // [When] 테스트할 서비스 메서드 호출
             WishedProductsResult result = service.getWishedProducts(userId);
@@ -401,7 +405,7 @@ class GetWishedProductsServiceTest {
         void throw_whenUserNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
-            Long userId = 1L;
+            Long userId = USER_ID;
 
             // 2. Mockito에게 행동 지시
             // 2-1. 유저 조회 실패 (존재하지 않음)
