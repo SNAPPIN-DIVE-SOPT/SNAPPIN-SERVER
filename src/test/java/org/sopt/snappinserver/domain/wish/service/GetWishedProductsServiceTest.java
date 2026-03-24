@@ -368,7 +368,7 @@ class GetWishedProductsServiceTest {
 
         @Test
         @DisplayName("성공 케이스 - 위시한 상품이 없으면 빈 리스트를 반환한다")
-        void success_emptyWishList_returnsEmpty() {
+        void getWishedProducts_Success_emptyWishList_returnsEmpty() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
             Long userId = USER_ID;
@@ -402,7 +402,7 @@ class GetWishedProductsServiceTest {
 
         @Test
         @DisplayName("예외 케이스 - 유저가 없으면 USER_NOT_FOUND 예외를 던지고, 이후 로직이 수행되지 않는다")
-        void throw_whenUserNotFound() {
+        void getWishedProducts_Fail_whenUserNotFound() {
             // [Given] 테스트 시 필요한 데이터 생성
             // 1. 요청 파라미터 준비
             Long userId = USER_ID;
