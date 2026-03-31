@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import org.sopt.snappinserver.api.v1.user.dto.request.CreateOnboardingRequest;
+import org.sopt.snappinserver.api.v1.user.dto.response.GetOnboardingResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetSwitchedUserProfileResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
@@ -53,6 +54,18 @@ public interface UserApi {
     ApiResponseBody<Void, Void> createOnboarding(
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
-        @RequestBody CreateOnboardingRequest request
+
+        @RequestBody
+        CreateOnboardingRequest request
+    );
+
+    @Operation(
+        summary = "온보딩 정보 조회 API",
+        description = "예약 문의 화면에서 예약자 정보를 불러올 때 사용합니다."
+    )
+    @GetMapping("/onboarding")
+    ApiResponseBody<GetOnboardingResponse, Void> getOnboarding(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo
     );
 }

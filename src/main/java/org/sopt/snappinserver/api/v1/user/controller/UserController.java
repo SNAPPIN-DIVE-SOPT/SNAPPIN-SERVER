@@ -6,14 +6,17 @@ import static org.sopt.snappinserver.global.response.code.user.UserSuccessCode.S
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.v1.user.dto.request.CreateOnboardingRequest;
+import org.sopt.snappinserver.api.v1.user.dto.response.GetOnboardingResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetSwitchedUserProfileResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.user.service.dto.request.CreateOnboardingCommand;
 import org.sopt.snappinserver.domain.user.service.dto.request.SwitchUserRoleCommand;
+import org.sopt.snappinserver.domain.user.service.dto.response.GetOnboardingResult;
 import org.sopt.snappinserver.domain.user.service.dto.response.GetUserInfoResult;
 import org.sopt.snappinserver.domain.user.service.dto.response.SwitchUserRoleResult;
 import org.sopt.snappinserver.domain.user.service.usecase.CreateUserOnboardingUseCase;
+import org.sopt.snappinserver.domain.user.service.usecase.GetOnboardingUseCase;
 import org.sopt.snappinserver.domain.user.service.usecase.GetUserInfoUseCase;
 import org.sopt.snappinserver.domain.user.service.usecase.SwitchUserRoleUseCase;
 import org.sopt.snappinserver.global.response.code.user.UserSuccessCode;
@@ -34,6 +37,7 @@ public class UserController implements UserApi {
     private final GetUserInfoUseCase getUserInfoUseCase;
     private final SwitchUserRoleUseCase switchUserRoleUseCase;
     private final CreateUserOnboardingUseCase createUserOnboardingUseCase;
+    private final GetOnboardingUseCase getOnboardingUseCase;
 
     @Value("${auth.cookie.secure}")
     private boolean isSecure;
@@ -78,6 +82,18 @@ public class UserController implements UserApi {
         );
         createUserOnboardingUseCase.createUserOnboarding(command);
         return ApiResponseBody.ok(CREATE_ONBOARDING_OK);
+    }
+
+    @Override
+    public ApiResponseBody<GetOnboardingResponse, Void> getOnboarding(
+        @AuthenticationPrincipal CustomUserInfo userInfo
+    ) {
+        GetOnboardingResult result = getOnboardingUseCase.getOnboarding(userInfo.userId());
+
+        return ApiResponseBody.ok(
+            UserSuccessCode.GET_ONBOARDING_OK,
+            GetOnboardingResponse.create(result)
+        );
     }
 
     private SwitchUserRoleCommand getCommand(
