@@ -45,6 +45,7 @@ public enum UserErrorCode implements ErrorCode {
     // 404 NOT FOUND
     USER_NOT_FOUND(404, "USER_404_001", "존재하지 않는 사용자입니다."),
     PHOTOGRAPHER_NOT_FOUND(404, "USER_404_002", "해당 사용자의 작가 프로필이 존재하지 않습니다."),
+    ONBOARDING_NOT_FOUND(404, "USER_404_003", "해당 사용자의 온보딩 정보가 존재하지 않습니다."),
 
     ;
 
