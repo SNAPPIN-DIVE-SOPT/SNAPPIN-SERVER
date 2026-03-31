@@ -4,12 +4,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import org.sopt.snappinserver.api.v1.user.dto.request.CreateOnboardingRequest;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetSwitchedUserProfileResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetUserInfoResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @Tag(name = "01 - User", description = "사용자 관련 API")
@@ -40,5 +43,16 @@ public interface UserApi {
 
         @Parameter(hidden = true)
         HttpServletResponse httpServletResponse
+    );
+
+    @Operation(
+        summary = "온보딩 정보 입력 API",
+        description = "카카오 로그인 이후, 온보딩 정보가 입력되지 않은 사용자에 한해 추가 정보를 입력받습니다."
+    )
+    @PostMapping("/onboarding")
+    ApiResponseBody<Void, Void> createOnboarding(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+        @RequestBody CreateOnboardingRequest request
     );
 }
