@@ -13,18 +13,14 @@ public record GetOnboardingResponse(
     String phoneNumber,
 
     @Schema(description = "온보딩 시 작성한 이메일")
-    String email,
-
-    @Schema(description = "온보딩 시 작성한 성별")
-    String gender
+    String email
 ) {
 
     public static GetOnboardingResponse create(GetOnboardingResult result) {
         return new GetOnboardingResponse(
             result.name(),
             result.phoneNumber(),
-            result.email(),
-            result.gender().getGender()
+            result.email()
         );
     }
 }
