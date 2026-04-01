@@ -10,6 +10,7 @@ public enum MoodCategory {
     COMPOSITION("장면구성"),
     ATMOSPHERE("분위기"),
     STYLE("스타일"),
+    NONE("없음")
     ;
 
     private final String category;
