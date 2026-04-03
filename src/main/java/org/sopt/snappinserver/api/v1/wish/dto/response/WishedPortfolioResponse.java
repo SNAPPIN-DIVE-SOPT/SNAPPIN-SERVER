@@ -13,13 +13,17 @@ public record WishedPortfolioResponse(
         description = "포트폴리오 대표 이미지 URL",
         example = "https://example.com/portfolio1.jpg"
     )
-    String imageUrl
+    String imageUrl,
+
+    @Schema(description = "포트폴리오 좋아요 수", example = "3")
+    Integer likeCount
 ) {
 
     public static WishedPortfolioResponse from(WishedPortfolioResult result) {
         return new WishedPortfolioResponse(
             result.id(),
-            result.imageUrl()
+            result.imageUrl(),
+            result.likeCount()
         );
     }
 }
