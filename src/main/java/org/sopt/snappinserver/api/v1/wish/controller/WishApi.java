@@ -46,6 +46,8 @@ public interface WishApi {
         @Valid @RequestBody WishProductRequest request
     );
 
+    @Hidden
+    @Deprecated
     @Operation(
         summary = "위시 포트폴리오 목록 조회",
         description = "사용자가 좋아요한 전체 포트폴리오 목록을 조회합니다."
