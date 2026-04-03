@@ -10,9 +10,7 @@ import org.sopt.snappinserver.global.response.code.wish.WishSuccessCode;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v2/wishes")
@@ -26,7 +24,7 @@ public class WishControllerV2 implements WishApi {
     @Override
     public ApiResponseBody<WishedProductsResponse, WishedProductsMetaResponse> getWishedProducts(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @RequestParam(value = "cursor", required = false) Long cursor
+        Long cursor
     ) {
         WishedProductsPageResult result =
             getWishedProductsUseCase.getWishedProductsPage(userInfo.userId(), cursor);
