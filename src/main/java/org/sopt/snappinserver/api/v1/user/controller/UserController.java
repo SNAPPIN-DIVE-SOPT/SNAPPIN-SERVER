@@ -74,7 +74,7 @@ public class UserController implements UserApi {
     @Override
     public ApiResponseBody<Void, Void> createOnboarding(
         @AuthenticationPrincipal CustomUserInfo userInfo,
-        @RequestBody CreateOnboardingRequest request
+        CreateOnboardingRequest request
     ) {
         CreateOnboardingCommand command = CreateOnboardingCommand.create(
             userInfo.userId(),
