@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.domain.wish.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
@@ -43,4 +44,12 @@ public interface WishPortfolioRepository extends JpaRepository<WishPortfolio, Lo
         @Param("cursor") Long cursor,
         Pageable pageable
     );
+
+    @Query("""
+            select wp.portfolio.id, count(wp)
+            from WishPortfolio wp
+            where wp.portfolio.id in :portfolioIds
+            group by wp.portfolio.id
+        """)
+    List<Object[]> countGroupedByPortfolioId(@Param("portfolioIds") Collection<Long> portfolioIds);
 }
