@@ -1,5 +1,6 @@
 package org.sopt.snappinserver.api.v1.wish.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,10 +57,8 @@ public interface WishApi {
         CustomUserInfo userInfo
     );
 
-    @Operation(
-        summary = "위시 상품 목록 조회",
-        description = "사용자가 좋아요한 전체 상품 목록을 조회합니다."
-    )
+    @Hidden
+    @Deprecated
     @GetMapping("/products")
     ApiResponseBody<WishedProductsResponse, Void> getWishedProducts(
 
