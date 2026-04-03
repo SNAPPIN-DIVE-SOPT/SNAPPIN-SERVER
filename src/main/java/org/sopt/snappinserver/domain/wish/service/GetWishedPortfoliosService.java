@@ -1,6 +1,10 @@
 package org.sopt.snappinserver.domain.wish.service;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.PortfolioPhoto;
@@ -83,10 +87,40 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
     }
 
     private List<WishedPortfolioResult> mapWishesToResults(List<WishPortfolio> wishes) {
+        if (wishes.isEmpty()) {
+            return List.of();
+        }
+        Set<Long> portfolioIds = new HashSet<>();
+        for (WishPortfolio w : wishes) {
+            portfolioIds.add(w.getPortfolio().getId());
+        }
+        Map<Long, Long> likeCountByPortfolioId = loadLikeCountByPortfolioIds(portfolioIds);
         return wishes.stream()
             .map(WishPortfolio::getPortfolio)
-            .map(this::mapToWishedPortfolioResult)
+            .map(portfolio ->
+                mapToWishedPortfolioResult(
+                    portfolio,
+                    likeCount(portfolio.getId(), likeCountByPortfolioId)
+                )
+            )
             .toList();
+    }
+
+    private Map<Long, Long> loadLikeCountByPortfolioIds(Set<Long> portfolioIds) {
+        if (portfolioIds.isEmpty()) {
+            return Map.of();
+        }
+        List<Object[]> rows = wishPortfolioRepository.countGroupedByPortfolioId(portfolioIds);
+        Map<Long, Long> map = new HashMap<>();
+        for (Object[] row : rows) {
+            map.put((Long) row[0], (Long) row[1]);
+        }
+        return map;
+    }
+
+    private static int likeCount(Long portfolioId, Map<Long, Long> likeCountByPortfolioId) {
+        long n = likeCountByPortfolioId.getOrDefault(portfolioId, 0L);
+        return n > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) n;
     }
 
     private static void validateCursor(Long cursor) {
@@ -95,13 +129,13 @@ public class GetWishedPortfoliosService implements GetWishedPortfoliosUseCase {
         }
     }
 
-    private WishedPortfolioResult mapToWishedPortfolioResult(Portfolio portfolio) {
+    private WishedPortfolioResult mapToWishedPortfolioResult(Portfolio portfolio, int likeCount) {
         String imageUrl = portfolioPhotoRepository
             .findFirstByPortfolioOrderByDisplayOrderAsc(portfolio)
             .map(PortfolioPhoto::getPhoto)
             .map(photo -> cloudFrontDomain + photo.getImageUrl())
             .orElse(null);
 
-        return WishedPortfolioResult.of(portfolio.getId(), imageUrl);
+        return WishedPortfolioResult.of(portfolio.getId(), imageUrl, likeCount);
     }
 }
