@@ -37,7 +37,8 @@ public class Onboarding extends BaseEntity {
     private static final Pattern KOREAN_ONLY_PATTERN = Pattern.compile("^[가-힣]+$");
     private static final Pattern NICKNAME_PATTERN = Pattern.compile("^[가-힣a-zA-Z0-9]{2,10}$");
     private static final Pattern PHONE_NUMBER_PATTERN = Pattern.compile("^\\d{3}-\\d{4}-\\d{4}$");
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$");
+    private static final Pattern EMAIL_PATTERN = Pattern
+        .compile("^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$");
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "onboarding_seq_gen")
@@ -49,7 +50,7 @@ public class Onboarding extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
     @Column(nullable = false, length = MAX_NAME_LENGTH)
