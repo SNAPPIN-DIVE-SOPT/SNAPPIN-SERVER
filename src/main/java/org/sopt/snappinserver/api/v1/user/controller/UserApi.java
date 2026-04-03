@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.sopt.snappinserver.api.v1.user.dto.request.CreateOnboardingRequest;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetOnboardingResponse;
 import org.sopt.snappinserver.api.v1.user.dto.response.GetSwitchedUserProfileResponse;
@@ -56,6 +57,7 @@ public interface UserApi {
         CustomUserInfo userInfo,
 
         @RequestBody
+        @Valid
         CreateOnboardingRequest request
     );
 
