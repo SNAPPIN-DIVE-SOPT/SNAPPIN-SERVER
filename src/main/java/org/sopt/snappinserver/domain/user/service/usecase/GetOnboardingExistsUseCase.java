@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.user.service.dto.response.GetOnboardingExis
 
 public interface GetOnboardingExistsUseCase {
 
-    GetOnboardingExistsResult getOnboardingExists(Long userId);
+    GetOnboardingExistsResult hasOnboarding(Long userId);
 }

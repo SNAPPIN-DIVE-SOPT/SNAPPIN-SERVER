@@ -20,7 +20,7 @@ public class GetOnboardingExistsService implements GetOnboardingExistsUseCase {
     private final OnboardingRepository onboardingRepository;
 
     @Override
-    public GetOnboardingExistsResult getOnboardingExists(Long userId) {
+    public GetOnboardingExistsResult hasOnboarding(Long userId) {
         User user = userRepository.findById(userId)
             .orElseThrow(() -> new UserException(UserErrorCode.USER_NOT_FOUND));
         return new GetOnboardingExistsResult(onboardingRepository.existsByUser(user));

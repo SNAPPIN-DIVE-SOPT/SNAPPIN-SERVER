@@ -27,7 +27,7 @@ public class AuthFacade {
         GetPhotographerExistenceResult photographerExistence = getPhotographerExistenceUseCase
             .getHasPhotographerProfile(loginResult.userId());
         GetOnboardingExistsResult onboardingExistence = getOnboardingExistsUseCase
-            .getOnboardingExists(loginResult.userId());
+            .hasOnboarding(loginResult.userId());
 
         return LoginWithPhotographerProfileResult.of(
             loginResult,
