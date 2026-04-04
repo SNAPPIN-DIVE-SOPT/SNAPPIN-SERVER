@@ -6,6 +6,7 @@ import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.PopularMoodProductItemResult;
 
 public interface ProductRepositoryCustom {
 
@@ -17,5 +18,9 @@ public interface ProductRepositoryCustom {
     );
 
     List<String> findProductMoods(Long productId);
+
+    List<Long> findTopProductIdsByMoodOrderByWishCount(Long moodId, int limit);
+
+    List<PopularMoodProductItemResult> findPopularMoodProductItemsByIds(List<Long> productIds);
 
 }

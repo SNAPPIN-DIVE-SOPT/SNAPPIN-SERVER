@@ -30,12 +30,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.product.domain.enums.ProductOptionCategory;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.PopularMoodProductItemResult;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 import org.sopt.snappinserver.global.enums.WeekDay;
 import org.springframework.stereotype.Repository;
@@ -174,6 +178,80 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             .where(productMood.product.id.eq(productId))
             .orderBy(productMood.id.asc())
             .fetch();
+    }
+
+    @Override
+    public List<Long> findTopProductIdsByMoodOrderByWishCount(Long moodId, int limit) {
+        return jpaQueryFactory
+            .select(product.id)
+            .from(product)
+            .join(productMood).on(productMood.product.id.eq(product.id))
+            .where(productMood.mood.id.eq(moodId))
+            .leftJoin(wishProduct).on(wishProduct.product.id.eq(product.id))
+            .groupBy(product.id)
+            .orderBy(wishProduct.id.count().desc(), product.id.desc())
+            .limit(limit)
+            .fetch();
+    }
+
+    @Override
+    public List<PopularMoodProductItemResult> findPopularMoodProductItemsByIds(
+        List<Long> productIds
+    ) {
+        if (productIds == null || productIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<ProductBaseRow> rows = jpaQueryFactory
+            .select(
+                Projections.constructor(
+                    ProductBaseRow.class,
+                    product.id,
+                    photo.imageUrl,
+                    product.title,
+                    Expressions.numberTemplate(
+                        Double.class,
+                        "round({0}, 1)",
+                        review.rating.avg().coalesce(0.0)
+                    ),
+                    review.id.countDistinct(),
+                    photographer.nickname,
+                    product.price
+                )
+            )
+            .from(product)
+            .join(productPhoto).on(
+                productPhoto.product.id.eq(product.id).and(productPhoto.displayOrder.eq(1))
+            )
+            .join(photo).on(photo.id.eq(productPhoto.photo.id))
+            .leftJoin(reservation).on(reservation.product.id.eq(product.id))
+            .leftJoin(review).on(review.reservation.id.eq(reservation.id))
+            .where(product.id.in(productIds))
+            .groupBy(
+                product.id,
+                photo.imageUrl,
+                product.title,
+                photographer.nickname,
+                product.price
+            )
+            .fetch();
+
+        Map<Long, ProductBaseRow> byId = rows.stream()
+            .collect(Collectors.toMap(ProductBaseRow::id, Function.identity()));
+
+        return productIds.stream()
+            .map(byId::get)
+            .filter(Objects::nonNull)
+            .map(row -> new PopularMoodProductItemResult(
+                row.id(),
+                row.imageUrl(),
+                row.title(),
+                row.rate(),
+                row.reviewCount() == null ? 0L : row.reviewCount(),
+                row.photographerName(),
+                row.price()
+            ))
+            .toList();
     }
 
     private BooleanExpression cursorLt(Long cursor) {
