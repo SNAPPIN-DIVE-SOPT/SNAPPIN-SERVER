@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v2/users")
 @RequiredArgsConstructor
 @RestController
-public class UserController implements UserApi{
+public class UserControllerV2 implements UserApi{
 
     private final GetUserInfoUseCase getUserInfoUseCase;
 

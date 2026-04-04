@@ -10,6 +10,9 @@ public record GetClientInfoResponse(
     @Schema(description = "고객명")
     String name,
 
+    @Schema(description = "닉네임")
+    String nickname,
+
     @Schema(description = "고객 큐레이션 무드 결과 목록")
     List<String> curatedMoods
 ) {
@@ -17,6 +20,7 @@ public record GetClientInfoResponse(
     public static GetClientInfoResponse from(GetClientInfoResult result) {
         return new GetClientInfoResponse(
             result.name(),
+            result.nickname(),
             result.curatedMoods()
         );
     }
