@@ -23,7 +23,7 @@ public record CreateOnboardingCommand(
             request.nickname(),
             request.phoneNumber(),
             request.email(),
-            request.snapCategories()
+            List.copyOf(request.snapCategories())
         );
     }
 
