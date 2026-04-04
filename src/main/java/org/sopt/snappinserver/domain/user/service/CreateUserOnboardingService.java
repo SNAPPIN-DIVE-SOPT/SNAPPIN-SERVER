@@ -27,6 +27,7 @@ public class CreateUserOnboardingService implements CreateUserOnboardingUseCase 
     @Override
     public void createUserOnboarding(CreateOnboardingCommand command) {
         User user = getExistingUser(command.userId());
+        validatedUniqueOnboarding(user);
         Onboarding onboarding = Onboarding.create(
             user,
             command.name(),
@@ -41,6 +42,12 @@ public class CreateUserOnboardingService implements CreateUserOnboardingUseCase 
             .map(category -> OnboardingSnapCategory.create(onboarding, category))
             .toList();
         onboardingSnapCategoryRepository.saveAll(categories);
+    }
+
+    private void validatedUniqueOnboarding(User user) {
+        if(onboardingRepository.existsByUser(user)) {
+            throw new UserException(UserErrorCode.ONBOARDING_ALREADY_SAVED);
+        }
     }
 
     private User getExistingUser(Long userID) {
