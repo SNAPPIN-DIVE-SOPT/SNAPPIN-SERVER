@@ -14,6 +14,7 @@ public enum MoodErrorCode implements ErrorCode {
     NAME_TOO_LONG(400, "MOOD_400_003", "무드 이름 길이는 10자 이하입니다."),
     DEFINITION_REQUIRED(400, "MOOD_400_004", "무드 정의가 필요합니다."),
     DEFINITION_TOO_LONG(400, "MOOD_400_005", "무드 정의 길이는 1024자 이하입니다."),
+    MOOD_NOT_FOUND(404, "MOOD_400_006", "존재하지 않는 무드 태그입니다."),
 
     // 401 UNAUTHORIZED
 
