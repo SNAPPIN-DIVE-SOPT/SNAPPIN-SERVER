@@ -9,9 +9,11 @@ import org.sopt.snappinserver.domain.photographer.domain.entity.Photographer;
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerAvailableLocationRepository;
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerRepository;
 import org.sopt.snappinserver.domain.photographer.repository.PhotographerSpecialtyRepository;
+import org.sopt.snappinserver.domain.user.domain.entity.Onboarding;
 import org.sopt.snappinserver.domain.user.domain.entity.User;
 import org.sopt.snappinserver.domain.user.domain.exception.UserErrorCode;
 import org.sopt.snappinserver.domain.user.domain.exception.UserException;
+import org.sopt.snappinserver.domain.user.repository.OnboardingRepository;
 import org.sopt.snappinserver.domain.user.repository.UserRepository;
 import org.sopt.snappinserver.domain.user.service.dto.response.GetClientInfoResult;
 import org.sopt.snappinserver.domain.user.service.dto.response.GetPhotographerInfoResult;
@@ -34,6 +36,7 @@ public class GetUserInfoService implements GetUserInfoUseCase {
     private final CurationRepositoryCustom curationRepository;
     private final PhotographerSpecialtyRepository specialtyRepository;
     private final PhotographerAvailableLocationRepository locationRepository;
+    private final OnboardingRepository onboardingRepository;
 
     @Value("${cloud.aws.cloud-front.domain}")
     private String cloudFrontDomain;
@@ -64,7 +67,8 @@ public class GetUserInfoService implements GetUserInfoUseCase {
         boolean hasPhotographerProfile = photographerRepository.existsByUser(user);
         List<Long> moodIds = curationRepository.findTop3MoodIdsByUserId(user.getId());
         List<String> moodNames = getMoodNames(moodIds);
-        GetClientInfoResult clientInfo = new GetClientInfoResult(user.getName(), moodNames);
+        Onboarding onboarding = getExistingOnboarding(user);
+        GetClientInfoResult clientInfo = GetClientInfoResult.create(onboarding, moodNames);
 
         return GetUserInfoResult.of(
             user,
@@ -73,6 +77,11 @@ public class GetUserInfoService implements GetUserInfoUseCase {
             clientInfo,
             null
         );
+    }
+
+    private Onboarding getExistingOnboarding(User user) {
+        return onboardingRepository.findByUser(user)
+            .orElseThrow(() -> new UserException(UserErrorCode.ONBOARDING_NOT_FOUND));
     }
 
     private List<String> getMoodNames(List<Long> moodIds) {
