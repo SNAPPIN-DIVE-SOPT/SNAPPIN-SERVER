@@ -132,7 +132,7 @@ public interface ProductApi {
         @Parameter(hidden = true)
         CustomUserInfo userInfo,
 
-        @Schema(description = "상품 ID")
+        @Parameter(description = "상품 ID")
         @NotNull(message = "상품은 비어있을 수 없습니다.")
         @PathVariable Long productId
     );
