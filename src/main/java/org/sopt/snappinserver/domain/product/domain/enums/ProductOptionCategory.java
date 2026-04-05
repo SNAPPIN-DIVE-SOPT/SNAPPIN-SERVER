@@ -20,6 +20,9 @@ public enum ProductOptionCategory {
     FINAL_CUT_COUNT("최종 제공 장수", "finalCutCount"),
     FINAL_DELIVERY_TIME("최종 결과물 전달 소요 시간", "finalDeliveryTime"),
     CAN_ADD_PHOTO("장수 추가 가능 여부", "canAddPhoto"),
+    UPLOAD_AGREE_NOTE("업로드 동의 시 안내", "uploadAgreeNote"),
+    UPLOAD_DISAGREE_NOTE("업로드 비동의 시 안내", "uploadDisagreeNote"),
+    ADDITIONAL_REQUEST("기타 요청 사항", "additionalRequest"),
     ;
 
     private final String option;

@@ -11,6 +11,7 @@ import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetPopularMoodProductsResponse;
+import org.sopt.snappinserver.api.v1.product.dto.response.GetProductExtraInfoResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListMeta;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListResponse;
@@ -158,6 +159,19 @@ public interface ProductApi {
     ApiResponseBody<GetPopularMoodProductsResponse, Void> getPopularMoodProducts(
         @Schema(description = "무드 태그 아이디", example = "1")
         @RequestParam @NotNull @Positive Long moodId
+    );
+
+    @Operation(
+        summary = "상품 예약 부가 안내 조회",
+        description = "작가가 등록한 업로드 동의 안내 및 기타 요청 사항을 조회합니다."
+    )
+    @GetMapping("/{productId}/extra-info")
+    ApiResponseBody<GetProductExtraInfoResponse, Void> getProductExtraInfo(
+        @Parameter(hidden = true)
+        CustomUserInfo principal,
+
+        @Schema(description = "상품 아이디", example = "1")
+        @PathVariable @NotNull Long productId
     );
 
 }

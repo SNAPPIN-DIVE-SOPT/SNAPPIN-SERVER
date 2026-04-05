@@ -9,6 +9,7 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductDurationT
 import org.sopt.snappinserver.global.response.code.product.ProductSuccessCode;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetPopularMoodProductsResponse;
+import org.sopt.snappinserver.api.v1.product.dto.response.GetProductExtraInfoResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListMeta;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListResponse;
@@ -22,6 +23,7 @@ import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
 import org.sopt.snappinserver.domain.product.service.dto.request.ProductReservationCommand;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetPopularMoodProductsResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.GetProductExtraInfoResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductListResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductAvailableTimesResult;
@@ -33,6 +35,7 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductAvailable
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductClosedDatesUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductDetailUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetPopularMoodProductsUseCase;
+import org.sopt.snappinserver.domain.product.service.usecase.GetProductExtraInfoUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductListUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
@@ -57,6 +60,7 @@ public class ProductController implements ProductApi {
     private final GetProductDetailUseCase getProductDetailUseCase;
     private final GetProductListUseCase getProductListUseCase;
     private final GetPopularMoodProductsUseCase getPopularMoodProductsUseCase;
+    private final GetProductExtraInfoUseCase getProductExtraInfoUseCase;
     private final GetProductDurationTimeUseCase getProductDurationTimeUseCase;
 
     @Override
@@ -189,6 +193,19 @@ public class ProductController implements ProductApi {
         return ApiResponseBody.ok(
             ProductSuccessCode.GET_POPULAR_MOOD_PRODUCTS_OK,
             GetPopularMoodProductsResponse.from(result)
+        );
+    }
+
+    @Override
+    public ApiResponseBody<GetProductExtraInfoResponse, Void> getProductExtraInfo(
+        @AuthenticationPrincipal CustomUserInfo principal,
+        Long productId
+    ) {
+        GetProductExtraInfoResult result = getProductExtraInfoUseCase.getProductExtraInfo(productId);
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.GET_PRODUCT_EXTRA_INFO_OK,
+            GetProductExtraInfoResponse.from(result)
         );
     }
 
