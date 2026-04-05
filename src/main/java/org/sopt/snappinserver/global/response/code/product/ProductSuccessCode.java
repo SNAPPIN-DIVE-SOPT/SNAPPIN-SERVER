@@ -20,7 +20,8 @@ public enum ProductSuccessCode implements SuccessCode {
     GET_POPULAR_MOOD_PRODUCTS_OK(200, "PRODUCT_200_009", "인기 무드 상품 목록 조회에 성공했습니다."),
 
     // 201 CREATED
-    POST_PRODUCT_RESERVATION_OK(201, "PRODUCT_201_001", "상품 예약 생성에 성공했습니다.");
+    POST_PRODUCT_RESERVATION_OK(201, "PRODUCT_201_001", "상품 예약 생성에 성공했습니다."),
+    POST_PRODUCT_REVIEW_CREATED(201, "PRODUCT_201_002", "상품 리뷰 등록에 성공했습니다.");
 
     private final int status;
     private final String code;
