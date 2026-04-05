@@ -19,6 +19,9 @@ public enum ProductOptionCategory {
     FREE_REVISION_COUNT("무료 수정 횟수"),
     FINAL_CUT_COUNT("최종 제공 장수"),
     FINAL_DELIVERY_TIME("최종 결과물 전달 소요 시간"),
+    UPLOAD_AGREE_NOTE("업로드 동의 시 안내"),
+    UPLOAD_DISAGREE_NOTE("업로드 비동의 시 안내"),
+    ADDITIONAL_REQUEST("기타 요청 사항"),
     ;
 
     private final String option;
