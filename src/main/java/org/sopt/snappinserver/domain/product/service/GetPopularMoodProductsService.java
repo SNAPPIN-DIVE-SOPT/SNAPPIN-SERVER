@@ -40,7 +40,7 @@ public class GetPopularMoodProductsService implements GetPopularMoodProductsUseC
             TOP_BY_WISH_COUNT
         );
 
-        List<Long> pickedIds = pickRandomSubset(topIds, RANDOM_PICK);
+        List<Long> pickedIds = pickRandomSubset(topIds);
         List<PopularMoodProductItemResult> items =
             productRepository.findPopularMoodProductItemsByIds(pickedIds);
 
@@ -66,12 +66,12 @@ public class GetPopularMoodProductsService implements GetPopularMoodProductsUseC
         return cloudFrontDomain + imageUrl;
     }
 
-    private static List<Long> pickRandomSubset(List<Long> ids, int maxPick) {
+    private static List<Long> pickRandomSubset(List<Long> ids) {
         if (ids.isEmpty()) {
             return List.of();
         }
         List<Long> copy = new ArrayList<>(ids);
         Collections.shuffle(copy);
-        return copy.subList(0, Math.min(maxPick, copy.size()));
+        return copy.subList(0, Math.min(RANDOM_PICK, copy.size()));
     }
 }
