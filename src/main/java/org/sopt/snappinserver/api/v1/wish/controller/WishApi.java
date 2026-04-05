@@ -46,11 +46,11 @@ public interface WishApi {
         @Valid @RequestBody WishProductRequest request
     );
 
-    @Hidden
     @Deprecated
     @Operation(
         summary = "위시 포트폴리오 목록 조회",
-        description = "사용자가 좋아요한 전체 포트폴리오 목록을 조회합니다."
+        description = "v2 API로 대체되었습니다. /api/v2/wishes/portfolios로 대체해서 사용하세요.",
+        deprecated = true
     )
     @GetMapping("/portfolios")
     ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
@@ -59,8 +59,12 @@ public interface WishApi {
         CustomUserInfo userInfo
     );
 
-    @Hidden
     @Deprecated
+    @Operation(
+        summary = "위시 상품 목록 조회",
+        description = "v2 API로 대체되었습니다. /api/v2/wishes/products로 대체해서 사용하세요.",
+        deprecated = true
+    )
     @GetMapping("/products")
     ApiResponseBody<WishedProductsResponse, Void> getWishedProducts(
 
