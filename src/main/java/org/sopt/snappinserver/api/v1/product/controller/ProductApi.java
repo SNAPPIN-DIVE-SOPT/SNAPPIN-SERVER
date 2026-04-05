@@ -121,9 +121,11 @@ public interface ProductApi {
         @RequestBody @Valid @NotNull ProductReservationRequest request
     );
 
+    @Deprecated
     @Operation(
-        summary = "상품 상세 정보 및 상품 안내 조회 API",
-        description = "상품 상세 정보, 상품 안내, 관련 작가, 관련 상품을 함께 조회합니다."
+        summary = "상품 상세 정보 및 상품 안내 조회 API (Deprecated)",
+        description = "v2 API로 대체되었습니다. `/api/v2/products/{productId}`를 사용하세요.",
+        deprecated = true
     )
     @GetMapping("/{productId}")
     ApiResponseBody<GetProductDetailResponse, Void> getProductDetail(
