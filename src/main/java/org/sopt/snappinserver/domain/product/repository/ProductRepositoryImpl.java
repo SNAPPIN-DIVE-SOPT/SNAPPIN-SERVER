@@ -10,7 +10,6 @@ import static org.sopt.snappinserver.domain.product.domain.entity.QProduct.produ
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductMood.productMood;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductOption.productOption;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductPhoto.productPhoto;
-import static org.sopt.snappinserver.domain.reservation.domain.entity.QReservation.reservation;
 import static org.sopt.snappinserver.domain.review.domain.entity.QReview.review;
 import static org.sopt.snappinserver.domain.wish.domain.entity.QWishProduct.wishProduct;
 
@@ -123,8 +122,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     productPhoto.product.id.eq(product.id).and(productPhoto.displayOrder.eq(1))
                 )
                 .join(photo).on(photo.id.eq(productPhoto.photo.id))
-                .leftJoin(reservation).on(reservation.product.id.eq(product.id))
-                .leftJoin(review).on(review.reservation.id.eq(reservation.id))
+                .leftJoin(review).on(
+                    review.product.id.eq(product.id)
+                        .or(
+                            review.reservation.isNotNull()
+                                .and(review.reservation.product.id.eq(product.id))
+                        )
+                )
                 .where(
                     cursorLt(query.cursor()),
                     photographerEq(query.photographerId()),
@@ -224,8 +228,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 productPhoto.product.id.eq(product.id).and(productPhoto.displayOrder.eq(1))
             )
             .join(photo).on(photo.id.eq(productPhoto.photo.id))
-            .leftJoin(reservation).on(reservation.product.id.eq(product.id))
-            .leftJoin(review).on(review.reservation.id.eq(reservation.id))
+            .leftJoin(review).on(
+                review.product.id.eq(product.id)
+                    .or(
+                        review.reservation.isNotNull()
+                            .and(review.reservation.product.id.eq(product.id))
+                    )
+            )
             .where(product.id.in(productIds))
             .groupBy(
                 product.id,
