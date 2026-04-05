@@ -23,6 +23,7 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReserva
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationDetailReviewResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationDetailUseCase;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
+import org.sopt.snappinserver.domain.review.repository.ReservationReviewRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,6 +40,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
     private final ProductPhotoRepository productPhotoRepository;
     private final ProductMoodRepository productMoodRepository;
     private final ReviewRepository reviewRepository;
+    private final ReservationReviewRepository reservationReviewRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
     private final ReservationAdditionalPaymentRepository reservationAdditionalPaymentRepository;
 
@@ -181,14 +183,14 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
     }
 
     private GetReservationDetailReviewResult mapToReviewResult(Reservation reservation) {
-        return reviewRepository.findByReservation(reservation)
+        return reservationReviewRepository.findFirstByReservationOrderByIdDesc(reservation)
             .map(review -> {
                 List<ReviewPhoto> photos =
                     reviewPhotoRepository.findAllByReviewIds(List.of(review.getId()));
 
                 return new GetReservationDetailReviewResult(
                     review.getId(),
-                    reservation.getUser().getName(),
+                    review.resolveReviewerName(),
                     review.getRating(),
                     LocalDate.ofInstant(review.getCreatedAt(), KOREA_ZONE),
                     photos.stream()

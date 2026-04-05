@@ -41,7 +41,7 @@ public class GetReviewDetailService implements GetReviewDetailUseCase {
 
         return new GetReviewDetailResult(
             review.getId(),
-            review.getReservation().getUser().getName(),
+            review.resolveReviewerName(),
             review.getRating(),
             review.getCreatedAt().atZone(KOREA_ZONE).toLocalDate(),
             images,

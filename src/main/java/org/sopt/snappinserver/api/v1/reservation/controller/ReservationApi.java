@@ -10,10 +10,10 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.api.v1.reservation.dto.request.CreateReservationReviewRequest;
 import org.sopt.snappinserver.api.v1.reservation.dto.request.RequestPaymentReservationRequest;
+import org.sopt.snappinserver.api.v1.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.CancelReservationResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.CompleteReservationResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.ConfirmReservationResponse;
-import org.sopt.snappinserver.api.v1.reservation.dto.response.CreateReservationReviewResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.PayReservationResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.RefuseReservationResponse;
 import org.sopt.snappinserver.api.v1.reservation.dto.response.RequestPaymentReservationResponse;
@@ -32,9 +32,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "010 - Reservation", description = "예약 관련 API")
 public interface ReservationApi {
+
+    @Deprecated
     @Operation(
         summary = "리뷰 등록",
-        description = "촬영 완료된 예약 상품에 대해 리뷰를 작성합니다."
+        description = "상품 리뷰 API로 대체되었습니다. POST /api/v1/products/{productId}/reviews 로 대체해서 사용하세요.",
+        deprecated = true
     )
     @PostMapping("/{reservationId}/reviews")
     ApiResponseBody<CreateReservationReviewResponse, Void> createReview(

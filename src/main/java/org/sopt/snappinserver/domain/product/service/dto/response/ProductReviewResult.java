@@ -29,9 +29,7 @@ public record ProductReviewResult(
     }
 
     private static String extractReviewer(Review review) {
-        return review.getReservation()
-            .getUser()
-            .getName();
+        return review.resolveReviewerName();
     }
 
     private static LocalDate extractCreatedDate(Review review) {

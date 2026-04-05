@@ -7,6 +7,7 @@ import org.sopt.snappinserver.api.v1.product.dto.response.ProductDurationTimeRes
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductDurationTimeResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductDurationTimeUseCase;
 import org.sopt.snappinserver.global.response.code.product.ProductSuccessCode;
+import org.sopt.snappinserver.api.v1.product.dto.request.CreateProductReviewRequest;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetPopularMoodProductsResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductExtraInfoResponse;
@@ -16,11 +17,13 @@ import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListResponse
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductAvailableTimesResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductClosedDatesResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductPeopleRangeResponse;
+import org.sopt.snappinserver.api.v1.product.dto.response.CreateProductReviewResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReservationResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReviewsMetaResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.ProductReviewsResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
+import org.sopt.snappinserver.domain.product.service.dto.request.CreateProductReviewCommand;
 import org.sopt.snappinserver.domain.product.service.dto.request.ProductReservationCommand;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetPopularMoodProductsResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductExtraInfoResult;
@@ -29,6 +32,7 @@ import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResu
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductAvailableTimesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductClosedDatesResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductPeopleRangeResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.CreateProductReviewResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReservationResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewPageResult;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductAvailableTimesUseCase;
@@ -40,6 +44,7 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductListUseCa
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRangeUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
+import org.sopt.snappinserver.domain.product.service.usecase.PostProductReviewUseCase;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -56,6 +61,7 @@ public class ProductController implements ProductApi {
     private final GetProductPeopleRangeUseCase getProductPeopleRangeUseCase;
     private final GetProductClosedDatesUseCase getProductClosedDatesUseCase;
     private final GetProductAvailableTimesUseCase getProductAvailableTimesUseCase;
+    private final PostProductReviewUseCase postProductReviewUseCase;
     private final PostProductReservationUseCase postProductReservationUseCase;
     private final GetProductDetailUseCase getProductDetailUseCase;
     private final GetProductListUseCase getProductListUseCase;
@@ -75,6 +81,28 @@ public class ProductController implements ProductApi {
             ProductSuccessCode.GET_PRODUCT_REVIEWS_OK,
             ProductReviewsResponse.from(result),
             ProductReviewsMetaResponse.from(result)
+        );
+    }
+
+    @Override
+    public ApiResponseBody<CreateProductReviewResponse, Void> createProductReview(
+        @AuthenticationPrincipal CustomUserInfo userInfo,
+        Long productId,
+        CreateProductReviewRequest request
+    ) {
+        CreateProductReviewCommand command = new CreateProductReviewCommand(
+            userInfo.userId(),
+            productId,
+            request.rating(),
+            request.content(),
+            request.imageUrls()
+        );
+
+        CreateProductReviewResult result = postProductReviewUseCase.createProductReview(command);
+
+        return ApiResponseBody.ok(
+            ProductSuccessCode.POST_PRODUCT_REVIEW_CREATED,
+            CreateProductReviewResponse.from(result)
         );
     }
 

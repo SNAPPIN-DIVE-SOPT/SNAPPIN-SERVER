@@ -20,6 +20,7 @@ import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReserva
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationListProductResult;
 import org.sopt.snappinserver.domain.reservation.service.dto.response.GetReservationListResult;
 import org.sopt.snappinserver.domain.reservation.service.usecase.GetReservationListUseCase;
+import org.sopt.snappinserver.domain.review.repository.ReservationReviewRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ public class GetReservationListService implements GetReservationListUseCase {
 
     private final ReservationRepository reservationRepository;
     private final ReviewRepository reviewRepository;
+    private final ReservationReviewRepository reservationReviewRepository;
     private final ProductMoodRepository productMoodRepository;
     private final ProductPhotoRepository productPhotoRepository;
 
@@ -126,7 +128,7 @@ public class GetReservationListService implements GetReservationListUseCase {
     }
 
     private Set<Long> getReviewedReservationIds(List<Long> reservationIds) {
-        return new HashSet<>(reviewRepository.findReviewedReservationIds(reservationIds));
+        return new HashSet<>(reservationReviewRepository.findReviewedReservationIds(reservationIds));
     }
 
     private Map<Long, ProductReviewStatsResult> getReviewStats(List<Long> productIds) {

@@ -17,8 +17,8 @@ import org.sopt.snappinserver.domain.review.domain.entity.Review;
 import org.sopt.snappinserver.domain.review.domain.entity.ReviewPhoto;
 import org.sopt.snappinserver.domain.review.domain.exception.ReviewErrorCode;
 import org.sopt.snappinserver.domain.review.domain.exception.ReviewException;
+import org.sopt.snappinserver.domain.review.repository.ReservationReviewRepository;
 import org.sopt.snappinserver.domain.review.repository.ReviewPhotoRepository;
-import org.sopt.snappinserver.domain.review.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -29,7 +29,7 @@ import org.springframework.util.CollectionUtils;
 public class PostReservationReviewService implements PostReservationReviewUseCase {
 
     private final ReservationRepository reservationRepository;
-    private final ReviewRepository reviewRepository;
+    private final ReservationReviewRepository reservationReviewRepository;
     private final PhotoRepository photoRepository;
     private final ReviewPhotoRepository reviewPhotoRepository;
 
@@ -46,8 +46,8 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
         validateShootCompleted(reservation);
         validateReviewDuplicated(reservationId);
 
-        Review review = createReview(command, reservation);
-        reviewRepository.save(review);
+        Review review = Review.createForReservation(reservation, command.rating(), command.content());
+        reservationReviewRepository.save(review);
 
         createAndSaveReviewPhotos(command, review);
 
@@ -73,13 +73,9 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
     }
 
     private void validateReviewDuplicated(Long reservationId) {
-        if (reviewRepository.existsByReservationId(reservationId)) {
+        if (reservationReviewRepository.existsByReservationId(reservationId)) {
             throw new ReviewException(ReviewErrorCode.REVIEW_ALREADY_EXISTS);
         }
-    }
-
-    private Review createReview(CreateReservationReviewCommand command, Reservation reservation) {
-        return Review.create(reservation, command.rating(), command.content());
     }
 
     private void createAndSaveReviewPhotos(CreateReservationReviewCommand command, Review review) {
@@ -95,4 +91,3 @@ public class PostReservationReviewService implements PostReservationReviewUseCas
         }
     }
 }
-

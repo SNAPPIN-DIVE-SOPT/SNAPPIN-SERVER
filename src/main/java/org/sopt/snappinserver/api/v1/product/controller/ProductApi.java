@@ -9,7 +9,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
+import org.sopt.snappinserver.api.v1.product.dto.request.CreateProductReviewRequest;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
+import org.sopt.snappinserver.api.v1.product.dto.response.CreateProductReviewResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetPopularMoodProductsResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductExtraInfoResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductDetailResponse;
@@ -47,6 +49,21 @@ public interface ProductApi {
 
         @Schema(description = "다음 페이지 조회를 위한 커서 값", example = "6")
         @RequestParam(value = "cursor", required = false) Long cursor
+    );
+
+    @Operation(
+        summary = "상품 리뷰 등록",
+        description = "상품에 대한 리뷰를 작성합니다."
+    )
+    @PostMapping("/{productId}/reviews")
+    ApiResponseBody<CreateProductReviewResponse, Void> createProductReview(
+        @Parameter(hidden = true)
+        CustomUserInfo userInfo,
+
+        @Schema(description = "상품 아이디", example = "1")
+        @PathVariable @NotNull Long productId,
+
+        @Valid @RequestBody CreateProductReviewRequest request
     );
 
     @Operation(
