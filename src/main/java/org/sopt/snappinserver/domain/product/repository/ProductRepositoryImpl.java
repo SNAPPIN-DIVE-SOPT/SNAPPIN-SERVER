@@ -194,8 +194,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         JPQLQuery<Double> avgRatingSub = JPAExpressions
             .select(Expressions.numberTemplate(Double.class, "round(avg({0}), 1)", review.rating))
             .from(review)
-            .join(review.reservation, reservation)
-            .where(reservation.product.id.eq(product.id));
+            .where(
+                review.product.id.eq(product.id)
+                    .or(
+                        review.reservation.isNotNull()
+                            .and(review.reservation.product.id.eq(product.id))
+                    )
+            );
 
         BooleanExpression liked = query.userId() == null
             ? Expressions.FALSE
@@ -229,8 +234,13 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             )
             .join(photo).on(photo.id.eq(productPhoto.photo.id))
             .leftJoin(wishProduct).on(wishProduct.product.id.eq(product.id))
-            .leftJoin(reservation).on(reservation.product.id.eq(product.id))
-            .leftJoin(review).on(review.reservation.id.eq(reservation.id))
+            .leftJoin(review).on(
+                review.product.id.eq(product.id)
+                    .or(
+                        review.reservation.isNotNull()
+                            .and(review.reservation.product.id.eq(product.id))
+                    )
+            )
             .where(
                 photographerEq(query.photographerId()),
                 snapCategoryEq(query.snapCategory()),
