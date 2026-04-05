@@ -35,8 +35,6 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
         Photo photo = photoRepository.findByImageUrl(photoProcessCommand.imageUrl())
             .orElseGet(() -> photoRepository.save(Photo.create(photoProcessCommand.imageUrl())));
 
-        photoMoodRepository.deleteAllByPhoto(photo);
-
         List<MoodWithScore> candidates = moodVectorRepository.findTopCandidates(
             toVectorLiteral(photoProcessCommand.embedding())
         );
@@ -44,6 +42,7 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
         List<Mood> selectedMood = getSelectedMood(selectedScores);
         List<PhotoMood> linkedPhotoMoods = photo.linkMoods(selectedMood, selectedScores);
 
+        photoMoodRepository.deleteAllByPhoto(photo);
         photoMoodRepository.saveAll(linkedPhotoMoods);
     }
 
