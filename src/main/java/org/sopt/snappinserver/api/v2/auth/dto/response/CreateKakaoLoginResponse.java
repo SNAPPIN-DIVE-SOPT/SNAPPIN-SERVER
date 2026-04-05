@@ -16,7 +16,10 @@ public record CreateKakaoLoginResponse(
     String role,
 
     @Schema(description = "작가 프로필 보유 여부")
-    boolean hasPhotographerProfile
+    boolean hasPhotographerProfile,
+
+    @Schema(description = "온보딩 완료 여부")
+    boolean isOnboardingCompleted
 ) {
 
     public static CreateKakaoLoginResponse from(LoginWithPhotographerProfileResult loginResult) {
@@ -24,7 +27,8 @@ public record CreateKakaoLoginResponse(
             loginResult.isNew(),
             loginResult.accessToken(),
             loginResult.role(),
-            loginResult.hasPhotographerProfile()
+            loginResult.hasPhotographerProfile(),
+            loginResult.isOnboardingCompleted()
         );
     }
 }
