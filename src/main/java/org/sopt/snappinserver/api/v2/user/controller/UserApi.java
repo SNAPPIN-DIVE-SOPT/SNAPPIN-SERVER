@@ -8,7 +8,7 @@ import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@Tag(name = "01 - User", description = "사용자 관련 API")
+@Tag(name = "01 - User", description = "사용자 관련 API V2")
 public interface UserApi {
 
     @Operation(
