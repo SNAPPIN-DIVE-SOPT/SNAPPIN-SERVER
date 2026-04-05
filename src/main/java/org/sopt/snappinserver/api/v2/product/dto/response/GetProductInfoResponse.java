@@ -1,0 +1,104 @@
+package org.sopt.snappinserver.api.v2.product.dto.response;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
+import java.util.Optional;
+import org.sopt.snappinserver.domain.product.service.dto.response.GetProductInfoResult;
+
+@Schema(description = "상품 안내 정보 응답 DTO")
+public record GetProductInfoResponse(
+
+    @Schema(description = "촬영 종류 (유형)")
+    String snapCategory,
+
+    @Schema(description = "촬영 장소 (지역)")
+    List<String> regions,
+
+    @Schema(description = "스냅 무드")
+    List<String> moods,
+
+    @Schema(description = "최대 촬영 인원")
+    String maxPeople,
+
+    @Schema(description = "촬영 작가 인원")
+    String photographerCount,
+
+    @Schema(description = "촬영 시간 (시간단위)")
+    String durationTime,
+
+    @Schema(description = "RAW 파일 제공 여부")
+    String provideRaw,
+
+    @Schema(description = "원본 JPG 제공 여부")
+    String provideOriginalJpg,
+
+    @Schema(description = "원본 JPG 제공 장수")
+    String originalJpgCount,
+
+    @Schema(description = "원본 제공 시점")
+    String originalDeliveryTime,
+
+    @Schema(description = "동영상 제공 여부")
+    String provideVideo,
+
+    @Schema(description = "무료 수정 횟수")
+    String freeRevisionCount,
+
+    @Schema(description = "최종 결과물 제공 장수")
+    String finalCutCount,
+
+    @Schema(description = "최종 결과물 전달 소요시간")
+    String finalDeliveryTime,
+
+    @Schema(description = "상품 소개")
+    String description,
+
+    @Schema(description = "촬영 진행 순서")
+    String processDescription,
+
+    @Schema(description = "사용 장비")
+    String equipment,
+
+    @Schema(description = "기타 주의 사항")
+    String caution,
+
+    @Schema(description = "장수 추가 가능 여부 및 금액")
+    String canAddPhoto,
+
+    @Schema(description = "유료 옵션 항목 키 목록")
+    List<String> paidOptions
+) {
+
+    public static GetProductInfoResponse from(GetProductInfoResult result) {
+        return new GetProductInfoResponse(
+            result.snapCategory(),
+            result.regions(),
+            result.moods(),
+            Optional.ofNullable(result.maxPeople())
+                .map(m -> m.concat("명"))
+                .orElse(null),
+            result.photographerCount(),
+            formatDurationTime(result.durationTime()),
+            result.provideRaw(),
+            result.provideOriginalJpg(),
+            result.originalJpgCount(),
+            result.originalDeliveryTime(),
+            result.provideVideo(),
+            result.freeRevisionCount(),
+            result.finalCutCount(),
+            result.finalDeliveryTime(),
+            result.description(),
+            result.processDescription(),
+            result.equipment(),
+            result.caution(),
+            result.canAddPhoto(),
+            result.paidOptions()
+        );
+    }
+
+    private static String formatDurationTime(double d) {
+        return Math.floor(d) == d
+            ? String.format("%.0f시간", d)
+            : String.format("%.1f시간", d);
+    }
+}
