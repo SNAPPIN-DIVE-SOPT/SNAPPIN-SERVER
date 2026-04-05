@@ -7,6 +7,7 @@ import org.sopt.snappinserver.domain.place.domain.entity.AvailableLocation;
 import org.sopt.snappinserver.domain.product.domain.entity.Product;
 import org.sopt.snappinserver.domain.product.domain.entity.ProductAvailableLocation;
 import org.sopt.snappinserver.domain.product.domain.entity.ProductMood;
+import org.sopt.snappinserver.domain.product.domain.entity.ProductOption;
 import org.sopt.snappinserver.domain.product.domain.enums.ProductOptionCategory;
 
 public record GetProductInfoResult(
@@ -27,15 +28,23 @@ public record GetProductInfoResult(
     String description,
     String processDescription,
     String equipment,
-    String caution
+    String caution,
+    String canAddPhoto,
+    List<String> paidOptions
 ) {
 
     public static GetProductInfoResult of(
         Product product,
         List<ProductAvailableLocation> productAvailableLocations,
         List<ProductMood> productMoods,
-        Map<ProductOptionCategory, String> options
+        Map<ProductOptionCategory, String> options,
+        List<ProductOption> productOptions
     ) {
+        List<String> paidOptions = productOptions.stream()
+            .filter(ProductOption::isPaid)
+            .map(o -> o.getProductOptionCategory().getFieldKey())
+            .toList();
+
         return new GetProductInfoResult(
             product.getSnapCategory().getCategory(),
             productAvailableLocations.stream()
@@ -62,7 +71,9 @@ public record GetProductInfoResult(
             product.getDescription(),
             product.getProcessDescription(),
             product.getEquipment(),
-            product.getCaution()
+            product.getCaution(),
+            options.get(ProductOptionCategory.CAN_ADD_PHOTO),
+            paidOptions
         );
     }
 }
