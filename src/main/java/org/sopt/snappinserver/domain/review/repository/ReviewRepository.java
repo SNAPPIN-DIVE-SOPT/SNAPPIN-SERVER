@@ -11,18 +11,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * 리뷰 Spring Data 저장 - 상품·예약 혼합 조회·통계 등 공용 쿼리
+ * 예약 전용·상품 전용 쓰기/예약 조회 경계는 ReservationReviewRepository,ProductReviewRepository가 위임
+ */
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    boolean existsByReservationId(Long reservationId);
+    boolean existsByReservation_Id(Long reservationId);
 
     // 리뷰 목록 첫 페이지 조회 (cursor 없음)
     @Query("""
-            select review
+            select distinct review
             from Review review
-            join fetch review.reservation reservation
-            join fetch reservation.user user
-            where reservation.product.id = :productId
+            left join fetch review.user author
+            left join fetch review.reservation reservation
+            left join fetch reservation.user reservationUser
+            where (
+                (review.product is not null and review.product.id = :productId)
+                or (review.reservation is not null and review.reservation.product.id = :productId)
+            )
             order by review.id desc
         """)
     List<Review> findReviewsWithUserByProductId(
@@ -32,11 +40,15 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 커서 이후 리뷰 목록 페이지 조회
     @Query("""
-            select review
+            select distinct review
             from Review review
-            join fetch review.reservation reservation
-            join fetch reservation.user user
-            where reservation.product.id = :productId
+            left join fetch review.user author
+            left join fetch review.reservation reservation
+            left join fetch reservation.user reservationUser
+            where (
+                (review.product is not null and review.product.id = :productId)
+                or (review.reservation is not null and review.reservation.product.id = :productId)
+            )
               and review.id < :cursor
             order by review.id desc
         """)
@@ -53,8 +65,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             cast(round(avg(r.rating), 1) as double)
         )
         from Review r
-        join r.reservation res
-        where res.product.id = :productId
+        where (
+            (r.product is not null and r.product.id = :productId)
+            or (r.reservation is not null and r.reservation.product.id = :productId)
+        )
         """)
     ProductReviewStatsResult findReviewStatsByProductId(
         @Param("productId") Long productId
@@ -63,15 +77,17 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 상품 리뷰 통계 수치 여러 개 배치 조회
     @Query("""
         select
-            res.product.id,
+            case when r.product is not null then r.product.id else r.reservation.product.id end,
             new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
                 count(r),
                 cast(round(avg(r.rating), 1) as double)
             )
         from Review r
-        join r.reservation res
-        where res.product.id in :productIds
-        group by res.product.id
+        where (
+            (r.product is not null and r.product.id in :productIds)
+            or (r.reservation is not null and r.reservation.product.id in :productIds)
+        )
+        group by case when r.product is not null then r.product.id else r.reservation.product.id end
         """)
     List<Object[]> findReviewStatsByProductIds(@Param("productIds") List<Long> productIds);
 
@@ -85,9 +101,5 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         @Param("reservationIds") List<Long> reservationIds
     );
 
-    // 예약 기준 리뷰 단일 조회
-    Optional<Review> findByReservation(Reservation reservation);
-
+    Optional<Review> findFirstByReservationOrderByIdDesc(Reservation reservation);
 }
-
-
