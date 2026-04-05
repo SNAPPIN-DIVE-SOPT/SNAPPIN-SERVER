@@ -190,7 +190,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         QWishProduct wishProductSub = new QWishProduct("wishProductSub");
         SortType sort = query.sort() == null ? SortType.RECOMMENDED : query.sort();
 
-        NumberExpression<Long> likeCount = wishProduct.id.count();
+        // review 조인으로 행이 늘어나도 동일 찜 행이 중복 집계되지 않도록 distinct
+        NumberExpression<Long> likeCount = wishProduct.id.countDistinct();
         JPQLQuery<Double> avgRatingSub = JPAExpressions
             .select(Expressions.numberTemplate(Double.class, "round(avg({0}), 1)", review.rating))
             .from(review)
