@@ -20,6 +20,7 @@ public class Review extends BaseEntity {
     private static final int MIN_RATING_SCORE = 1;
     private static final int MAX_RATING_SCORE = 5;
     private static final int MAX_CONTENT_LENGTH = 512;
+    private static final String UNKNOWN_REVIEWER_NAME = "알 수 없음";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_seq_gen")
@@ -101,7 +102,11 @@ public class Review extends BaseEntity {
         return reservation != null ? reservation.getUser() : null;
     }
 
-    /** 상품·별점·본문만 검증. 작성자는 서비스에서 조회·검증 후 넘깁니다. */
+    public String resolveReviewerName() {
+        User reviewer = resolveReviewer();
+        return reviewer != null ? reviewer.getName() : UNKNOWN_REVIEWER_NAME;
+    }
+
     private static void validateReview(Product product, Integer rating, String content) {
         validateProduct(product);
         validateRating(rating);

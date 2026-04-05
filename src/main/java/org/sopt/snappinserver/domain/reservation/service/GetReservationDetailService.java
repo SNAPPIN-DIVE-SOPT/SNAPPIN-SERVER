@@ -190,7 +190,7 @@ public class GetReservationDetailService implements GetReservationDetailUseCase 
 
                 return new GetReservationDetailReviewResult(
                     review.getId(),
-                    review.resolveReviewer().getName(),
+                    review.resolveReviewerName(),
                     review.getRating(),
                     LocalDate.ofInstant(review.getCreatedAt(), KOREA_ZONE),
                     photos.stream()
