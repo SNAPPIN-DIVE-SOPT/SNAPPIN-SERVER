@@ -353,7 +353,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
 
         NumberExpression<Long> likeCount = wishPortfolio.id.count();
         JPQLQuery<Double> avgRatingSub = JPAExpressions
-            .select(review.rating.avg())
+            .select(Expressions.numberTemplate(Double.class, "round(avg({0}), 1)", review.rating))
             .from(review)
             .join(review.reservation, reservation)
             .where(reservation.product.id.eq(product.id));
