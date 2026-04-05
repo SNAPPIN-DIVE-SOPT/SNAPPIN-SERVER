@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetPopularMoodProductsResponse;
@@ -152,7 +153,7 @@ public interface ProductApi {
     @GetMapping("/popular")
     ApiResponseBody<GetPopularMoodProductsResponse, Void> getPopularMoodProducts(
         @Schema(description = "무드 태그 아이디", example = "1")
-        @RequestParam @NotNull Long moodId
+        @RequestParam @NotNull @Positive Long moodId
     );
 
 }
