@@ -464,7 +464,7 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             case LATEST -> new OrderSpecifier<?>[]{portfolio.id.desc()};
             case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), portfolio.id.desc()};
             case RECOMMENDED -> new OrderSpecifier<?>[]{
-                new OrderSpecifier<>(Order.DESC, avgRatingSub),
+                new OrderSpecifier<>(Order.DESC, avgRatingSub, OrderSpecifier.NullHandling.NullsLast),
                 portfolio.id.desc()
             };
         };
