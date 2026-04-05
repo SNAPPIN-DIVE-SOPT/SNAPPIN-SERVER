@@ -18,6 +18,7 @@ public enum ReviewErrorCode implements ErrorCode {
     REVIEW_ALREADY_EXISTS(400, "REVIEW_400_007", "이미 존재하는 리뷰입니다."),
     UNSUPPORTED_IMAGE_TYPE(400, "REVIEW_400_008", "지원하지 않는 파일 형식입니다."),
     INVALID_FILE_NAME(400, "REVIEW_400_009", "지원하지 않는 파일 확장자입니다."),
+    REVIEW_PRODUCT_REQUIRED(400, "REVIEW_400_010", "리뷰 대상 상품은 필수입니다."),
 
     // 401 UNAUTHORIZED
 
