@@ -62,6 +62,7 @@ public class WishController implements WishApi {
         return ApiResponseBody.ok(decideSuccessCode(result), response);
     }
 
+    @Deprecated
     @Override
     public ApiResponseBody<WishedPortfoliosResponse, Void> getWishedPortfolios(
         @AuthenticationPrincipal CustomUserInfo userInfo
@@ -74,6 +75,7 @@ public class WishController implements WishApi {
         return ApiResponseBody.ok(WishSuccessCode.GET_WISHED_PORTFOLIOS_OK, response);
     }
 
+    @Deprecated
     @Override
     public ApiResponseBody<WishedProductsResponse, Void> getWishedProducts(
         @AuthenticationPrincipal CustomUserInfo userInfo

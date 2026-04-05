@@ -15,9 +15,12 @@ import org.sopt.snappinserver.domain.wish.domain.exception.WishErrorCode;
 import org.sopt.snappinserver.domain.wish.domain.exception.WishException;
 import org.sopt.snappinserver.domain.wish.repository.WishProductRepository;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductResult;
+import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsPageResult;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedProductsResult;
 import org.sopt.snappinserver.domain.wish.service.usecase.GetWishedProductsUseCase;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class GetWishedProductsService implements GetWishedProductsUseCase {
+
+    private static final int PAGE_SIZE = 10;
+    private static final long MIN_CURSOR_VALUE = 1L;
 
     private final WishProductRepository wishProductRepository;
     private final ProductPhotoRepository productPhotoRepository;
@@ -38,9 +44,42 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
     @Override
     public WishedProductsResult getWishedProducts(Long userId) {
         User user = getUser(userId);
-        List<WishedProductResult> results = getWishedProductResults(user);
+        List<WishProduct> wishes =
+            wishProductRepository.findAllByUserWithProductOrderByCreatedAtDesc(user);
+        List<WishedProductResult> results = mapWishesToResults(wishes);
 
         return WishedProductsResult.from(results);
+    }
+
+    @Override
+    public WishedProductsPageResult getWishedProductsPage(Long userId, Long cursor) {
+        User user = getUser(userId);
+        validateCursor(cursor);
+
+        Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
+        List<WishProduct> wishes =
+            (cursor == null)
+                ? wishProductRepository.findAllByUserWithProductOrderByIdDesc(user, pageable)
+                : wishProductRepository.findAllByUserWithProductOrderByIdDescAndCursor(
+                    user,
+                    cursor,
+                    pageable
+                );
+
+        boolean hasNext = wishes.size() > PAGE_SIZE;
+        if (hasNext) {
+            wishes = wishes.subList(0, PAGE_SIZE);
+        }
+
+        if (wishes.isEmpty()) {
+            return WishedProductsPageResult.from(List.of(), null, false);
+        }
+
+        List<WishedProductResult> results = mapWishesToResults(wishes);
+
+        Long nextCursor = hasNext ? wishes.get(wishes.size() - 1).getId() : null;
+
+        return WishedProductsPageResult.from(results, nextCursor, hasNext);
     }
 
     private User getUser(Long userId) {
@@ -48,13 +87,17 @@ public class GetWishedProductsService implements GetWishedProductsUseCase {
             .orElseThrow(() -> new WishException(WishErrorCode.USER_NOT_FOUND));
     }
 
-    private List<WishedProductResult> getWishedProductResults(User user) {
-        return wishProductRepository
-            .findAllByUserWithProductOrderByCreatedAtDesc(user)
-            .stream()
+    private List<WishedProductResult> mapWishesToResults(List<WishProduct> wishes) {
+        return wishes.stream()
             .map(WishProduct::getProduct)
             .map(this::mapToWishedProductResult)
             .toList();
+    }
+
+    private static void validateCursor(Long cursor) {
+        if (cursor != null && cursor < MIN_CURSOR_VALUE) {
+            throw new WishException(WishErrorCode.INVALID_CURSOR);
+        }
     }
 
     private WishedProductResult mapToWishedProductResult(Product product) {

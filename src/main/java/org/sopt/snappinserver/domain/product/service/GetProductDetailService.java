@@ -83,7 +83,8 @@ public class GetProductDetailService implements GetProductDetailUseCase {
             product,
             availableLocations,
             productMoods,
-            optionMap
+            optionMap,
+            productOptions
         );
 
         return GetProductResult.of(
@@ -164,13 +165,15 @@ public class GetProductDetailService implements GetProductDetailUseCase {
         Product product,
         List<ProductAvailableLocation> availableLocations,
         List<ProductMood> productMoods,
-        Map<ProductOptionCategory, String> optionMap
+        Map<ProductOptionCategory, String> optionMap,
+        List<ProductOption> productOptions
     ) {
         return GetProductInfoResult.of(
             product,
             availableLocations,
             productMoods,
-            optionMap
+            optionMap,
+            productOptions
         );
     }
 
