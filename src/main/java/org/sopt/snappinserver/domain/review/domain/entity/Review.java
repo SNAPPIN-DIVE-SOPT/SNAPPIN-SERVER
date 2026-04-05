@@ -38,9 +38,9 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    /** 과거 예약 기반 리뷰만 존재할 수 있으며, 신규 리뷰는 비워 둡니다. */
+    /** 과거 예약 기반 리뷰만 연결 - 상품만으로 작성한 리뷰는 null */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reservation_id")
+    @JoinColumn(name = "reservation_id", nullable = true)
     private Reservation reservation;
 
     @Column(nullable = false)
