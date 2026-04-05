@@ -12,6 +12,7 @@ public enum WishErrorCode implements ErrorCode {
     USER_REQUIRED(400, "WISH_400_001", "좋아요를 누른 사용자는 필수입니다."),
     PRODUCT_REQUIRED(400, "WISH_400_002", "좋아요한 상품은 필수입니다."),
     PORTFOLIO_REQUIRED(400, "WISH_400_003", "좋아요한 포트폴리오는 필수입니다."),
+    INVALID_CURSOR(400, "WISH_400_004", "유효하지 않은 커서 값입니다."),
 
     // 401 UNAUTHORIZED
 

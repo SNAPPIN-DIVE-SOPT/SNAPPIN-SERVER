@@ -55,27 +55,34 @@ public class ProductOption extends BaseEntity {
     @Column(nullable = false, length = MAX_ANSWER_LENGTH)
     private String answer;
 
+    @Column(name = "is_paid", nullable = false)
+    private boolean paid;
+
     @Builder(access = AccessLevel.PRIVATE)
     private ProductOption(
         Product product,
         ProductOptionCategory productOptionCategory,
-        String answer
+        String answer,
+        boolean paid
     ) {
         this.product = product;
         this.productOptionCategory = productOptionCategory;
         this.answer = answer;
+        this.paid = paid;
     }
 
     public static ProductOption create(
         Product product,
         ProductOptionCategory productOptionCategory,
-        String answer
+        String answer,
+        boolean paid
     ) {
         validateProductOption(product, productOptionCategory, answer);
         return ProductOption.builder()
             .product(product)
             .productOptionCategory(productOptionCategory)
             .answer(answer)
+            .paid(paid)
             .build();
     }
 

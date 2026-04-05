@@ -10,8 +10,7 @@ import org.springframework.stereotype.Component;
 public class MoodSelector {
 
     private static final List<Set<String>> OPPOSITE_PAIRS = List.of(
-        Set.of("내추럴", "연출된"),
-        Set.of("아날로그", "디지털")
+        Set.of("따스한", "시크한")
     );
 
     public List<MoodWithScore> selectTop3(int lastRank, List<MoodWithScore> candidates) {
