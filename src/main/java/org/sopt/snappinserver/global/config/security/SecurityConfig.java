@@ -30,6 +30,7 @@ public class SecurityConfig {
         "/api/v1/categories",
         "/api/v1/home/recommendation",
         "/api/v1/moods",
+        "/api/v2/moods",
 
         "/api/v1/photographers/**",
         "/api/v1/places/**",
