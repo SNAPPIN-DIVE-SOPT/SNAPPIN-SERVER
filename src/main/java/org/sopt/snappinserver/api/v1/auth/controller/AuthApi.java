@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "01 - Auth", description = "인증/인가 관련 API")
 public interface AuthApi {
 
+    @Deprecated
     @Operation(
         summary = "카카오 로그인",
-        description = "인가 코드를 받아 카카오로 소셜 로그인을 진행합니다."
+        description = "v2 API로 대체되었습니다. /api/v2/auth/login/kakao로 대체해서 사용하세요.",
+        deprecated = true
     )
     @PostMapping("/login/kakao")
     ApiResponseBody<CreateKakaoLoginResponse, Void> createKakaoLogin(
