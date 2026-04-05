@@ -130,13 +130,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                     productPhoto.product.id.eq(product.id).and(productPhoto.displayOrder.eq(1))
                 )
                 .join(photo).on(photo.id.eq(productPhoto.photo.id))
-                .leftJoin(review).on(
-                    review.product.id.eq(product.id)
-                        .or(
-                            review.reservation.isNotNull()
-                                .and(review.reservation.product.id.eq(product.id))
-                        )
-                )
+                .leftJoin(review).on(review.product.id.eq(product.id))
                 .where(
                     cursorLt(query.cursor()),
                     photographerEq(query.photographerId()),
@@ -190,18 +184,11 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         QWishProduct wishProductSub = new QWishProduct("wishProductSub");
         SortType sort = query.sort() == null ? SortType.RECOMMENDED : query.sort();
 
-        // review 조인으로 행이 늘어나도 동일 찜 행이 중복 집계되지 않도록 distinct
         NumberExpression<Long> likeCount = wishProduct.id.countDistinct();
         JPQLQuery<Double> avgRatingSub = JPAExpressions
             .select(Expressions.numberTemplate(Double.class, "round(avg({0}), 1)", review.rating))
             .from(review)
-            .where(
-                review.product.id.eq(product.id)
-                    .or(
-                        review.reservation.isNotNull()
-                            .and(review.reservation.product.id.eq(product.id))
-                    )
-            );
+            .where(review.product.id.eq(product.id));
 
         BooleanExpression liked = query.userId() == null
             ? Expressions.FALSE
@@ -235,13 +222,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             )
             .join(photo).on(photo.id.eq(productPhoto.photo.id))
             .leftJoin(wishProduct).on(wishProduct.product.id.eq(product.id))
-            .leftJoin(review).on(
-                review.product.id.eq(product.id)
-                    .or(
-                        review.reservation.isNotNull()
-                            .and(review.reservation.product.id.eq(product.id))
-                    )
-            )
+            .leftJoin(review).on(review.product.id.eq(product.id))
             .where(
                 photographerEq(query.photographerId()),
                 snapCategoryEq(query.snapCategory()),
@@ -396,13 +377,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 productPhoto.product.id.eq(product.id).and(productPhoto.displayOrder.eq(1))
             )
             .join(photo).on(photo.id.eq(productPhoto.photo.id))
-            .leftJoin(review).on(
-                review.product.id.eq(product.id)
-                    .or(
-                        review.reservation.isNotNull()
-                            .and(review.reservation.product.id.eq(product.id))
-                    )
-            )
+            .leftJoin(review).on(review.product.id.eq(product.id))
             .where(product.id.in(productIds))
             .groupBy(
                 product.id,
