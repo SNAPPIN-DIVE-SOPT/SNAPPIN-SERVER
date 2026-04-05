@@ -41,7 +41,7 @@ public class GetProductReviewsService implements GetProductReviewsUseCase {
         validateProductExist(productId);
         validateCursorSize(cursor);
 
-        // 리뷰 조회 (Review + Reservation + User fetch join)
+        // 리뷰 조회 (작성자·예약 경로 fetch join)
         Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
         List<Review> reviews =
             (cursor == null)
