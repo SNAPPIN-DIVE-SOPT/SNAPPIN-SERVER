@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.time.LocalDate;
 import org.sopt.snappinserver.api.v1.product.dto.request.ProductReservationRequest;
+import org.sopt.snappinserver.api.v1.product.dto.response.GetPopularMoodProductsResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductDetailResponse;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListMeta;
 import org.sopt.snappinserver.api.v1.product.dto.response.GetProductListResponse;
@@ -144,6 +146,16 @@ public interface ProductApi {
     @GetMapping
     ApiResponseBody<GetProductListResponse, GetProductListMeta> getProductList(
         @ModelAttribute GetProductListQuery query
+    );
+
+    @Operation(
+        summary = "인기 무드 상품 목록 조회",
+        description = "특정 무드 태그를 포함한 상품 중 좋아요 수가 많은 상품 12개 중 랜덤으로 4개를 조회합니다."
+    )
+    @GetMapping("/popular")
+    ApiResponseBody<GetPopularMoodProductsResponse, Void> getPopularMoodProducts(
+        @Schema(description = "무드 태그 아이디", example = "1")
+        @RequestParam @NotNull @Positive Long moodId
     );
 
 }

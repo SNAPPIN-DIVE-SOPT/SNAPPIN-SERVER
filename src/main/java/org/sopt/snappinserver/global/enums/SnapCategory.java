@@ -13,6 +13,7 @@ public enum SnapCategory {
     DAILY("일상스냅"),
     FAMILY("가족스냅"),
     RECITAL("연주스냅"),
+    FRIENDS("우정스냅")
     ;
 
     private final String category;
