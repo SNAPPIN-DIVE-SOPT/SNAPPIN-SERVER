@@ -12,11 +12,14 @@ import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioMo
 import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioPhoto.portfolioPhoto;
 import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioPlace.portfolioPlace;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProduct.product;
-import static org.sopt.snappinserver.domain.product.domain.entity.QProductMood.productMood;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductPhoto.productPhoto;
+import static org.sopt.snappinserver.domain.reservation.domain.entity.QReservation.reservation;
+import static org.sopt.snappinserver.domain.review.domain.entity.QReview.review;
 import static org.sopt.snappinserver.domain.wish.domain.entity.QWishPortfolio.wishPortfolio;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -32,10 +35,14 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
+import org.sopt.snappinserver.domain.portfolio.domain.enums.PortfolioSortType;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
+import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQueryV2;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResultV2;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.PortfolioDetailProjection;
+import org.sopt.snappinserver.domain.wish.domain.entity.QWishPortfolio;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 import org.springframework.stereotype.Repository;
 
@@ -318,7 +325,9 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
     }
 
     private BooleanExpression placeExists(Long placeId) {
-        if (placeId == null) return null;
+        if (placeId == null) {
+            return null;
+        }
 
         return JPAExpressions
             .selectOne()
@@ -330,5 +339,89 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .exists();
     }
 
+    @Override
+    public List<GetPortfolioCardResultV2> findPortfolioCardsV2(
+        GetPortfolioListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap,
+        int size
+    ) {
+        QWishPortfolio wishPortfolioSub = new QWishPortfolio("wishPortfolioSub");
+
+        NumberExpression<Long> likeCount = wishPortfolio.id.count();
+
+        BooleanExpression liked = query.userId() == null
+            ? Expressions.FALSE
+            : JPAExpressions
+                .selectOne()
+                .from(wishPortfolioSub)
+                .where(
+                    wishPortfolioSub.portfolio.id.eq(portfolio.id),
+                    wishPortfolioSub.user.id.eq(query.userId())
+                )
+                .exists();
+
+        return jpaQueryFactory
+            .select(
+                Projections.constructor(
+                    GetPortfolioCardResultV2.class,
+                    portfolio.id,
+                    portfolioPhoto.photo.imageUrl,
+                    liked,
+                    likeCount
+                )
+            )
+            .from(portfolio)
+            .join(portfolio.product, product)
+            .join(product.photographer, photographer)
+            .join(portfolioPhoto).on(
+                portfolioPhoto.portfolio.id.eq(portfolio.id)
+                    .and(portfolioPhoto.displayOrder.eq(1))
+            )
+            .join(portfolioPhoto.photo, photo)
+            .leftJoin(wishPortfolio).on(wishPortfolio.portfolio.id.eq(portfolio.id))
+            .where(
+                cursorLt(query.cursor()),
+                moodCategoryGroupedCondition(moodGroupMap),
+                productIdEq(query.productId()),
+                photographerIdEq(query.photographerId()),
+                snapCategoryEq(query.snapCategory()),
+                placeExists(query.placeId()),
+                minPriceGreaterThanOrEqualTo(query.minPrice()),
+                maxPriceLessThanOrEqualTo(query.maxPrice())
+            )
+            .groupBy(portfolio.id, portfolioPhoto.photo.imageUrl)
+            .orderBy(buildOrderBy(query.sort(), likeCount))
+            .limit(size + 1)
+            .fetch();
+    }
+
+    private BooleanExpression minPriceGreaterThanOrEqualTo(Integer minPrice) {
+        return minPrice == null ? null : product.price.goe(minPrice);
+    }
+
+    private BooleanExpression maxPriceLessThanOrEqualTo(Integer maxPrice) {
+        return maxPrice == null ? null : product.price.loe(maxPrice);
+    }
+
+    private OrderSpecifier<?>[] buildOrderBy(PortfolioSortType sort,
+        NumberExpression<Long> likeCount) {
+        PortfolioSortType resolved = sort == null ? PortfolioSortType.RECOMMENDED : sort;
+        return switch (resolved) {
+            case LATEST -> new OrderSpecifier<?>[]{portfolio.id.desc()};
+            case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), portfolio.id.desc()};
+            case RECOMMENDED -> new OrderSpecifier<?>[]{averageRatingDesc(), portfolio.id.desc()};
+        };
+    }
+
+    private OrderSpecifier<Double> averageRatingDesc() {
+        return new OrderSpecifier<>(
+            Order.DESC,
+            JPAExpressions
+                .select(review.rating.avg())
+                .from(review)
+                .join(review.reservation, reservation)
+                .where(reservation.product.id.eq(product.id))
+        );
+    }
 
 }
