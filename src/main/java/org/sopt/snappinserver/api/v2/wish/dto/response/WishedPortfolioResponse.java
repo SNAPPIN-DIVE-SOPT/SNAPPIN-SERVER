@@ -1,4 +1,4 @@
-package org.sopt.snappinserver.api.v1.wish.dto.response;
+package org.sopt.snappinserver.api.v2.wish.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.sopt.snappinserver.domain.wish.service.dto.response.WishedPortfolioResult;
