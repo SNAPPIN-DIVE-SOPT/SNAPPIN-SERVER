@@ -13,7 +13,7 @@ import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@Tag(name = "012 - Wish (v2)", description = "좋아요 관련 API (v2)")
+@Tag(name = "012 - Wish", description = "좋아요 관련 API")
 public interface WishApi {
 
     @Operation(
