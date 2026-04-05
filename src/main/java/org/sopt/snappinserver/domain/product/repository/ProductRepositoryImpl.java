@@ -16,12 +16,16 @@ import static org.sopt.snappinserver.domain.wish.domain.entity.QWishProduct.wish
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Ops;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -38,9 +42,13 @@ import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.product.domain.enums.ProductOptionCategory;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
+import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQueryV2;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResultV2;
+import org.sopt.snappinserver.domain.wish.domain.entity.QWishProduct;
 import org.sopt.snappinserver.domain.product.service.dto.response.PopularMoodProductItemResult;
 import org.sopt.snappinserver.global.enums.SnapCategory;
+import org.sopt.snappinserver.global.enums.SortType;
 import org.sopt.snappinserver.global.enums.WeekDay;
 import org.springframework.stereotype.Repository;
 
@@ -167,6 +175,155 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 moodNamesMap.getOrDefault(row.id(), List.of())
             ))
             .toList();
+    }
+
+    @Override
+    public List<GetProductCardResultV2> findProductCardsV2(
+        GetProductListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap,
+        int size
+    ) {
+        QWishProduct wishProductSub = new QWishProduct("wishProductSub");
+        SortType sort = query.sort() == null ? SortType.RECOMMENDED : query.sort();
+
+        NumberExpression<Long> likeCount = wishProduct.id.count();
+        JPQLQuery<Double> avgRatingSub = JPAExpressions
+            .select(Expressions.numberTemplate(Double.class, "round(avg({0}), 1)", review.rating))
+            .from(review)
+            .join(review.reservation, reservation)
+            .where(reservation.product.id.eq(product.id));
+
+        BooleanExpression liked = query.userId() == null
+            ? Expressions.FALSE
+            : JPAExpressions
+                .selectOne()
+                .from(wishProductSub)
+                .where(
+                    wishProductSub.product.id.eq(product.id),
+                    wishProductSub.user.id.eq(query.userId())
+                )
+                .exists();
+
+        List<ProductBaseRowV2> baseRows = jpaQueryFactory
+            .select(Projections.constructor(
+                ProductBaseRowV2.class,
+                product.id,
+                photo.imageUrl,
+                liked,
+                likeCount,
+                avgRatingSub,
+                product.title,
+                review.id.countDistinct(),
+                photographer.nickname,
+                product.price
+            ))
+            .from(product)
+            .join(product.photographer, photographer)
+            .join(productPhoto).on(
+                productPhoto.product.id.eq(product.id)
+                    .and(productPhoto.displayOrder.eq(1))
+            )
+            .join(photo).on(photo.id.eq(productPhoto.photo.id))
+            .leftJoin(wishProduct).on(wishProduct.product.id.eq(product.id))
+            .leftJoin(reservation).on(reservation.product.id.eq(product.id))
+            .leftJoin(review).on(review.reservation.id.eq(reservation.id))
+            .where(
+                photographerEq(query.photographerId()),
+                snapCategoryEq(query.snapCategory()),
+                placeCondition(query.placeId()),
+                peopleCountCondition(query.peopleCount()),
+                availableOnDate(query.date()),
+                moodCategoryGroupedCondition(moodGroupMap),
+                minPriceGoe(query.minPrice()),
+                maxPriceLoe(query.maxPrice()),
+                whereV2CursorCondition(sort, avgRatingSub, query.cursorAvgRating(), query.cursorId())
+            )
+            .groupBy(product.id, photo.imageUrl, product.title, photographer.nickname, product.price)
+            .having(havingV2CursorCondition(sort, likeCount, query.cursorLikeCount(), query.cursorId()))
+            .orderBy(buildV2OrderBy(sort, likeCount, avgRatingSub))
+            .limit(size + 1)
+            .fetch();
+
+        if (baseRows.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> productIds = baseRows.stream().map(ProductBaseRowV2::id).toList();
+        Map<Long, List<String>> moodNamesMap = fetchMoodNames(productIds);
+
+        return baseRows.stream()
+            .map(row -> new GetProductCardResultV2(
+                row.id(), row.imageUrl(), row.isLiked(),
+                row.likeCount() == null ? 0L : row.likeCount(),
+                row.averageRating(), row.title(),
+                row.reviewCount() == null ? 0L : row.reviewCount(),
+                row.photographerName(), row.price(),
+                moodNamesMap.getOrDefault(row.id(), List.of())
+            ))
+            .toList();
+    }
+
+    private BooleanExpression whereV2CursorCondition(
+        SortType sort,
+        JPQLQuery<Double> avgRatingSub,
+        Double cursorAvgRating,
+        Long cursorId
+    ) {
+        return switch (sort) {
+            case LATEST -> cursorId != null ? product.id.lt(cursorId) : null;
+            case POPULAR -> null;
+            case RECOMMENDED -> {
+                if (cursorAvgRating == null && cursorId == null) {
+                    yield null;
+                }
+                BooleanExpression nullRating = Expressions.predicate(Ops.IS_NULL, avgRatingSub);
+                if (cursorAvgRating == null) {
+                    yield nullRating.and(product.id.lt(cursorId));
+                }
+                BooleanExpression ltAvg = Expressions.predicate(
+                    Ops.LT, avgRatingSub, Expressions.constant(cursorAvgRating));
+                BooleanExpression eqAvgAndLtId = Expressions.predicate(
+                        Ops.EQ, avgRatingSub, Expressions.constant(cursorAvgRating))
+                    .and(product.id.lt(cursorId));
+                yield ltAvg.or(eqAvgAndLtId).or(nullRating);
+            }
+        };
+    }
+
+    private BooleanExpression havingV2CursorCondition(
+        SortType sort,
+        NumberExpression<Long> likeCount,
+        Long cursorLikeCount,
+        Long cursorId
+    ) {
+        if (sort != SortType.POPULAR || cursorLikeCount == null) {
+            return null;
+        }
+        return likeCount.lt(cursorLikeCount)
+            .or(likeCount.eq(cursorLikeCount).and(product.id.lt(cursorId)));
+    }
+
+    private OrderSpecifier<?>[] buildV2OrderBy(
+        SortType sort,
+        NumberExpression<Long> likeCount,
+        JPQLQuery<Double> avgRatingSub
+    ) {
+        return switch (sort) {
+            case LATEST -> new OrderSpecifier<?>[]{product.id.desc()};
+            case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), product.id.desc()};
+            case RECOMMENDED -> new OrderSpecifier<?>[]{
+                new OrderSpecifier<>(Order.DESC, avgRatingSub, OrderSpecifier.NullHandling.NullsLast),
+                product.id.desc()
+            };
+        };
+    }
+
+    private BooleanExpression minPriceGoe(Integer minPrice) {
+        return minPrice == null ? null : product.price.goe(minPrice);
+    }
+
+    private BooleanExpression maxPriceLoe(Integer maxPrice) {
+        return maxPrice == null ? null : product.price.loe(maxPrice);
     }
 
     @Override

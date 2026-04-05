@@ -5,8 +5,10 @@ import java.util.Map;
 import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.LikeStatusProjection;
 import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQuery;
+import org.sopt.snappinserver.domain.product.service.dto.request.GetProductListQueryV2;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResult;
 import org.sopt.snappinserver.domain.product.service.dto.response.PopularMoodProductItemResult;
+import org.sopt.snappinserver.domain.product.service.dto.response.GetProductCardResultV2;
 
 public interface ProductRepositoryCustom {
 
@@ -15,6 +17,12 @@ public interface ProductRepositoryCustom {
     List<GetProductCardResult> findProducts(
         GetProductListQuery query,
         Map<MoodCategory, List<Long>> moodGroupMap
+    );
+
+    List<GetProductCardResultV2> findProductCardsV2(
+        GetProductListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap,
+        int size
     );
 
     List<String> findProductMoods(Long productId);

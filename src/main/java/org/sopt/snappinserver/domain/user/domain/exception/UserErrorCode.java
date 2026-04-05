@@ -48,7 +48,7 @@ public enum UserErrorCode implements ErrorCode {
     ONBOARDING_NOT_FOUND(404, "USER_404_003", "해당 사용자의 온보딩 정보가 존재하지 않습니다."),
 
     // 409 Conflict
-    ONBOARDING_ALREADY_SAVED(409, "USER_409_001", "이미 해당 사용자의 온보딩 정보가 존재합니다.");
+    ONBOARDING_ALREADY_SAVED(409, "USER_409_001", "이미 해당 사용자의 온보딩 정보가 존재합니다."),
 
     ;
 

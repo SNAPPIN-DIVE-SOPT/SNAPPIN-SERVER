@@ -139,9 +139,11 @@ public interface ProductApi {
         @PathVariable Long productId
     );
 
+    @Deprecated
     @Operation(
-        summary = "상품 목록 조회 API",
-        description = "요청받은 조건에 맞게 상품 목록을 필터링하여 반환합니다."
+        summary = "상품 목록 조회 API (Deprecated)",
+        description = "v2 API로 대체되었습니다. `/api/v2/products`를 사용하세요.",
+        deprecated = true
     )
     @GetMapping
     ApiResponseBody<GetProductListResponse, GetProductListMeta> getProductList(
