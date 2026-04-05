@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @Tag(name = "01 - User", description = "사용자 관련 API")
 public interface UserApi {
 
+    @Deprecated
     @Operation(
         summary = "유저 정보 조회 API",
-        description = "현재 로그인한 사용자의 역할을 기반으로 사용자 정보를 조회합니다."
+        description = "v2 API로 대체되었습니다. /api/v2/users/me를 사용하세요.",
+        deprecated = true
     )
     @GetMapping("/me")
     ApiResponseBody<GetUserInfoResponse, Void> getUserInfo(
