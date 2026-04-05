@@ -1,7 +1,7 @@
 package org.sopt.snappinserver.domain.portfolio.service.dto.request;
 
 import java.util.List;
-import org.sopt.snappinserver.domain.portfolio.domain.enums.PortfolioSortType;
+import org.sopt.snappinserver.global.enums.SortType;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 
 public record GetPortfolioListQueryV2(
@@ -10,8 +10,10 @@ public record GetPortfolioListQueryV2(
     Long photographerId,
     SnapCategory snapCategory,
     Long placeId,
-    Long cursor,
-    PortfolioSortType sort,
+    Long cursorId,
+    Long cursorLikeCount,
+    Double cursorAvgRating,
+    SortType sort,
     Integer minPrice,
     Integer maxPrice,
     Long userId

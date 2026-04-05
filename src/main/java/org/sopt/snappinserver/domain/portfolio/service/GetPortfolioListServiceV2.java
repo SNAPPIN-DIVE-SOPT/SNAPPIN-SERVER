@@ -9,10 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.mood.domain.entity.Mood;
 import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.mood.repository.MoodRepository;
+import org.sopt.snappinserver.global.enums.SortType;
 import org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryCustom;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQueryV2;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResultV2;
-import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioListMeta;
+import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioListMetaV2;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioListResultV2;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioListUseCaseV2;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,19 +43,34 @@ public class GetPortfolioListServiceV2 implements GetPortfolioListUseCaseV2 {
                 String imageUrl = (result.imageUrl() != null && !result.imageUrl().isBlank())
                     ? cloudFrontDomain + result.imageUrl()
                     : null;
-                return new GetPortfolioCardResultV2(result.id(), imageUrl, result.isLiked(),
-                    result.likeCount());
+
+                return new GetPortfolioCardResultV2(
+                    result.id(),
+                    imageUrl,
+                    result.isLiked(),
+                    result.likeCount(),
+                    result.averageRating()
+                );
             })
             .toList();
 
         boolean hasNext = rows.size() > PAGE_SIZE;
         List<GetPortfolioCardResultV2> portfolios = hasNext ? rows.subList(0, PAGE_SIZE) : rows;
-        Long nextCursor = hasNext ? portfolios.get(portfolios.size() - 1).id() : null;
+        String nextCursor = hasNext
+            ? buildNextCursor(portfolios.get(portfolios.size() - 1), query.sort())
+            : null;
 
-        return new GetPortfolioListResultV2(
-            portfolios,
-            new GetPortfolioListMeta(hasNext, nextCursor)
-        );
+        return new GetPortfolioListResultV2(portfolios,
+            new GetPortfolioListMetaV2(hasNext, nextCursor));
+    }
+
+    private String buildNextCursor(GetPortfolioCardResultV2 last, SortType sort) {
+        SortType resolved = sort == null ? SortType.RECOMMENDED : sort;
+        return switch (resolved) {
+            case LATEST -> String.valueOf(last.id());
+            case POPULAR -> last.likeCount() + ":" + last.id();
+            case RECOMMENDED -> last.averageRating() + ":" + last.id();
+        };
     }
 
     private Map<MoodCategory, List<Long>> groupByCategory(List<Long> moodIds) {

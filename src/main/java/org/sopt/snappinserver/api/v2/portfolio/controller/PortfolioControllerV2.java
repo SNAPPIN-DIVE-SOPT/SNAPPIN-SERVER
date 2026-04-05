@@ -2,10 +2,11 @@ package org.sopt.snappinserver.api.v2.portfolio.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.v2.portfolio.dto.request.GetPortfolioListRequestV2;
+import org.sopt.snappinserver.global.util.ParsedCursor;
 import org.sopt.snappinserver.api.v2.portfolio.dto.response.GetPortfolioListResponseV2;
 import org.sopt.snappinserver.api.v2.portfolio.dto.response.GetPortfolioMetaResponseV2;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
-import org.sopt.snappinserver.domain.portfolio.domain.enums.PortfolioSortType;
+import org.sopt.snappinserver.global.enums.SortType;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQueryV2;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioListResultV2;
 import org.sopt.snappinserver.domain.portfolio.service.usecase.GetPortfolioListUseCaseV2;
@@ -41,7 +42,7 @@ public class PortfolioControllerV2 implements PortfolioApi {
     }
 
     private GetPortfolioListQueryV2 toQuery(GetPortfolioListRequestV2 request, Long userId) {
-        PortfolioSortType sort = request.sort() == null ? PortfolioSortType.RECOMMENDED : request.sort();
+        SortType sort = request.sort() == null ? SortType.RECOMMENDED : request.sort();
         ParsedCursor cursor = ParsedCursor.of(request.cursor(), sort);
 
         return new GetPortfolioListQueryV2(
@@ -60,23 +61,4 @@ public class PortfolioControllerV2 implements PortfolioApi {
         );
     }
 
-    private record ParsedCursor(Long cursorId, Long cursorLikeCount, Double cursorAvgRating) {
-
-        static ParsedCursor of(String cursor, PortfolioSortType sort) {
-            if (cursor == null) {
-                return new ParsedCursor(null, null, null);
-            }
-            return switch (sort) {
-                case LATEST -> new ParsedCursor(Long.parseLong(cursor), null, null);
-                case POPULAR -> {
-                    String[] parts = cursor.split(":");
-                    yield new ParsedCursor(Long.parseLong(parts[1]), Long.parseLong(parts[0]), null);
-                }
-                case RECOMMENDED -> {
-                    String[] parts = cursor.split(":");
-                    yield new ParsedCursor(Long.parseLong(parts[1]), null, Double.parseDouble(parts[0]));
-                }
-            };
-        }
-    }
 }

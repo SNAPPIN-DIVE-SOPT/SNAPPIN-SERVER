@@ -18,6 +18,7 @@ import static org.sopt.snappinserver.domain.review.domain.entity.QReview.review;
 import static org.sopt.snappinserver.domain.wish.domain.entity.QWishPortfolio.wishPortfolio;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Ops;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -26,6 +27,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.mood.domain.enums.MoodCategory;
 import org.sopt.snappinserver.domain.portfolio.domain.entity.Portfolio;
-import org.sopt.snappinserver.domain.portfolio.domain.enums.PortfolioSortType;
+import org.sopt.snappinserver.global.enums.SortType;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQuery;
 import org.sopt.snappinserver.domain.portfolio.service.dto.request.GetPortfolioListQueryV2;
 import org.sopt.snappinserver.domain.portfolio.service.dto.response.GetPortfolioCardResult;
@@ -346,8 +348,15 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         int size
     ) {
         QWishPortfolio wishPortfolioSub = new QWishPortfolio("wishPortfolioSub");
+        SortType sort =
+            query.sort() == null ? SortType.RECOMMENDED : query.sort();
 
         NumberExpression<Long> likeCount = wishPortfolio.id.count();
+        JPQLQuery<Double> avgRatingSub = JPAExpressions
+            .select(review.rating.avg())
+            .from(review)
+            .join(review.reservation, reservation)
+            .where(reservation.product.id.eq(product.id));
 
         BooleanExpression liked = query.userId() == null
             ? Expressions.FALSE
@@ -367,7 +376,8 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
                     portfolio.id,
                     portfolioPhoto.photo.imageUrl,
                     liked,
-                    likeCount
+                    likeCount,
+                    avgRatingSub
                 )
             )
             .from(portfolio)
@@ -380,19 +390,61 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .join(portfolioPhoto.photo, photo)
             .leftJoin(wishPortfolio).on(wishPortfolio.portfolio.id.eq(portfolio.id))
             .where(
-                cursorLt(query.cursor()),
                 moodCategoryGroupedCondition(moodGroupMap),
                 productIdEq(query.productId()),
                 photographerIdEq(query.photographerId()),
                 snapCategoryEq(query.snapCategory()),
                 placeExists(query.placeId()),
                 minPriceGreaterThanOrEqualTo(query.minPrice()),
-                maxPriceLessThanOrEqualTo(query.maxPrice())
+                maxPriceLessThanOrEqualTo(query.maxPrice()),
+                whereCursorCondition(sort, avgRatingSub, query.cursorAvgRating(), query.cursorId())
             )
             .groupBy(portfolio.id, portfolioPhoto.photo.imageUrl)
-            .orderBy(buildOrderBy(query.sort(), likeCount))
+            .having(
+                havingCursorCondition(sort, likeCount, query.cursorLikeCount(), query.cursorId()))
+            .orderBy(buildOrderBy(sort, likeCount, avgRatingSub))
             .limit(size + 1)
             .fetch();
+    }
+
+    private BooleanExpression whereCursorCondition(
+        SortType sort,
+        JPQLQuery<Double> avgRatingSub,
+        Double cursorAvgRating,
+        Long cursorId
+    ) {
+        return switch (sort) {
+            case LATEST -> cursorId != null ? portfolio.id.lt(cursorId) : null;
+            case POPULAR -> null;
+            case RECOMMENDED -> {
+                if (cursorAvgRating == null && cursorId == null) {
+                    yield null;
+                }
+                BooleanExpression nullRating = Expressions.predicate(Ops.IS_NULL, avgRatingSub);
+                if (cursorAvgRating == null) {
+                    yield nullRating.and(portfolio.id.lt(cursorId));
+                }
+                BooleanExpression ltAvg = Expressions.predicate(
+                    Ops.LT, avgRatingSub, Expressions.constant(cursorAvgRating));
+                BooleanExpression eqAvgAndLtId = Expressions.predicate(
+                        Ops.EQ, avgRatingSub, Expressions.constant(cursorAvgRating))
+                    .and(portfolio.id.lt(cursorId));
+                yield ltAvg.or(eqAvgAndLtId).or(nullRating);
+            }
+        };
+    }
+
+    private BooleanExpression havingCursorCondition(
+        SortType sort,
+        NumberExpression<Long> likeCount,
+        Long cursorLikeCount,
+        Long cursorId
+    ) {
+        if (sort != SortType.POPULAR || cursorLikeCount == null) {
+            return null;
+        }
+        return likeCount.lt(cursorLikeCount)
+            .or(likeCount.eq(cursorLikeCount).and(portfolio.id.lt(cursorId)));
     }
 
     private BooleanExpression minPriceGreaterThanOrEqualTo(Integer minPrice) {
@@ -403,25 +455,19 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         return maxPrice == null ? null : product.price.loe(maxPrice);
     }
 
-    private OrderSpecifier<?>[] buildOrderBy(PortfolioSortType sort,
-        NumberExpression<Long> likeCount) {
-        PortfolioSortType resolved = sort == null ? PortfolioSortType.RECOMMENDED : sort;
-        return switch (resolved) {
+    private OrderSpecifier<?>[] buildOrderBy(
+        SortType sort,
+        NumberExpression<Long> likeCount,
+        JPQLQuery<Double> avgRatingSub
+    ) {
+        return switch (sort) {
             case LATEST -> new OrderSpecifier<?>[]{portfolio.id.desc()};
             case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), portfolio.id.desc()};
-            case RECOMMENDED -> new OrderSpecifier<?>[]{averageRatingDesc(), portfolio.id.desc()};
+            case RECOMMENDED -> new OrderSpecifier<?>[]{
+                new OrderSpecifier<>(Order.DESC, avgRatingSub),
+                portfolio.id.desc()
+            };
         };
-    }
-
-    private OrderSpecifier<Double> averageRatingDesc() {
-        return new OrderSpecifier<>(
-            Order.DESC,
-            JPAExpressions
-                .select(review.rating.avg())
-                .from(review)
-                .join(review.reservation, reservation)
-                .where(reservation.product.id.eq(product.id))
-        );
     }
 
 }

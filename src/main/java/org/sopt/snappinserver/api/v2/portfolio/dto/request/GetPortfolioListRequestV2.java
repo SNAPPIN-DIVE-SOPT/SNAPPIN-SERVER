@@ -3,7 +3,7 @@ package org.sopt.snappinserver.api.v2.portfolio.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Positive;
 import java.util.List;
-import org.sopt.snappinserver.domain.portfolio.domain.enums.PortfolioSortType;
+import org.sopt.snappinserver.global.enums.SortType;
 import org.sopt.snappinserver.global.enums.SnapCategory;
 
 @Schema(description = "포폴 목록 조회 요청 DTO - 쿼리 파라미터용")
@@ -31,7 +31,7 @@ public record GetPortfolioListRequestV2(
     String cursor,
 
     @Schema(description = "정렬 기준 (RECOMMENDED, LATEST, POPULAR). 기본값: RECOMMENDED")
-    PortfolioSortType sort,
+    SortType sort,
 
     @Schema(description = "최소 가격")
     @Positive(message = "최소 가격은 양수값이어야 합니다.")

@@ -4,7 +4,8 @@ public record GetPortfolioCardResultV2(
     Long id,
     String imageUrl,
     boolean isLiked,
-    long likeCount
+    long likeCount,
+    Double averageRating
 ) {
 
 }
