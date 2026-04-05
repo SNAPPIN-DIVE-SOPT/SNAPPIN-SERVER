@@ -27,8 +27,8 @@ public record GetPortfolioListRequestV2(
     @Positive(message = "장소 ID는 양수값이어야 합니다.")
     Long placeId,
 
-    @Schema(description = "커서 값")
-    Long cursor,
+    @Schema(description = "커서 값 (LATEST: portfolioId / POPULAR: likeCount:portfolioId / RECOMMENDED: avgRating:portfolioId)")
+    String cursor,
 
     @Schema(description = "정렬 기준 (RECOMMENDED, LATEST, POPULAR). 기본값: RECOMMENDED")
     PortfolioSortType sort,
