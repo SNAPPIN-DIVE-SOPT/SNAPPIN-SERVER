@@ -48,9 +48,11 @@ public interface PortfolioApi {
         CustomUserInfo userInfo
     );
 
+    @Deprecated
     @Operation(
-        summary = "포폴 목록 조회 (전체조회/필터링(무드&상품)/검색) API",
-        description = "포트폴리오 전체 조회, 필터링, 검색 시 사용되는 API 입니다."
+        summary = "포폴 목록 조회 (전체조회/필터링(무드&상품)/검색) API (Deprecated)",
+        description = "v2 API로 대체되었습니다. `/api/v2/portfolios`를 사용하세요.",
+        deprecated = true
     )
     @GetMapping
     ApiResponseBody<GetPortfolioListResponse, GetPortfolioMetaResponse> getPortfolioList(
