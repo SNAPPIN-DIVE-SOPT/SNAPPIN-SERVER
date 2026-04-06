@@ -4,5 +4,5 @@ import org.sopt.snappinserver.domain.product.service.dto.response.GetPopularMood
 
 public interface GetPopularMoodProductsUseCase {
 
-    GetPopularMoodProductsResult getPopularMoodProducts(Long moodId);
+    GetPopularMoodProductsResult getPopularMoodProducts(Long moodId, Long userId);
 }

@@ -174,7 +174,10 @@ public interface ProductApi {
     )
     @GetMapping("/popular")
     ApiResponseBody<GetPopularMoodProductsResponse, Void> getPopularMoodProducts(
-        @Schema(description = "무드 태그 아이디", example = "1")
+        @Parameter(hidden = true)
+        CustomUserInfo principal,
+
+        @Parameter(description = "무드 태그 아이디", example = "1")
         @RequestParam @NotNull @Positive Long moodId
     );
 

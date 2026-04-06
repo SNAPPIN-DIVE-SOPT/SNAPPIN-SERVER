@@ -27,7 +27,10 @@ public record GetPopularMoodProductItemResponse(
     String photographer,
 
     @Schema(description = "상품 가격")
-    int price
+    int price,
+
+    @Schema(description = "좋아요 여부 (비로그인 시 항상 false)")
+    boolean isLiked
 ) {
 
     public static GetPopularMoodProductItemResponse from(PopularMoodProductItemResult result) {
@@ -43,7 +46,8 @@ public record GetPopularMoodProductItemResponse(
             rate,
             result.reviewCount(),
             result.photographer(),
-            result.price()
+            result.price(),
+            result.isLiked()
         );
     }
 }

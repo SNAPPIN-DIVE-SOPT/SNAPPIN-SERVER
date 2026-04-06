@@ -401,7 +401,8 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
                 row.rate(),
                 row.reviewCount() == null ? 0L : row.reviewCount(),
                 row.photographerName(),
-                row.price()
+                row.price(),
+                false
             ))
             .toList();
     }
