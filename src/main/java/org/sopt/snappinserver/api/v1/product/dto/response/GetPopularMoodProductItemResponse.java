@@ -1,6 +1,5 @@
 package org.sopt.snappinserver.api.v1.product.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -30,7 +29,6 @@ public record GetPopularMoodProductItemResponse(
     @Schema(description = "상품 가격")
     int price,
 
-    @JsonProperty("isLiked")
     @Schema(description = "좋아요 여부 (비로그인 시 항상 false)")
     boolean isLiked
 ) {
