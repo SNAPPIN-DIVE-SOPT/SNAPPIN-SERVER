@@ -7,7 +7,8 @@ public record PopularMoodProductItemResult(
     Double rate,
     long reviewCount,
     String photographer,
-    int price
+    int price,
+    boolean isLiked
 ) {
 
 }
