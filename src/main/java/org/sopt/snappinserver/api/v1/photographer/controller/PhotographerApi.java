@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Validated
 public interface PhotographerApi {
 
+    @Deprecated
     @Operation(
         summary = "작가 상세 조회 API",
-        description = "입력받은 photographerId로 해당 작가의 프로필을 조회합니다."
+        description = "입력받은 photographerId로 해당 작가의 프로필을 조회합니다.",
+        deprecated = true
     )
     @GetMapping("/{photographerId}")
     ApiResponseBody<GetPhotographerProfileResponse, Void> getPhotographerProfile(
