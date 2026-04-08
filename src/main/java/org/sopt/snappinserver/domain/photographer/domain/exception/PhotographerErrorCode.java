@@ -23,6 +23,7 @@ public enum PhotographerErrorCode implements ErrorCode {
     START_TIME_AFTER_THAN_END_TIME(400, "PHOTOGRAPHER_400_012", "스케줄 시작 시간이 종료 시간보다 늦을 수 없습니다."),
     BIO_TOO_LONG(400, "PHOTOGRAPHER_400_013", "한 줄 소개 길이는 200자 이하입니다."),
     AVAILABLE_LOCATION_REQUIRED(400, "PHOTOGRAPHER_400_014", "활동 지역은 필수입니다."),
+    CONTACT_LINK_INVALID(400, "PHOTOGRAPHER_400_015", "연락 링크는 유효한 URL 형식이어야 합니다."),
 
     // 401 UNAUTHORIZED
 

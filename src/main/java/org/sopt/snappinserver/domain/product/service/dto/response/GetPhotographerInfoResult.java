@@ -8,6 +8,7 @@ public record GetPhotographerInfoResult(
     String name,
     String profileImageUrl,
     String bio,
+    String contactLink,
     List<String> specialties,
     List<String> locations
 ) {
@@ -23,6 +24,7 @@ public record GetPhotographerInfoResult(
             photographer.getNickname(),
             profileImageUrl,
             photographer.getBio(),
+            photographer.getContactLink(),
             specialties,
             locations
         );

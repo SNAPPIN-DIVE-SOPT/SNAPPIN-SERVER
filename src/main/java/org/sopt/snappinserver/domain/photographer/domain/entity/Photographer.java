@@ -14,6 +14,7 @@ import jakarta.persistence.SequenceGenerator;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -33,6 +34,7 @@ public class Photographer extends BaseEntity {
     private static final int MAX_NICKNAME_LENGTH = 20;
     private static final int MAX_BIO_LENGTH = 200;
     private static final ZoneId KOREA_ZONE = ZoneId.of("Asia/Seoul");
+    private static final Pattern URL_PATTERN = Pattern.compile("^https?://.+");
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "photographer_seq_gen")
@@ -60,19 +62,24 @@ public class Photographer extends BaseEntity {
     @Column(length = MAX_BIO_LENGTH)
     private String bio;
 
+    @Column
+    private String contactLink;
+
     @Builder(access = AccessLevel.PRIVATE)
     private Photographer(
         User user,
         String name,
         String nickname,
         Gender gender,
-        String bio
+        String bio,
+        String contactLink
     ) {
         this.user = user;
         this.name = name;
         this.nickname = nickname;
         this.gender = gender;
         this.bio = bio;
+        this.contactLink = contactLink;
     }
 
     public static Photographer create(
@@ -80,15 +87,17 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        String bio
+        String bio,
+        String contactLink
     ) {
-        validatePhotographer(user, name, nickname, gender, bio);
+        validatePhotographer(user, name, nickname, gender, bio, contactLink);
         return Photographer.builder()
             .user(user)
             .name(name)
             .nickname(nickname)
             .gender(gender)
             .bio(bio)
+            .contactLink(contactLink)
             .build();
     }
 
@@ -97,13 +106,15 @@ public class Photographer extends BaseEntity {
         String name,
         String nickname,
         Gender gender,
-        String bio
+        String bio,
+        String contactLink
     ) {
         validateUserExists(user);
         validateName(name);
         validateNickname(nickname);
         validateGenderExists(gender);
         validateBioLength(bio);
+        validateContactLink(contactLink);
     }
 
     private static void validateUserExists(User user) {
@@ -155,6 +166,12 @@ public class Photographer extends BaseEntity {
     private static void validateBioLength(String bio) {
         if (bio != null && bio.length() > MAX_BIO_LENGTH) {
             throw new PhotographerException(PhotographerErrorCode.BIO_TOO_LONG);
+        }
+    }
+
+    private static void validateContactLink(String contactLink) {
+        if (contactLink != null && !URL_PATTERN.matcher(contactLink).matches()) {
+            throw new PhotographerException(PhotographerErrorCode.CONTACT_LINK_INVALID);
         }
     }
 

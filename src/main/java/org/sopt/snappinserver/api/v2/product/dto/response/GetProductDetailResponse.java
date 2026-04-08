@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
-import org.sopt.snappinserver.api.v1.product.dto.response.GetProductPhotographerInfoResponse;
 import org.sopt.snappinserver.domain.product.service.dto.response.GetProductResult;
 
 @Schema(description = "상품 상세 조회 응답 DTO")
@@ -35,7 +34,7 @@ public record GetProductDetailResponse(
     int price,
 
     @Schema(description = "스냅 작가 응답 DTO")
-    GetProductPhotographerInfoResponse photographerInfo,
+    GetProductPhotographerInfoResponseV2 photographerInfo,
 
     @Schema(description = "상품 안내 정보 응답 DTO")
     GetProductInfoResponse productInfo
@@ -56,7 +55,7 @@ public record GetProductDetailResponse(
             rate,
             result.reviewCount(),
             result.price(),
-            GetProductPhotographerInfoResponse.from(result.photographerInfo()),
+            GetProductPhotographerInfoResponseV2.from(result.photographerInfo()),
             GetProductInfoResponse.from(result.productInfo())
         );
     }
