@@ -12,6 +12,7 @@ public record GetPhotographerProfileResult(
     String name,
     String profileImageUrl,
     String bio,
+    String contactLink,
     List<String> specialties,
     List<String> locations
 ) {
@@ -27,6 +28,7 @@ public record GetPhotographerProfileResult(
             photographer.getNickname(),
             profileImageUrl,
             photographer.getBio(),
+            photographer.getContactLink(),
 
             specialties.stream()
                 .map(PhotographerSpecialty::getSpecialty)
