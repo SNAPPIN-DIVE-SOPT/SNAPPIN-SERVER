@@ -25,6 +25,11 @@ public interface ProductRepositoryCustom {
         int size
     );
 
+    long countProductCardsV2(
+        GetProductListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap
+    );
+
     List<String> findProductMoods(Long productId);
 
     List<Long> findTopProductIdsByMoodOrderByWishCount(Long moodId, int limit);

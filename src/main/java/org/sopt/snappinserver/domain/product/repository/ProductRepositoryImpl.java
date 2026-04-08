@@ -6,6 +6,7 @@ import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotogra
 import static org.sopt.snappinserver.domain.photographer.domain.entity.QPhotographerSchedule.photographerSchedule;
 import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolio.portfolio;
 import static org.sopt.snappinserver.domain.portfolio.domain.entity.QPortfolioPlace.portfolioPlace;
+import static org.sopt.snappinserver.domain.portfolio.repository.PortfolioRepositoryImpl.getOrderSpecifiers;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProduct.product;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductMood.productMood;
 import static org.sopt.snappinserver.domain.product.domain.entity.QProductOption.productOption;
@@ -259,6 +260,34 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
             .toList();
     }
 
+    @Override
+    public long countProductCardsV2(
+        GetProductListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap
+    ) {
+        Long result = jpaQueryFactory
+            .select(product.id.countDistinct())
+            .from(product)
+            .join(product.photographer, photographer)
+            .join(productPhoto).on(
+                productPhoto.product.id.eq(product.id)
+                    .and(productPhoto.displayOrder.eq(1))
+            )
+            .join(photo).on(photo.id.eq(productPhoto.photo.id))
+            .where(
+                photographerEq(query.photographerId()),
+                snapCategoryEq(query.snapCategory()),
+                placeCondition(query.placeId()),
+                peopleCountCondition(query.peopleCount()),
+                availableOnDate(query.date()),
+                moodCategoryGroupedCondition(moodGroupMap),
+                minPriceGoe(query.minPrice()),
+                maxPriceLoe(query.maxPrice())
+            )
+            .fetchOne();
+        return result == null ? 0L : result;
+    }
+
     private BooleanExpression whereV2CursorCondition(
         SortType sort,
         JPQLQuery<Double> avgRatingSub,
@@ -304,14 +333,7 @@ public class ProductRepositoryImpl implements ProductRepositoryCustom {
         NumberExpression<Long> likeCount,
         JPQLQuery<Double> avgRatingSub
     ) {
-        return switch (sort) {
-            case LATEST -> new OrderSpecifier<?>[]{product.id.desc()};
-            case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), product.id.desc()};
-            case RECOMMENDED -> new OrderSpecifier<?>[]{
-                new OrderSpecifier<>(Order.DESC, avgRatingSub, OrderSpecifier.NullHandling.NullsLast),
-                product.id.desc()
-            };
-        };
+        return getOrderSpecifiers(sort, likeCount, avgRatingSub, product.id);
     }
 
     private BooleanExpression minPriceGoe(Integer minPrice) {
