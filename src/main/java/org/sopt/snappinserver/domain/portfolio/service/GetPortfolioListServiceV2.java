@@ -59,9 +59,10 @@ public class GetPortfolioListServiceV2 implements GetPortfolioListUseCaseV2 {
         String nextCursor = hasNext
             ? buildNextCursor(portfolios.get(portfolios.size() - 1), query.sort())
             : null;
+        long totalCount = portfolioRepositoryCustom.countPortfolioCardsV2(query, moodGroupMap);
 
         return new GetPortfolioListResultV2(portfolios,
-            new GetPortfolioListMetaV2(hasNext, nextCursor));
+            new GetPortfolioListMetaV2(hasNext, nextCursor, totalCount));
     }
 
     private String buildNextCursor(GetPortfolioCardResultV2 last, SortType sort) {
