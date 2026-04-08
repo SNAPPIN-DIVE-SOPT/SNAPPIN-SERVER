@@ -51,4 +51,9 @@ public interface PortfolioRepositoryCustom {
         Map<MoodCategory, List<Long>> moodGroupMap,
         int size
     );
+
+    long countPortfolioCardsV2(
+        GetPortfolioListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap
+    );
 }

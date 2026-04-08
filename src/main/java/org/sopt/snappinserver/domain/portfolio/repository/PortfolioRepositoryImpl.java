@@ -26,6 +26,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
+import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -407,6 +408,34 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
             .fetch();
     }
 
+    @Override
+    public long countPortfolioCardsV2(
+        GetPortfolioListQueryV2 query,
+        Map<MoodCategory, List<Long>> moodGroupMap
+    ) {
+        Long result = jpaQueryFactory
+            .select(portfolio.id.countDistinct())
+            .from(portfolio)
+            .join(portfolio.product, product)
+            .join(product.photographer, photographer)
+            .join(portfolioPhoto).on(
+                portfolioPhoto.portfolio.id.eq(portfolio.id)
+                    .and(portfolioPhoto.displayOrder.eq(1))
+            )
+            .join(portfolioPhoto.photo, photo)
+            .where(
+                moodCategoryGroupedCondition(moodGroupMap),
+                productIdEq(query.productId()),
+                photographerIdEq(query.photographerId()),
+                snapCategoryEq(query.snapCategory()),
+                placeExists(query.placeId()),
+                minPriceGreaterThanOrEqualTo(query.minPrice()),
+                maxPriceLessThanOrEqualTo(query.maxPrice())
+            )
+            .fetchOne();
+        return result == null ? 0L : result;
+    }
+
     private BooleanExpression whereCursorCondition(
         SortType sort,
         JPQLQuery<Double> avgRatingSub,
@@ -460,12 +489,18 @@ public class PortfolioRepositoryImpl implements PortfolioRepositoryCustom {
         NumberExpression<Long> likeCount,
         JPQLQuery<Double> avgRatingSub
     ) {
+        return getOrderSpecifiers(sort, likeCount, avgRatingSub, portfolio.id);
+    }
+
+    public static OrderSpecifier<?>[] getOrderSpecifiers(SortType sort,
+        NumberExpression<Long> likeCount,
+        JPQLQuery<Double> avgRatingSub, NumberPath<Long> id) {
         return switch (sort) {
-            case LATEST -> new OrderSpecifier<?>[]{portfolio.id.desc()};
-            case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), portfolio.id.desc()};
+            case LATEST -> new OrderSpecifier<?>[]{id.desc()};
+            case POPULAR -> new OrderSpecifier<?>[]{likeCount.desc(), id.desc()};
             case RECOMMENDED -> new OrderSpecifier<?>[]{
                 new OrderSpecifier<>(Order.DESC, avgRatingSub, OrderSpecifier.NullHandling.NullsLast),
-                portfolio.id.desc()
+                id.desc()
             };
         };
     }

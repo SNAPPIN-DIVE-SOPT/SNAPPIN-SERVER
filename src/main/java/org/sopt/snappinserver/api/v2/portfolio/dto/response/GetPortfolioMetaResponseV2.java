@@ -10,10 +10,13 @@ public record GetPortfolioMetaResponseV2(
     String nextCursor,
 
     @Schema(description = "다음 커서 존재 여부")
-    boolean hasNext
+    boolean hasNext,
+
+    @Schema(description = "전체 검색 결과 수")
+    long totalCount
 ) {
 
     public static GetPortfolioMetaResponseV2 from(GetPortfolioListMetaV2 meta) {
-        return new GetPortfolioMetaResponseV2(meta.nextCursor(), meta.hasNext());
+        return new GetPortfolioMetaResponseV2(meta.nextCursor(), meta.hasNext(), meta.totalCount());
     }
 }
