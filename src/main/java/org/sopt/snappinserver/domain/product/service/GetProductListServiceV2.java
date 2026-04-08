@@ -56,8 +56,9 @@ public class GetProductListServiceV2 implements GetProductListUseCaseV2 {
         String nextCursor = hasNext
             ? buildNextCursor(products.get(products.size() - 1), query.sort())
             : null;
+        long totalCount = productRepositoryCustom.countProductCardsV2(query, moodGroupMap);
 
-        return new GetProductListResultV2(products, new GetProductListMetaV2(hasNext, nextCursor));
+        return new GetProductListResultV2(products, new GetProductListMetaV2(hasNext, nextCursor, totalCount));
     }
 
     private String buildNextCursor(GetProductCardResultV2 last, SortType sort) {

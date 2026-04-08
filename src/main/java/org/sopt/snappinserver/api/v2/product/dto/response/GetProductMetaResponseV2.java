@@ -10,10 +10,13 @@ public record GetProductMetaResponseV2(
     String nextCursor,
 
     @Schema(description = "다음 커서 존재 여부")
-    boolean hasNext
+    boolean hasNext,
+
+    @Schema(description = "전체 검색 결과 수")
+    long totalCount
 ) {
 
     public static GetProductMetaResponseV2 from(GetProductListMetaV2 meta) {
-        return new GetProductMetaResponseV2(meta.nextCursor(), meta.hasNext());
+        return new GetProductMetaResponseV2(meta.nextCursor(), meta.hasNext(), meta.totalCount());
     }
 }
