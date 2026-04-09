@@ -80,7 +80,7 @@ public class GetAllCurationQuestionService implements GetAllCurationQuestionUseC
     private Gender getUserGender(User user) {
         Onboarding onboarding = onboardingRepository.findByUser(user)
             .orElseThrow(
-                () -> new CurationException(CurationErrorCode.CURATIOON_ONBOARDING_REQUIRED)
+                () -> new CurationException(CurationErrorCode.CURATION_ONBOARDING_REQUIRED)
             );
 
         return onboarding.getGender();
