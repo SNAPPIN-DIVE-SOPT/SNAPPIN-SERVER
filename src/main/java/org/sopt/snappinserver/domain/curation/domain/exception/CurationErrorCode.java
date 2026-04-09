@@ -17,6 +17,7 @@ public enum CurationErrorCode implements ErrorCode {
 
     // 401 UNAUTHORIZED
     CURATION_LOGIN_REQUIRED(401, "CURATION_401_001", "무드 큐레이션은 로그인이 필요합니다."),
+    CURATION_ONBOARDING_REQUIRED(401, "CURATION_401_002", "무드 큐레이션은 온보딩 정보가 필요합니다."),
 
     // 403 FORBIDDEN
 

@@ -14,6 +14,7 @@ import org.sopt.snappinserver.domain.photo.repository.PhotoMoodRepository;
 import org.sopt.snappinserver.domain.photo.repository.PhotoRepository;
 import org.sopt.snappinserver.domain.photo.service.dto.request.PhotoProcessCommand;
 import org.sopt.snappinserver.domain.photo.service.usecase.ProcessPhotoUseCase;
+import org.sopt.snappinserver.global.enums.Gender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +34,9 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
     @Override
     public void linkPhotoWithMoodTags(PhotoProcessCommand photoProcessCommand) {
         Photo photo = photoRepository.findByImageUrl(photoProcessCommand.imageUrl())
-            .orElseGet(() -> photoRepository.save(Photo.create(photoProcessCommand.imageUrl())));
+            .orElseGet(() -> photoRepository.save(
+                Photo.create(photoProcessCommand.imageUrl(), parseGender(photoProcessCommand.imageUrl()))
+            ));
 
         List<MoodWithScore> candidates = moodVectorRepository.findTopCandidates(
             toVectorLiteral(photoProcessCommand.embedding())
@@ -56,6 +59,16 @@ public class ProcessPhotoService implements ProcessPhotoUseCase {
         return selected.stream()
             .map(m -> moodRepository.getReferenceById(m.id()))
             .toList();
+    }
+
+    private Gender parseGender(String imageUrl) {
+        if (imageUrl.contains("/female/")) {
+            return Gender.FEMALE;
+        }
+        if (imageUrl.contains("/male/")) {
+            return Gender.MALE;
+        }
+        return null;
     }
 
 }
