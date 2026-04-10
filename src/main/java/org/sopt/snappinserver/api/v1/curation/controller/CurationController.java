@@ -1,9 +1,9 @@
 package org.sopt.snappinserver.api.v1.curation.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 import org.sopt.snappinserver.api.v1.curation.dto.response.CreateMoodCurationResponse;
-import org.sopt.snappinserver.api.v1.curation.dto.response.GetAllCurationQuestionsResponse;
 import org.sopt.snappinserver.api.v1.curation.dto.response.GetCurationQuestionPhotosResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.domain.curation.service.dto.request.CreateMoodCurationCommand;
@@ -58,12 +58,14 @@ public class CurationController implements CurationApi {
     }
 
     @Override
-    public ApiResponseBody<GetAllCurationQuestionsResponse, Void> getAllCurationQuestions(
+    public ApiResponseBody<List<GetCurationQuestionPhotosResponse>, Void> getAllCurationQuestions(
         @AuthenticationPrincipal CustomUserInfo userInfo
     ) {
         GetAllCurationQuestionResult result = getAllCurationQuestionUseCase
             .getAllCurationQuestions(userInfo.userId());
-        GetAllCurationQuestionsResponse response = GetAllCurationQuestionsResponse.from(result);
+        List<GetCurationQuestionPhotosResponse> response = result.questions().stream()
+            .map(GetCurationQuestionPhotosResponse::from)
+            .toList();
 
         return ApiResponseBody.ok(CurationSuccessCode.GET_CURATION_QUESTION_SUCCESS, response);
     }

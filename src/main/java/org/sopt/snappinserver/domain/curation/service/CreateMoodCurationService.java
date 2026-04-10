@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CreateMoodCurationService implements CreateMoodCurationUseCase {
 
-    public static final int PHOTO_MOODS_SIZE = 15;
+    public static final int PHOTO_MOODS_SIZE = 12;
     private final UserRepository userRepository;
     private final PhotoMoodRepository photoMoodRepository;
     private final CurationRepository curationRepository;
