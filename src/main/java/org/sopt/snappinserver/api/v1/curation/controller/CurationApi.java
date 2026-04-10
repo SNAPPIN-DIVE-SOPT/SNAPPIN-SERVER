@@ -7,9 +7,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import org.sopt.snappinserver.api.v1.curation.dto.request.CreateMoodCurationRequest;
 import org.sopt.snappinserver.api.v1.curation.dto.response.CreateMoodCurationResponse;
-import org.sopt.snappinserver.api.v1.curation.dto.response.GetAllCurationQuestionsResponse;
 import org.sopt.snappinserver.api.v1.curation.dto.response.GetCurationQuestionPhotosResponse;
 import org.sopt.snappinserver.domain.auth.infra.jwt.CustomUserInfo;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
@@ -59,7 +59,7 @@ public interface CurationApi {
         description = "로그인한 사용자가 전체 큐레이션 질문과 각 질문 별 사진을 한꺼번에 조회할 수 있습니다."
     )
     @GetMapping("/all")
-    ApiResponseBody<GetAllCurationQuestionsResponse, Void> getAllCurationQuestions(
+    ApiResponseBody<List<GetCurationQuestionPhotosResponse>, Void> getAllCurationQuestions(
         @Parameter(hidden = true)
         CustomUserInfo userInfo
     );

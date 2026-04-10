@@ -48,6 +48,12 @@ public class GetAllCurationQuestionService implements GetAllCurationQuestionUseC
 
         Gender gender = getUserGender(user);
         List<Photo> photos = new ArrayList<>(photoRepository.findAllByGender(gender));
+
+        int requiredPhotoCount = questions.size() * PHOTOS_PER_STEP;
+        if (photos.size() < requiredPhotoCount) {
+            throw new CurationException(CurationErrorCode.PHOTO_NOT_FOUND);
+        }
+
         Collections.shuffle(photos);
 
         List<GetCurationQuestionResult> results = new ArrayList<>();
