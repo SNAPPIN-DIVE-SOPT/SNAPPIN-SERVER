@@ -27,9 +27,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             left join fetch review.user author
             left join fetch review.reservation reservation
             left join fetch reservation.user reservationUser
+            left join reservation.product reservationProduct
             where (
                 (review.product is not null and review.product.id = :productId)
-                or (review.reservation is not null and review.reservation.product.id = :productId)
+                or (reservation is not null and reservationProduct.id = :productId)
             )
             order by review.id desc
         """)
@@ -45,9 +46,10 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             left join fetch review.user author
             left join fetch review.reservation reservation
             left join fetch reservation.user reservationUser
+            left join reservation.product reservationProduct
             where (
                 (review.product is not null and review.product.id = :productId)
-                or (review.reservation is not null and review.reservation.product.id = :productId)
+                or (reservation is not null and reservationProduct.id = :productId)
             )
               and review.id < :cursor
             order by review.id desc
@@ -65,9 +67,11 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
             cast(round(avg(r.rating), 1) as double)
         )
         from Review r
+        left join r.reservation res
+        left join res.product resProd
         where (
             (r.product is not null and r.product.id = :productId)
-            or (r.reservation is not null and r.reservation.product.id = :productId)
+            or (res is not null and resProd.id = :productId)
         )
         """)
     ProductReviewStatsResult findReviewStatsByProductId(
@@ -77,17 +81,19 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 상품 리뷰 통계 수치 여러 개 배치 조회
     @Query("""
         select
-            case when r.product is not null then r.product.id else r.reservation.product.id end,
+            case when r.product is not null then r.product.id else resProd.id end,
             new org.sopt.snappinserver.domain.product.service.dto.response.ProductReviewStatsResult(
                 count(r),
                 cast(round(avg(r.rating), 1) as double)
             )
         from Review r
+        left join r.reservation res
+        left join res.product resProd
         where (
             (r.product is not null and r.product.id in :productIds)
-            or (r.reservation is not null and r.reservation.product.id in :productIds)
+            or (res is not null and resProd.id in :productIds)
         )
-        group by case when r.product is not null then r.product.id else r.reservation.product.id end
+        group by case when r.product is not null then r.product.id else resProd.id end
         """)
     List<Object[]> findReviewStatsByProductIds(@Param("productIds") List<Long> productIds);
 
