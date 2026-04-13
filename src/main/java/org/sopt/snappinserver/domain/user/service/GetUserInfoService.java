@@ -81,7 +81,7 @@ public class GetUserInfoService implements GetUserInfoUseCase {
 
     private Onboarding getExistingOnboarding(User user) {
         return onboardingRepository.findByUser(user)
-            .orElseThrow(() -> new UserException(UserErrorCode.ONBOARDING_NOT_FOUND));
+            .orElse(null);
     }
 
     private List<String> getMoodNames(List<Long> moodIds) {
