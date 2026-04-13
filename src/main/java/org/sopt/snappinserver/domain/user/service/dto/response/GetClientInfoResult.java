@@ -11,8 +11,8 @@ public record GetClientInfoResult(
 
     public static GetClientInfoResult create(Onboarding onboarding, List<String> curatedMoods) {
         return new GetClientInfoResult(
-            onboarding.getName(),
-            onboarding.getNickname(),
+            onboarding != null ? onboarding.getName() : null,
+            onboarding != null ? onboarding.getNickname() : null,
             curatedMoods
         );
     }
