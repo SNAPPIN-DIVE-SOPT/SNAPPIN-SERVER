@@ -217,7 +217,7 @@ public class ProductController implements ProductApi {
     @Override
     public ApiResponseBody<GetPopularMoodProductsResponse, Void> getPopularMoodProducts(
         @AuthenticationPrincipal CustomUserInfo principal,
-        @RequestParam @NotNull @Positive Long moodId
+        Long moodId
     ) {
         Long userId = principal != null ? principal.userId() : null;
         GetPopularMoodProductsResult result =
