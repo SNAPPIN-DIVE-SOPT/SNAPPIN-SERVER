@@ -45,13 +45,10 @@ import org.sopt.snappinserver.domain.product.service.usecase.GetProductPeopleRan
 import org.sopt.snappinserver.domain.product.service.usecase.GetProductReviewsUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReservationUseCase;
 import org.sopt.snappinserver.domain.product.service.usecase.PostProductReviewUseCase;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import org.sopt.snappinserver.global.response.dto.ApiResponseBody;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/api/v1/products")
@@ -217,7 +214,7 @@ public class ProductController implements ProductApi {
     @Override
     public ApiResponseBody<GetPopularMoodProductsResponse, Void> getPopularMoodProducts(
         @AuthenticationPrincipal CustomUserInfo principal,
-        @RequestParam @NotNull @Positive Long moodId
+        Long moodId
     ) {
         Long userId = principal != null ? principal.userId() : null;
         GetPopularMoodProductsResult result =
