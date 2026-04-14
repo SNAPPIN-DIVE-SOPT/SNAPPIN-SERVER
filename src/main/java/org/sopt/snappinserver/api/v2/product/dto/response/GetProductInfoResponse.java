@@ -96,9 +96,12 @@ public record GetProductInfoResponse(
         );
     }
 
-    private static String formatDurationTime(double d) {
-        return Math.floor(d) == d
-            ? String.format("%.0f시간", d)
-            : String.format("%.1f시간", d);
+    private static String formatDurationTime(double totalMinutes) {
+        int hours = (int) totalMinutes;
+        int minutes = (int) Math.round((totalMinutes - hours) * 60);
+
+        if (hours == 0) return minutes + "분";
+        if (minutes == 0) return hours + "시간";
+        return hours + "시간 " + minutes + "분";
     }
 }
