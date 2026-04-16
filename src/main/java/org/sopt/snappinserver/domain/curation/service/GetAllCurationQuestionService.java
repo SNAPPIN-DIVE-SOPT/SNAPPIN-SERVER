@@ -3,7 +3,6 @@ package org.sopt.snappinserver.domain.curation.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.sopt.snappinserver.domain.curation.domain.exception.CurationErrorCode;
 import org.sopt.snappinserver.domain.curation.domain.exception.CurationException;
@@ -85,12 +84,9 @@ public class GetAllCurationQuestionService implements GetAllCurationQuestionUseC
     }
 
     private Gender getUserGender(User user) {
-        Optional<Onboarding> onboarding = onboardingRepository.findByUser(user);
-        if(onboarding.isEmpty()) {
-            return Gender.FEMALE;
-        }
-
-        return onboarding.get().getGender();
+        return onboardingRepository.findByUser(user)
+            .map(Onboarding::getGender)
+            .orElse(Gender.FEMALE);
     }
 
     private List<GetPhotoResult> mapPhotosToResults(List<Photo> photos) {
