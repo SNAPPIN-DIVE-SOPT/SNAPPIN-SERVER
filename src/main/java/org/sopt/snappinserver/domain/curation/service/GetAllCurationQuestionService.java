@@ -84,12 +84,9 @@ public class GetAllCurationQuestionService implements GetAllCurationQuestionUseC
     }
 
     private Gender getUserGender(User user) {
-        Onboarding onboarding = onboardingRepository.findByUser(user)
-            .orElseThrow(
-                () -> new CurationException(CurationErrorCode.CURATION_ONBOARDING_REQUIRED)
-            );
-
-        return onboarding.getGender();
+        return onboardingRepository.findByUser(user)
+            .map(Onboarding::getGender)
+            .orElse(Gender.FEMALE);
     }
 
     private List<GetPhotoResult> mapPhotosToResults(List<Photo> photos) {
